@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>	
+	<declare-styleable name="XUITabHost">	
+		<attr name="targetContainer" format="integer"/>		
+	</declare-styleable>
+	<declare-styleable name="XUIMenuButtonGroup">	
+		<attr name="groupName" format="string"/>		
+	</declare-styleable>
+	<declare-styleable name="PullToRefreshListView">	
+		<attr name="textColor" format="color"/>
+		<attr name="subTextColor" format="color"/>
+		<attr name="headerBackgroundColor" format="color"/>		
+	</declare-styleable>	
+</resources>

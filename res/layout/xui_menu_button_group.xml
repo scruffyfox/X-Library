@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginTop="10dp"
+>
+	<TextView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:id="@+id/group_label"
+		android:text="Group Name"
+		android:textSize="17dp"
+		android:textColor="#3e3e3e"
+		android:textStyle="bold"		
+		android:layout_marginLeft="6dp"
+		android:layout_marginBottom="3dp"
+	/>		 
+	
+	<LinearLayout 
+		android:id="@+id/items"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:background="@drawable/button_group_all_faux"
+		android:padding="1px"		
+	/>		
+</LinearLayout>
+ 
