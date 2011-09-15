@@ -41,6 +41,20 @@ public class XUITitleButton extends ImageButton
 	/**
 	 * Default Constructor
 	 * @param context The application's context
+	 * @param imageId The image resource of the button
+	 * @param l Set the onclick listener for the button
+	 */
+	public XUITitleButton(Context context, int imageId, OnClickListener l)
+	{
+		super(context);
+	
+		setOnClickListener(l);
+		setImage(imageId);		
+	}
+	
+	/**
+	 * Default Constructor
+	 * @param context The application's context
 	 * @param attrs The attribute set passed via the SAX parser
 	 */
 	public XUITitleButton(Context context, AttributeSet attrs)
