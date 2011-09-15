@@ -5,6 +5,8 @@
 **/
 package x.ui;
 
+import java.io.Serializable;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
@@ -13,7 +15,7 @@ import android.widget.LinearLayout;
 /**
  * @brief The title button to be used with XUITitleButtonHost
  */
-public class XUITitleButton extends ImageButton
+public class XUITitleButton extends ImageButton implements Serializable
 {
 	private int mImageId;
 	
