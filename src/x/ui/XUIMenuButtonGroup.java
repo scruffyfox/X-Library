@@ -111,11 +111,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * Adds a new button to the group
 	 * @param child The new button to add
 	 */
-	@Override	
-	public void addView(View child)
-	{
-		if (!(child instanceof XUIMenuButton)) return;
-		
+	public void addMenuButton(XUIMenuButton child)
+	{		
 		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child);		
 		updateLayout();
 	}
@@ -124,11 +121,10 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * Adds a new button to the group
 	 * @param child The new button to add
 	 */
-	public void addView(View... child)
+	public void addMenuButton(XUIMenuButton... child)
 	{
 		for (XUIMenuButton b : (XUIMenuButton[])child)
 		{
-			if (!(b instanceof XUIMenuButton)) continue;
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(b);
 		}
 		
@@ -140,11 +136,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * @param child The new button to add
 	 * @param index The index to put the new button
 	 */
-	@Override
-	public void addView(View child, int index)
+	public void addMenuButton(XUIMenuButton child, int index)
 	{
-		if (!(child instanceof XUIMenuButton)) return;
-
 		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child, index);
 		updateLayout();
 	}
@@ -154,11 +147,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * @param child The new button to add
 	 * @param params The params for the new view
 	 */
-	@Override
-	public void addView(View child, android.view.ViewGroup.LayoutParams params)
+	public void addMenuButton(XUIMenuButton child, android.view.ViewGroup.LayoutParams params)
 	{
-		if (!(child instanceof XUIMenuButton)) return;
-
 		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child, params);
 		updateLayout();
 	}
@@ -167,11 +157,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * Removes a view from the group
 	 * @param view The view to remove
 	 */
-	@Override
-	public void removeView(View view)
+	public void removeMenuButton(XUIMenuButton view)
 	{	
-		if (!(view instanceof XUIMenuButton)) return;
-
 		((LinearLayout)layoutView.findViewById(R.id.items)).removeView(view);
 		updateLayout();
 	}
@@ -180,8 +167,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * Removes a view from the group
 	 * @param view The index of where to remove the view
 	 */
-	@Override
-	public void removeViewAt(int index)
+	public void removeMenuButtonAt(int index)
 	{		
 		((LinearLayout)layoutView.findViewById(R.id.items)).removeViewAt(index);
 		updateLayout();
@@ -190,8 +176,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	/**
 	 * Removes all views from the group
 	 */
-	@Override
-	public void removeAllViews()
+	public void removeAllMenuButtons()
 	{
 		((LinearLayout)layoutView.findViewById(R.id.items)).removeAllViews();
 		updateLayout();
