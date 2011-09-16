@@ -108,7 +108,76 @@ public class XUIMenuButtonGroup extends LinearLayout
 	private void init()
 	{
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}	
+	}
+
+	/**
+	 * Adds a new button to the group
+	 * @param button The new button to add
+	 */
+	public void addMenuButton(XUIMenuButton... button)
+	{
+		for (XUIMenuButton b : button)
+		{
+			this.addView(b);
+		}
+		
+		updateLayout();
+	}
+	
+	/**
+	 * Adds a new button to the group
+	 * @param button The new button to add
+	 */
+	public void addMenuButton(XUIMenuButton button)
+	{
+		//	Find out how many buttons we have
+		//	Set the background resource of this button to bottom because it will be added at the bottom
+		//	Update the children backgrounds		
+		this.addView(button);				
+		
+		updateLayout();
+	}
+	
+	/**
+	 * Adds a new button to the group at the specified index
+	 * @param button The new button to add
+	 * @param index The index to put the new button
+	 */
+	public void addMenuButton(XUIMenuButton button, int index)
+	{
+		this.addView(button, index);
+		updateLayout();
+	}
+	
+	private void updateLayout()
+	{
+		childCount = getChildCount();
+		
+		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
+		{
+			View childView = getChildAt(viewIndex);
+			
+			if (childCount == 1)
+			{
+				childView.setBackgroundResource(R.drawable.button_group_all);
+			}		
+			else
+			{
+				if (viewIndex == 0)
+				{
+					childView.setBackgroundResource(R.drawable.button_group_top);
+				}
+				else if (viewIndex == childCount - 1)
+				{
+					childView.setBackgroundResource(R.drawable.button_group_bottom);
+				}
+				else
+				{
+					childView.setBackgroundResource(R.drawable.button_group_middle);
+				}
+			}						
+		}
+	}
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
