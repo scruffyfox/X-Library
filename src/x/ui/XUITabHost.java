@@ -147,69 +147,6 @@ public class XUITabHost extends RelativeLayout
 	}
 	
 	/**
-	 * Adds a view 
-	 * @param child The child to add
-	 */
-	@Override
-	public void addView(View child)
-	{
-		return;
-	}
-	
-	/**
-	 * Adds a view 
-	 * @param child The child to add
-	 * @param index The index to put the new child at
-	 * @param params The layout params for the new view
-	 */
-	@Override
-	public void addView(View child, int index, android.view.ViewGroup.LayoutParams params)
-	{
-		return;
-	}
-	
-	/**
-	 * Adds a view 
-	 * @param child The child to add
-	 * @param width The width for the new child
-	 * @param height The height for the new child
-	 */
-	@Override
-	public void addView(View child, int width, int height)
-	{
-		return;
-	}
-	
-	/**
-	 * Removes all the views in the host
-	 */
-	@Override
-	public void removeAllViews()
-	{
-		return;
-	}
-	
-	/**
-	 * Removes a view
-	 * @param view The view to remove
-	 */
-	@Override
-	public void removeView(View view)
-	{
-		return;
-	}
-	
-	/**
-	 * Removes a view at the specified index
-	 * @param index The index of t he view to remove
-	 */
-	@Override
-	public void removeViewAt(int index)
-	{
-		return;
-	}
-	
-	/**
 	 * Adds a tab to the host
 	 * @param tab The new tab to add
 	 */
