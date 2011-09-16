@@ -65,7 +65,10 @@ public class XUIMenuButton extends LinearLayout
 		super(context);		
 		
 		this.mContext = context;
-		init();
+
+		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
+		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, this);
+		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);	
 	}
 	
 	/**
@@ -78,7 +81,10 @@ public class XUIMenuButton extends LinearLayout
 		super(context, attrs);
 				
 		this.mContext = context; 
-		init();
+
+		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
+		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
+		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
 	}	 
 	
 	/**
@@ -94,7 +100,7 @@ public class XUIMenuButton extends LinearLayout
 			TextView t = new TextView(mContext);
 			t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 			t.setTextColor(0xff352B21);		
-			t.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));
+			t.setText(Html.fromHtml("<b>" + text + "</b>"));
 			
 			((LinearLayout)mLayout.findViewById(R.id.label)).addView(t);
 		}
@@ -114,19 +120,20 @@ public class XUIMenuButton extends LinearLayout
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(v);
 	}
-	
-	private void init()
-	{
-		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
-		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
-	}
-	 
+
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{	
 		super.onLayout(changed, l, t, r, b);
 		
-		mChildCount = getChildCount();		
+		mChildCount = getChildCount();	
+		
+		if (changed)
+		{
+			Debug.out(getChildCount());
+		}
+		
+		Debug.out("first");
 	}
 
 	@Override
@@ -138,8 +145,6 @@ public class XUIMenuButton extends LinearLayout
 		mContentView = (View)getChildAt(1);
 			
 		this.removeAllViews();				
-				
-		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
 		
 		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 		mLabel.setTextColor(0xff352B21);		

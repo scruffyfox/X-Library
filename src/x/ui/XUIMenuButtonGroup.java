@@ -86,7 +86,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 		super(context);
 		mContext = context;
 		
-		init();
+		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, this);		
 	}
 	
 	/**
@@ -102,60 +103,107 @@ public class XUIMenuButtonGroup extends LinearLayout
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup);		
 		groupName = attributes.getString(R.styleable.XUIMenuButtonGroup_groupName);
 		
-		init();
+		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);				
 	}
 	
-	private void init()
+	/**
+	 * Adds a new button to the group
+	 * @param child The new button to add
+	 */
+	@Override	
+	public void addView(View child)
 	{
-		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		if (!(child instanceof XUIMenuButton)) return;
+		
+		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child);		
+		updateLayout();
 	}
 
 	/**
 	 * Adds a new button to the group
-	 * @param button The new button to add
+	 * @param child The new button to add
 	 */
-	public void addMenuButton(XUIMenuButton... button)
+	public void addView(View... child)
 	{
-		for (XUIMenuButton b : button)
+		for (XUIMenuButton b : (XUIMenuButton[])child)
 		{
-			this.addView(b);
+			if (!(b instanceof XUIMenuButton)) continue;
+			((LinearLayout)layoutView.findViewById(R.id.items)).addView(b);
 		}
 		
 		updateLayout();
 	}
 	
 	/**
-	 * Adds a new button to the group
-	 * @param button The new button to add
+	 * Adds a new button to the group at the specified index
+	 * @param child The new button to add
+	 * @param index The index to put the new button
 	 */
-	public void addMenuButton(XUIMenuButton button)
+	@Override
+	public void addView(View child, int index)
 	{
-		//	Find out how many buttons we have
-		//	Set the background resource of this button to bottom because it will be added at the bottom
-		//	Update the children backgrounds		
-		this.addView(button);				
-		
+		if (!(child instanceof XUIMenuButton)) return;
+
+		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child, index);
 		updateLayout();
 	}
 	
 	/**
 	 * Adds a new button to the group at the specified index
-	 * @param button The new button to add
-	 * @param index The index to put the new button
+	 * @param child The new button to add
+	 * @param params The params for the new view
 	 */
-	public void addMenuButton(XUIMenuButton button, int index)
+	@Override
+	public void addView(View child, android.view.ViewGroup.LayoutParams params)
 	{
-		this.addView(button, index);
+		if (!(child instanceof XUIMenuButton)) return;
+
+		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child, params);
+		updateLayout();
+	}
+	
+	/**
+	 * Removes a view from the group
+	 * @param view The view to remove
+	 */
+	@Override
+	public void removeView(View view)
+	{	
+		if (!(view instanceof XUIMenuButton)) return;
+
+		((LinearLayout)layoutView.findViewById(R.id.items)).removeView(view);
+		updateLayout();
+	}
+
+	/**
+	 * Removes a view from the group
+	 * @param view The index of where to remove the view
+	 */
+	@Override
+	public void removeViewAt(int index)
+	{		
+		((LinearLayout)layoutView.findViewById(R.id.items)).removeViewAt(index);
+		updateLayout();
+	}
+	
+	/**
+	 * Removes all views from the group
+	 */
+	@Override
+	public void removeAllViews()
+	{
+		((LinearLayout)layoutView.findViewById(R.id.items)).removeAllViews();
 		updateLayout();
 	}
 	
 	private void updateLayout()
 	{
-		childCount = getChildCount();
+		childCount = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount();
 		
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{
-			View childView = getChildAt(viewIndex);
+			View childView = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildAt(viewIndex);
 			
 			if (childCount == 1)
 			{
@@ -192,9 +240,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 						 
 		int childCount = getChildCount();
 		XUIMenuButton[] views = new XUIMenuButton[childCount];
-		
-		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);		
-		
+				
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{			
 			views[viewIndex] = (XUIMenuButton)getChildAt(viewIndex);					

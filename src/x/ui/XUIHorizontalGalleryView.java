@@ -97,18 +97,57 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Adds an image to the scroller
 	 * @param image The imageview to add
 	 */
-	public void addImage(ImageView image)
+	@Override
+	public void addView(View child)
 	{
-		((ViewGroup)this.getChildAt(0)).addView(image);		
+		if (!(child instanceof ImageView)) return;
+		
+		((ViewGroup)this.getChildAt(0)).addView(child);
+	}
+	
+	/**
+	 * Adds an image to the scroller
+	 * @param image The imageview to add
+	 * @param index The index to add the view at
+	 */
+	@Override
+	public void addView(View child, int index)
+	{
+		if (!(child instanceof ImageView)) return;
+		
+		((ViewGroup)this.getChildAt(0)).addView(child, index);
+	}
+	
+	/**
+	 * Adds an image to the scroller
+	 * @param image The imageview to add
+	 * @param params The params for the new view
+	 */
+	@Override
+	public void addView(View child, android.view.ViewGroup.LayoutParams params)
+	{
+		if (!(child instanceof ImageView)) return;
+		
+		((ViewGroup)this.getChildAt(0)).addView(child, params);
 	}
 	
 	/**
 	 * Removes an image at an index
 	 * @param index The index of the image to remove
 	 */
-	public void removeImageAt(int index)
+	@Override
+	public void removeViewAt(int index)
 	{
 		((ViewGroup)this.getChildAt(0)).removeViewAt(index);
+	}
+	
+	/**
+	 * Removes all the views
+	 */
+	@Override
+	public void removeAllViews()
+	{
+		((ViewGroup)this.getChildAt(0)).removeAllViews();
 	}
 	
 	int prevX = 0;
