@@ -81,6 +81,40 @@ public class XUIMenuButton extends LinearLayout
 		init();
 	}	 
 	
+	/**
+	 * Sets the label text
+	 * @param text The new text for the label
+	 */
+	public void setLabel(String text)
+	{
+		int childCount = ((LinearLayout)mLayout.findViewById(R.id.label)).getChildCount();
+		
+		if (childCount < 1)
+		{
+			TextView t = new TextView(mContext);
+			t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+			t.setTextColor(0xff352B21);		
+			t.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));
+			
+			((LinearLayout)mLayout.findViewById(R.id.label)).addView(t);
+		}
+		else
+		{
+			TextView t = (TextView)((LinearLayout)mLayout.findViewById(R.id.label)).getChildAt(0);
+			t.setText(text);
+		}
+	}
+	
+	/**
+	 * Sets the input view
+	 * @param v The new input view
+	 */
+	public void setInput(View v)
+	{
+		((LinearLayout)mLayout.findViewById(R.id.input_container)).removeAllViews();
+		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(v);
+	}
+	
 	private void init()
 	{
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
