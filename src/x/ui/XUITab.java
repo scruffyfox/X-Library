@@ -50,7 +50,7 @@ public class XUITab extends RelativeLayout
 	private ImageView imageIcon;
 	private TextView tabText;
 	private XUITabParams params;
-	private View tabView = null;
+	private ViewGroup tabView = null;
 	private OnPostLayoutListener mOnPostLayout = null;
 	
 	/**
@@ -146,14 +146,14 @@ public class XUITab extends RelativeLayout
 		}
 		
 		Activity a = (Activity)context;				
-		LinearLayout targetContainer = (LinearLayout)a.findViewById(targetView);
+		ViewGroup targetContainer = (ViewGroup)a.findViewById(targetView);
         Intent mIntent = this.params.intent;	       
                
         final Window w = activityManager.startActivity("tag", mIntent);
         final View wd = w != null ? w.getDecorView() : null;	
         
         targetContainer.removeAllViews();
-        View mLaunchedView = wd;
+        View mLaunchedView = wd; 
 
         if (mLaunchedView != null) 
         {
@@ -205,7 +205,7 @@ public class XUITab extends RelativeLayout
 	private void init()
 	{			
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		tabView = inflater.inflate(R.layout.xuitab, this);
+		tabView = (ViewGroup)inflater.inflate(R.layout.xuitab, this);
 				
 		imageIcon = (ImageView)tabView.findViewById(R.id.tabIcon);
 		tabText = (TextView)tabView.findViewById(R.id.tabText);		
@@ -217,7 +217,7 @@ public class XUITab extends RelativeLayout
 	{			
 		tabText.setText(this.params.tabText.selected);
 		
-		RelativeLayout.LayoutParams lp = new LayoutParams(this.params.layoutParams.width, this.params.layoutParams.height);
+		LayoutParams lp = new LayoutParams(this.params.layoutParams.width, this.params.layoutParams.height);
 		lp.leftMargin = this.params.layoutParams.leftMargin;
 		lp.topMargin = this.params.layoutParams.topMargin;
 		lp.rightMargin = this.params.layoutParams.rightMargin;
@@ -235,12 +235,12 @@ public class XUITab extends RelativeLayout
 		{
 			this.select();
 		}
-		else
+		else 
 		{
 			this.deselect();
 		}
 	}
-	
+	 
 	/**
 	 * Gets the intent set to the tab
 	 * @return The intent associated with the tab
