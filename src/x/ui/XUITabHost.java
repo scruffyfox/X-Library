@@ -52,7 +52,7 @@ import android.widget.RelativeLayout;
  *	
  *  XUITab tab = new XUITab(this);
  *  tabHost.addTab(tab, tabParams);        	   
- *  tabHost.select(0);
+ *  tabHost.selectTab(0);
  *  @endcode
  */
 public class XUITabHost extends RelativeLayout
