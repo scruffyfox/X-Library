@@ -21,6 +21,8 @@ public class StringUtils
 	 */
 	public static String capitalize(String input)
 	{
+		if (input.length() < 2) return "";
+		
 		String[] words = input.split(" ");
 		int length = words.length;
 		
@@ -45,7 +47,7 @@ public class StringUtils
 		
 		for (int arrIndex = 0; arrIndex < arrCount; arrIndex++)
 		{						
-			if (arr[arrIndex] != null && !(arr[arrIndex].toString()).trim().equals(""))
+			if (arr[arrIndex] != null && !(arr[arrIndex].toString()).trim().equals("")) 
 			{
 				retString += (arr[arrIndex].toString()).trim();
 				retString += glue;
