@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="46dp"
+>
+    <TextView
+    	android:id="@+id/titlebar_label"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:text=""	
+    	android:textSize="@dimen/titlebar_title_size"
+    	android:gravity="center_vertical"
+    	android:layout_marginLeft="10dp"
+    	style="@style/titlebar_label"
+    />
+    
+    <x.ui.XUITitleButtonHost
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="right"
+    	android:id="@+id/titlebar_buttons"
+    />
+</RelativeLayout>

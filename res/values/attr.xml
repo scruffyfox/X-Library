@@ -11,8 +11,7 @@
 		<attr name="subTextColor" format="color"/>
 		<attr name="headerBackgroundColor" format="color"/>		
 	</declare-styleable>	
-	<declare-styleable name="XUITileView">
-		<attr name="spacing" format="dimension" />		
-		<attr name="maxColumns" format="integer" />
+	<declare-styleable name="XUITitleBar">
+		<attr name="title" format="string" />				
 	</declare-styleable>
 </resources>

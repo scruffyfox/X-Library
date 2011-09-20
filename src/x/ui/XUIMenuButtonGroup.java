@@ -106,7 +106,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);				
 	}
-	
+	 
 	/**
 	 * Adds a new button to the group
 	 * @param child The new button to add

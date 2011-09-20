@@ -42,16 +42,6 @@ public class XUITitleButtonHost extends LinearLayout
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context The application's context
-	 * @param attrs The attribute set passed via the SAX parser
-	 */
-	public XUITitleButtonHost(Context context, AttributeSet attrs)
-	{
-		super(context, attrs);
-	}
-	
-	/**
 	 * Adds a button to the container
 	 * @param button The button to add
 	 */
@@ -109,6 +99,16 @@ public class XUITitleButtonHost extends LinearLayout
 	{
 		this.removeView(button);
 	}
+	
+	/**
+	 * Default Constructor
+	 * @param context The application's context
+	 * @param attrs The attribute set passed via the SAX parser
+	 */
+	public XUITitleButtonHost(Context context, AttributeSet attrs)
+	{
+		super(context, attrs);
+	}	
 	
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
