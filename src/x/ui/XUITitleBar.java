@@ -32,6 +32,10 @@ public class XUITitleBar extends RelativeLayout
 	private TextView mLabel;
 	private XUITitleButtonHost mButtonHost;
 	
+	/**
+	 * Default Constructor
+	 * @param context
+	 */
 	public XUITitleBar(Context context)
 	{
 		super(context);
@@ -41,6 +45,11 @@ public class XUITitleBar extends RelativeLayout
 		init();
 	}
 	
+	/**
+	 * Default Constructor
+	 * @param context
+	 * @param attrs
+	 */
 	public XUITitleBar(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);	 
@@ -58,18 +67,24 @@ public class XUITitleBar extends RelativeLayout
 		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.titlebar, this);
 		mLabel = (TextView)findViewById(R.id.titlebar_label);
 		mButtonHost = ((XUITitleButtonHost)findViewById(R.id.titlebar_buttons));
-		
-		setLayoutParams(new LayoutParams(199, 100)); 
-				
+						
 		setTitleText(mTitleText);
 	}
 	
+	/**
+	 * Set the title bar text label
+	 * @param text The new text for the titlebar
+	 */
 	public void setTitleText(String text)
 	{
 		mTitleText = text;
 		mLabel.setText(mTitleText); 
 	} 
 	
+	/**
+	 * Sets the titlebar button host
+	 * @param buttonHost The new button host
+	 */
 	public void setTitleButtons(XUITitleButtonHost buttonHost)
 	{
 		removeView(mButtonHost);
@@ -78,26 +93,46 @@ public class XUITitleBar extends RelativeLayout
 		addView(mButtonHost);		
 	}
 
+	/**
+	 * Adds a button to the button host
+	 * @param button The button to add
+	 */
 	public void addButton(XUITitleButton button)
 	{
 		mButtonHost.addButton(button);
 	}
 
+	/**
+	 * Adds buttons to the button host
+	 * @param button The buttons to add
+	 */
 	public void addButtons(XUITitleButton... button)
 	{
 		mButtonHost.addButtons(button);
 	}
 
+	/**
+	 * Removes a button from a specific index
+	 * @param index The index of the button to remove
+	 */
 	public void removeButton(int index)
 	{
 		mButtonHost.removeButton(index);
 	}
 
+	/**
+	 * Remove a button from the view
+	 * @param button The button to remove
+	 */
 	public void removeButton(XUITitleButton button)
 	{
 		mButtonHost.removeButton(button);
 	}
 
+	/**
+	 * Sets the buttons in the view
+	 * @param button The buttons to set
+	 */
 	public void setButtons(XUITitleButton... button)
 	{
 		mButtonHost.setButtons(button);
