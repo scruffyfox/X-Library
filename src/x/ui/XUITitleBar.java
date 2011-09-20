@@ -1,9 +1,11 @@
 package x.ui;
 
+import x.lib.Debug;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View.MeasureSpec;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,27 +46,29 @@ public class XUITitleBar extends RelativeLayout
 		super(context, attrs);	 
 		mContext = context;
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-		TypedArray a = mContext.obtainStyledAttributes(R.styleable.XUITitleBar);
+		 
+		TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.XUITitleBar);
 		mTitleText = a.getString(R.styleable.XUITitleBar_title);
 		
 		init();
 	}
 
 	private void init()
-	{
-		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.titlebar, this, true);
-		mLabel = (TextView)mLayout.findViewById(R.id.label);
+	{ 
+		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.titlebar, this);
+		mLabel = (TextView)findViewById(R.id.titlebar_label);
 		mButtonHost = ((XUITitleButtonHost)findViewById(R.id.titlebar_buttons));
 		
+		setLayoutParams(new LayoutParams(199, 100)); 
+				
 		setTitleText(mTitleText);
 	}
 	
 	public void setTitleText(String text)
 	{
 		mTitleText = text;
-		mLabel.setText(mTitleText);
-	}
+		mLabel.setText(mTitleText); 
+	} 
 	
 	public void setTitleButtons(XUITitleButtonHost buttonHost)
 	{
@@ -98,4 +102,16 @@ public class XUITitleBar extends RelativeLayout
 	{
 		mButtonHost.setButtons(button);
 	}		
+	
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	{
+		super.onLayout(changed, l, t, r, b);		
+	}
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+	{						
+		super.onMeasure(MeasureSpec.makeMeasureSpec(widthMeasureSpec, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec((int)mContext.getResources().getDimension(R.dimen.titlebar_size), MeasureSpec.EXACTLY));
+	}
 }
