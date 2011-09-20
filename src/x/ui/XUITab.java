@@ -140,7 +140,7 @@ public class XUITab extends RelativeLayout
 		
 		if (targetView < 1)
 		{
-			Log.e("XUITab", "No Target view");
+			Log.e("XUITab", "No Target view"); 
 			select();
 			return;
 		}
