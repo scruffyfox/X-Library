@@ -548,15 +548,7 @@ public class AsyncHttpClient
 						    	conn.setRequestProperty(mHeaders.get(headerIndex)[0], mHeaders.get(headerIndex)[1]);
 						    }
 						}
-						
-						for (int i = 0;; i++)
-					    {
-					    	if (conn.getHeaderFieldKey(i) == null && conn.getHeaderField(i) == null)
-					    	{
-					    		break;
-					    	}				    					    
-					    }
-						
+												
 					    responseCode = conn.getResponseCode();
 					    responseMessage = conn.getResponseMessage();
 					  
@@ -633,15 +625,7 @@ public class AsyncHttpClient
 					    wr.write(mSendData.toString());
 					    wr.flush();
 					    wr.close();
-					    
-					    for (int i = 0;; i++)
-					    {
-					    	if (conn.getHeaderFieldKey(i) == null && conn.getHeaderField(i) == null)
-					    	{
-					    		break;
-					    	}				    
-					    }
-					    
+					    					   
 					   	responseCode = conn.getResponseCode();
 					    responseMessage = conn.getResponseMessage();				    				   
 					    				    
@@ -691,6 +675,9 @@ public class AsyncHttpClient
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
 						                    
+						responseCode = conn.getResponseCode();
+					    responseMessage = conn.getResponseMessage();				
+						
 	                    BitmapFactory.Options opts = new BitmapFactory.Options();                
 	        			
 	        			PatchInputStream stream = new PatchInputStream(conn.getInputStream());
@@ -751,7 +738,7 @@ public class AsyncHttpClient
 	 */
 	abstract class AsyncHttpResponse
 	{
-		private Bundle mExtras;
+		private Bundle mExtras = null;
 		
 		public AsyncHttpResponse(){}
 		
