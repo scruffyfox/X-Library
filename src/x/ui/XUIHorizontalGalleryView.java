@@ -54,6 +54,8 @@ import android.widget.ImageView;
  *	  galleryView.addImage(image);		
  *  }
  *  @endcode
+ *  
+ *  @TODO Add remove all images and remove image (view) support
  */
 public class XUIHorizontalGalleryView extends HorizontalScrollView
 {
@@ -97,8 +99,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Adds an image to the scroller
 	 * @param image The imageview to add
 	 */
-	@Override
-	public void addView(View child)
+	public void addImage(View child)
 	{
 		if (!(child instanceof ImageView)) return;
 		
@@ -110,8 +111,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * @param image The imageview to add
 	 * @param index The index to add the view at
 	 */
-	@Override
-	public void addView(View child, int index)
+	public void addImage(View child, int index)
 	{
 		if (!(child instanceof ImageView)) return;
 		
@@ -123,20 +123,28 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * @param image The imageview to add
 	 * @param params The params for the new view
 	 */
-	@Override
-	public void addView(View child, android.view.ViewGroup.LayoutParams params)
+	public void addImage(View child, android.view.ViewGroup.LayoutParams params)
 	{
 		if (!(child instanceof ImageView)) return;
 		
 		((ViewGroup)this.getChildAt(0)).addView(child, params);
 	}
 	
+
+	/**
+	 * Removes an image at an index
+	 * @param view The view of the image to remove
+	 */
+	public void removeImage(View view)
+	{
+		((ViewGroup)this.getChildAt(0)).removeView(view);
+	}
+	
 	/**
 	 * Removes an image at an index
 	 * @param index The index of the image to remove
 	 */
-	@Override
-	public void removeViewAt(int index)
+	public void removeImageAt(int index)
 	{
 		((ViewGroup)this.getChildAt(0)).removeViewAt(index);
 	}
@@ -144,8 +152,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	/**
 	 * Removes all the views
 	 */
-	@Override
-	public void removeAllViews()
+	public void removeAllImages()
 	{
 		((ViewGroup)this.getChildAt(0)).removeAllViews();
 	}
