@@ -8,7 +8,7 @@ package x.lib;
 /**
  * @brief The class that gives more manipulation options for integer
  */
-class IntegerUtils
+public class IntegerUtils
 {
 	/**
 	 * Parses an string to integer by removing any non-integer character
