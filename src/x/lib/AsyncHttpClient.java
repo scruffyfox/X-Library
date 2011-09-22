@@ -373,6 +373,7 @@ public class AsyncHttpClient
 		private HttpParams mHttpParams;
 		private int responseCode = 0;
 		private String responseMessage;
+		public ConnectionInfo mConnectionInfo = new ConnectionInfo();
 		
 		/**
 		 * Default Constructor
@@ -508,6 +509,14 @@ public class AsyncHttpClient
 		{				
 			mLoadTime = System.currentTimeMillis();
 			
+			mConnectionInfo.connectionHeaders = mHttpParams;
+			mConnectionInfo.connectionResponseTime = mLoadTime;
+			mConnectionInfo.connectionUrl = url[0];
+			if (mAsyncHttpResponse != null)
+			{	
+				mAsyncHttpResponse.setConnectionInfo(mConnectionInfo);
+			}
+			
 			switch (type)
 			{
 				case DELETE:
@@ -551,6 +560,9 @@ public class AsyncHttpClient
 												
 					    responseCode = conn.getResponseCode();
 					    responseMessage = conn.getResponseMessage();
+					    
+					    mConnectionInfo.connectionResponseCode = responseCode;
+					    mConnectionInfo.connectionResponseMessage = responseMessage;
 					  
 					    // Get the response				    
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
@@ -577,10 +589,12 @@ public class AsyncHttpClient
 					} 
 					catch (EOFException e)
 					{
+						e.printStackTrace();
 						return "";
 					}
 					catch (Exception e)
 					{
+						e.printStackTrace();
 						return null;
 					}
 				}
@@ -627,7 +641,10 @@ public class AsyncHttpClient
 					    wr.close();
 					    					   
 					   	responseCode = conn.getResponseCode();
-					    responseMessage = conn.getResponseMessage();				    				   
+					    responseMessage = conn.getResponseMessage();		
+					    
+					    mConnectionInfo.connectionResponseCode = responseCode;
+					    mConnectionInfo.connectionResponseMessage = responseMessage;
 					    				    
 					    // Get the response				    
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
@@ -676,7 +693,10 @@ public class AsyncHttpClient
 						conn.setRequestProperty("Connection", "close");
 						                    
 						responseCode = conn.getResponseCode();
-					    responseMessage = conn.getResponseMessage();				
+					    responseMessage = conn.getResponseMessage();			
+					    
+					    mConnectionInfo.connectionResponseCode = responseCode;
+					    mConnectionInfo.connectionResponseMessage = responseMessage;
 						
 	                    BitmapFactory.Options opts = new BitmapFactory.Options();                
 	        			
@@ -709,7 +729,7 @@ public class AsyncHttpClient
 			mTimeoutHandler.removeCallbacks(timeoutRunnable);
 			
 			if (mAsyncHttpResponse != null)
-			{
+			{				
 				mAsyncHttpResponse.beforeFinish();
 			
 				if (result != null || (responseCode >= 200 && responseCode < 300))
@@ -731,6 +751,28 @@ public class AsyncHttpClient
 				mAsyncHttpResponse.onFinish();
 			}
 		}				
+	}
+	
+	/**
+	 * Gives details on the connection made to a server
+	 */
+	class ConnectionInfo 
+	{
+		public String connectionUrl = "";
+		public HttpParams connectionHeaders = null;
+		public long connectionInitiationTime = 0;
+		public long connectionResponseTime = 0;
+		public int connectionResponseCode = 0;
+		public String connectionResponseMessage = "";
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString()
+		{
+			return "ConnectionInfo \n[\n\tconnectionHeaders=" + connectionHeaders + ", \n\tconnectionInitiationTime=" + connectionInitiationTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + ", \n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionUrl=" + connectionUrl + "\n]";
+		}
 	}
 }
 
