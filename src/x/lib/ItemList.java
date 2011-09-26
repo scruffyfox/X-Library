@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @brief Extends arraylist to allow adding multiple items inline
  * @param <E>
  */
-class ItemList<E> extends ArrayList
+public class ItemList<E> extends ArrayList
 {
 	/**
 	 * Default Constructor
@@ -42,5 +42,14 @@ class ItemList<E> extends ArrayList
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Gets an object at the specified index
+	 * @return the object pre-casted to the pseudo-type
+	 */
+	public E get(int index)
+	{	
+		return (E)super.get(index);
 	}
 }
