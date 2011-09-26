@@ -28,4 +28,31 @@ public class IntegerUtils
 			return 0;
 		}				
 	}
+	
+	/**
+	 * Adds commas to an integer
+	 * @param value The integer value
+	 * @return Comma formatted string value of the integer (I.E. 1000 becomes 1,000)
+	 */
+	public static String addCommas(int value)
+	{
+		String finalString = "";
+		String intStr = "" + value;
+		
+		int strCount = intStr.length();
+		for (int index = strCount - 1, pointerCount = 0; index >= 0; index--, pointerCount++)
+		{
+			if (pointerCount > 0)
+			{
+				if (pointerCount % 3 == 0)
+				{
+					finalString = "," + finalString;
+				}
+			}
+			
+			finalString = intStr.charAt(index) + finalString;
+		}
+		
+		return finalString;
+	}
 }
