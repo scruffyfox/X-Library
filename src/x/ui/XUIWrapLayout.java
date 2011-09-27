@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 
 public class XUIWrapLayout extends LinearLayout
 {
@@ -26,51 +27,24 @@ public class XUIWrapLayout extends LinearLayout
 	
 	@Override
 	protected void onFinishInflate()
-	{
+	{ 
 		super.onFinishInflate();
-		
-		int childCount = getChildCount();
-		views = new View[childCount];
-		
-		for (int index = 0; index < childCount; index++)
-		{
-			views[index] = getChildAt(index);
-		}
-		
-		this.removeAllViews();
 	}
 	
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{
-		super.onLayout(changed, l, t, r, b);
+		super.onLayout(changed, l, t, r, b);		
 		
-		int maxWidth = this.getWidth();
-		int currentWidth = 0;		
-		int childCount = getChildCount();
-		
-		for (int index = 0, currentRowIndex = 0; index < childCount; index++)
+		int left = 0;
+		for (int i = 0; i < getChildCount(); i++) 
 		{
-			if (currentWidth + views[index].getMeasuredWidth() > maxWidth)
-			{
-				currentRowIndex++;
-				currentWidth = 0;
-			}
-			
-			if (currentWidth <= 0)
-			{
-				LinearLayout row = new LinearLayout(mContext);
-				row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				
-				this.addView(row);
-			}
-			
-			LinearLayout row = (LinearLayout)getChildAt(currentRowIndex);			
-			row.addView(views[index]);			
+			getChildAt(i).layout(left * i, t, getChildAt(i).getWidth(), getChildAt(i).getHeight());
+			left += getChildAt(i).getWidth();
 		}
 	}
-	
-	@Override
+	 
+	@Override 
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);

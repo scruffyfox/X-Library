@@ -12,7 +12,7 @@ import android.widget.Checkable;
  */
 public class XUICheckBox extends ImageView implements Checkable
 {
-	private boolean mIsChecked = false;
+	private boolean mIsChecked;
 	private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};	
 	private OnCheckedChangeListener mOnCheckedChangeListener;
 	
@@ -33,7 +33,8 @@ public class XUICheckBox extends ImageView implements Checkable
 			}
 		});		
 		 
-		setBackgroundResource(R.drawable.xui_checkbox_drawable);
+		//setBackgroundResource(R.drawable.xui_checkbox_drawable);
+		refreshDrawableState();
 	}
 	
 	public void toggle()
@@ -48,7 +49,7 @@ public class XUICheckBox extends ImageView implements Checkable
 			mIsChecked = isChecked; 
 			
 			refreshDrawableState();
-			
+			 
 			if (mOnCheckedChangeListener != null)
 			{				
 				mOnCheckedChangeListener.onCheckChanged(this, mIsChecked);
@@ -89,6 +90,8 @@ public class XUICheckBox extends ImageView implements Checkable
 	protected void onFinishInflate()
 	{	
 		super.onFinishInflate();
+		
+		setChecked(false);
 	}
 	
 	public interface OnCheckedChangeListener

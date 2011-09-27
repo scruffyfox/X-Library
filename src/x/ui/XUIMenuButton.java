@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -28,7 +29,7 @@ import android.widget.TextView;
  * Example XML Code (Note to make a button clickable, you must declare it clickable by using android:clickable="true")
  * @code
  * <x.ui.XUIMenuButton
- *		android:layout_width="fill_parent"
+ *		android:layout_width="fill_parent" 
  *		android:layout_height="wrap_content"
  *		android:id="@+id/town"
  *		android:onClick="townClick"  
@@ -96,7 +97,11 @@ public class XUIMenuButton extends LinearLayout
 				
 				if (input instanceof EditText)
 				{
-					((EditText)input).requestFocusFromTouch();
+					EditText t = ((EditText)input);
+					t.requestFocus();
+					t.requestFocusFromTouch();
+					InputMethodManager m = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);						        
+			       	m.showSoftInput(t, 0);		 
 				}
 				else if (input instanceof CheckBox)
 				{
@@ -105,7 +110,7 @@ public class XUIMenuButton extends LinearLayout
 				else if (input instanceof XUICheckBox)
 				{
 					((XUICheckBox)input).toggle();	
-				}
+				} 				
 			}
 		});
 	}	 
