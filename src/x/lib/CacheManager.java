@@ -263,9 +263,9 @@ public class CacheManager implements Serializable
 	 * @param fileContents The contents for the file
 	 * @return true
 	 */
-	public boolean addFile(String fileName, Object fileContents)
+	public boolean addFile(String fileName, Serializable fileContents)
 	{
-		final Object fFileContents = fileContents;
+		final Serializable fFileContents = fileContents;
 		final String fFileName = fileName;
 		
 		Thread r = new Thread()

@@ -42,7 +42,7 @@ public class ItemList<E> extends ArrayList
 		}
 		
 		return true;
-	}
+	}	
 	
 	/**
 	 * Gets an object at the specified index

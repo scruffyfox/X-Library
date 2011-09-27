@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -85,6 +87,27 @@ public class XUIMenuButton extends LinearLayout
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
+		
+		this.setOnClickListener(new OnClickListener()
+		{			
+			public void onClick(View v)
+			{
+				View input = ((LinearLayout)mLayout.findViewById(R.id.input_container)).getChildAt(0);
+				
+				if (input instanceof EditText)
+				{
+					((EditText)input).requestFocusFromTouch();
+				}
+				else if (input instanceof CheckBox)
+				{
+					((CheckBox)input).toggle();
+				}
+				else if (input instanceof XUICheckBox)
+				{
+					((XUICheckBox)input).toggle();	
+				}
+			}
+		});
 	}	 
 	
 	/**
@@ -127,13 +150,6 @@ public class XUIMenuButton extends LinearLayout
 		super.onLayout(changed, l, t, r, b);
 		
 		mChildCount = getChildCount();	
-		
-		if (changed)
-		{
-			Debug.out(getChildCount());
-		}
-		
-		Debug.out("first");
 	}
 
 	@Override
