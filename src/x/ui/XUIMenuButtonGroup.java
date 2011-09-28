@@ -106,7 +106,25 @@ public class XUIMenuButtonGroup extends LinearLayout
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);				
 	}
-	 
+	
+	/**
+	 * Gets all the buttons as an array from the group
+	 * @return The buttons within the group as an XUIMenuButton array
+	 */
+	public XUIMenuButton[] getButtons()
+	{
+		LinearLayout itemContainer = ((LinearLayout)layoutView.findViewById(R.id.items));
+		int childCount = itemContainer.getChildCount();
+		XUIMenuButton[] buttons = new XUIMenuButton[childCount];
+		
+		for (int index = 0; index < childCount; index++)
+		{
+			buttons[index] = (XUIMenuButton)itemContainer.getChildAt(index);
+		}
+		
+		return buttons;
+	}
+	
 	/**
 	 * Adds a new button to the group
 	 * @param child The new button to add

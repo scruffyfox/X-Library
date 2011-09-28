@@ -5,6 +5,8 @@
 **/
 package x.ui;
 
+import java.lang.reflect.Method;
+
 import x.lib.Debug;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -58,6 +60,7 @@ public class XUIMenuButton extends LinearLayout
 	private ViewGroup mLayout;
 	private TextView mLabel;
 	private View mContentView;
+	private boolean mSetOnClickListener;
 	
 	/**
 	 * Default Constructor
@@ -88,32 +91,46 @@ public class XUIMenuButton extends LinearLayout
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
-		
-		this.setOnClickListener(new OnClickListener()
+	
+		//	Only set the onlick listener if it hasn't already
+		if (!mSetOnClickListener)
 		{			
-			public void onClick(View v)
-			{
-				View input = ((LinearLayout)mLayout.findViewById(R.id.input_container)).getChildAt(0);
-				
-				if (input instanceof EditText)
+			OnClickListener l = new OnClickListener()
+			{			
+				public void onClick(View v)
 				{
-					EditText t = ((EditText)input);
-					t.requestFocus();
-					t.requestFocusFromTouch();
-					InputMethodManager m = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);						        
-			       	m.showSoftInput(t, 0);		 
+					View input = ((LinearLayout)mLayout.findViewById(R.id.input_container)).getChildAt(0);
+					
+					if (input instanceof EditText)
+					{
+						EditText t = ((EditText)input);
+						t.requestFocus();
+						t.requestFocusFromTouch();
+						InputMethodManager m = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);						        
+				       	m.showSoftInput(t, 0);		 
+					}
+					else if (input instanceof CheckBox)
+					{
+						((CheckBox)input).toggle();
+					}
+					else if (input instanceof XUICheckBox)
+					{
+						((XUICheckBox)input).toggle();	
+					} 				
 				}
-				else if (input instanceof CheckBox)
-				{
-					((CheckBox)input).toggle();
-				}
-				else if (input instanceof XUICheckBox)
-				{
-					((XUICheckBox)input).toggle();	
-				} 				
-			}
-		});
+			};
+			
+			this.setOnClickListener(l);
+		}
 	}	 
+	
+	@Override
+	public void setOnClickListener(OnClickListener l)
+	{	
+		mSetOnClickListener = true;
+		
+		super.setOnClickListener(l);
+	}
 	
 	/**
 	 * Sets the label text
