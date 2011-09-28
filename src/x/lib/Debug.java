@@ -291,10 +291,10 @@ public class Debug
 	    df.setMaximumFractionDigits(2);
 	    df.setMinimumFractionDigits(2);
 
-	    Debug.out("" + System.currentTimeMillis() + " - DUMP");
-	    Debug.out("Memory Heap Debug. ==============================================================================================================");
-	    Debug.out("Memory Heap Native: Allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free) in [" + mClass.getName() + "]");
-	    Debug.out("Memory Heap App: Allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory() / 1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory() / 1048576)) + "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory() / 1048576)) + "MB free)");
-	    Debug.out("Memory Heap Debug. ==============================================================================================================");
+	    Log.d("MEM", "" + System.currentTimeMillis() + " - DUMP");
+	    Log.d("MEM", "Memory Heap Debug. ==============================================================================================================");
+	    Log.d("MEM", "Memory Heap Native: Allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free) in [" + mClass.getName() + "]");
+	    Log.d("MEM", "Memory Heap App: Allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory() / 1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory() / 1048576)) + "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory() / 1048576)) + "MB free)");
+	    Log.d("MEM", "Memory Heap Debug. ==============================================================================================================");
 	}
 }

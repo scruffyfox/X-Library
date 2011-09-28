@@ -52,4 +52,26 @@ public class ItemList<E> extends ArrayList
 	{	
 		return (E)super.get(index);
 	}
+
+	/**
+	 * Removes all items from an index to the end
+	 * @param from The index to start from
+	 */
+	public void removeFrom(int from)
+	{
+		removeFrom(from, this.size() - from);
+	}
+	
+	/**
+	 * Removes the length of index starting from 'from'
+	 * @param from The index to start from
+	 * @param length The length to remove
+	 */
+	public void removeFrom(int from, int length)
+	{
+		for (int index = from; index < length + from - 1; index++)
+		{
+			remove(index);
+		}
+	}
 }

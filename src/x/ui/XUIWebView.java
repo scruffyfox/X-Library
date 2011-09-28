@@ -9,6 +9,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import x.lib.*;
 
 public class XUIWebView extends WebView
 {
@@ -72,6 +73,16 @@ public class XUIWebView extends WebView
 	public void loadJSON(String variableName, String JSON)
 	{
 		loadUrl("javascript: var " + variableName + " = " + JSON + ";");
+	}
+	
+	/**
+	 * Calls a JavaScript function with the params
+	 * @param functionName The function name to call
+	 * @param param Array of params to pass
+	 */
+	public void callFunction(String functionName, String... param)
+	{	
+		loadUrl("javascript: " + functionName + "(" + StringUtils.join(param, ",") + ");");		
 	}
 	
 	private class ViewClient extends WebViewClient
