@@ -1,20 +1,21 @@
 package x.lib;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @brief Http Params to be used with AsyncHttpClient (Key, Value pair class)
  */	
-public class HttpParams
+public class HttpParams implements Serializable
 {
-	private ArrayList<String[]> queryString;
+	private ItemList<String[]> queryString;
 		
 	/**
 	 * Default Constructor
 	 */	 
 	public HttpParams()
 	{
-		queryString = new ArrayList<String[]>();
+		queryString = new ItemList<String[]>();
 	}
 	
 	/**
@@ -23,7 +24,7 @@ public class HttpParams
 	 */
 	public HttpParams(String[]... params)
 	{
-		queryString = new ArrayList<String[]>();
+		queryString = new ItemList<String[]>();
 		for (String[] param : params)
 		{
 			addParam(param[0], param[1]);
@@ -64,7 +65,7 @@ public class HttpParams
 	 * Get the headers as an array list
 	 * @return The headers as the array list
 	 */
-	public ArrayList<String[]> getHeaders()
+	public ItemList<String[]> getHeaders()
 	{
 		return queryString;
 	}
