@@ -46,7 +46,7 @@ public class XUITitleButton extends ImageButton implements Serializable
 	 * @param imageId The image resource of the button
 	 * @param l Set the onclick listener for the button
 	 */
-	public XUITitleButton(Context context, int imageId, OnClickListener l)
+	public XUITitleButton(Context context, int imageId, OnClickListener l) 
 	{
 		super(context);
 	

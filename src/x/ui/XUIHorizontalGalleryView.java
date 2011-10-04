@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 /**
  * @brief Horizontal gallery view for swiping images similar to the iPhone gallery
@@ -79,7 +80,17 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	public XUIHorizontalGalleryView(Context context) 
 	{
 		super(context);
-		this.context = context;			
+		this.context = context;		
+		
+		LinearLayout layout = new LinearLayout(context);
+		layout.setOrientation(LinearLayout.HORIZONTAL);
+		layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		
+		this.setVerticalFadingEdgeEnabled(false);
+		this.setHorizontalFadingEdgeEnabled(false);
+		this.addView(layout, 0);
+		
+		init();
 	}
 	
 	/**

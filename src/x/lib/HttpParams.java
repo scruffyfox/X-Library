@@ -52,6 +52,25 @@ public class HttpParams implements Serializable
 	}
 	
 	/**
+	 * Gets a value from a param key
+	 * @param key The key to get the value from
+	 * @return Null if not found
+	 */
+	public String getParam(String key)
+	{
+		int dataCount = queryString.size();
+		for (int dataIndex = 0; dataIndex < dataCount; dataIndex++)
+		{
+			if (queryString.get(dataIndex)[0].equals(key))
+			{				
+				return queryString.get(dataIndex)[1];
+			}
+		}	
+		
+		return null;
+	}
+	
+	/**
 	 * Add a param to the class
 	 * @param key The key
 	 * @param value The value

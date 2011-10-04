@@ -208,7 +208,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		{
 			View childView = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildAt(viewIndex);
 			
-			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1)
+			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
 			{			
 				if (childCount == 1)
 				{
@@ -262,24 +262,31 @@ public class XUIMenuButtonGroup extends LinearLayout
 		{
 			LinearLayout container = (LinearLayout)views[viewIndex].findViewById(R.id.container).getParent();
 			
-			if (childCount == 1)
-			{
-				container.setBackgroundResource(R.drawable.button_group_all);
-			}		
-			else
-			{
-				if (viewIndex == 0)
+			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
+			{			
+				if (childCount == 1)
 				{
-					container.setBackgroundResource(R.drawable.button_group_top);
-				}
-				else if (viewIndex == childCount - 1)
-				{
-					container.setBackgroundResource(R.drawable.button_group_bottom);
-				}
+					container.setBackgroundResource(R.drawable.button_group_all);
+				}		
 				else
 				{
-					container.setBackgroundResource(R.drawable.button_group_middle);
-				}
+					if (viewIndex == 0)
+					{
+						container.setBackgroundResource(R.drawable.button_group_top);
+					}
+					else if (viewIndex == childCount - 1)
+					{
+						container.setBackgroundResource(R.drawable.button_group_bottom);
+					}
+					else
+					{
+						container.setBackgroundResource(R.drawable.button_group_middle);
+					}
+				}	
+			}
+			else
+			{
+				container.setBackgroundResource(R.drawable.button_group_middle);
 			}
 						
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(views[viewIndex]);			

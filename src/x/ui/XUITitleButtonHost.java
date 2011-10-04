@@ -46,7 +46,7 @@ public class XUITitleButtonHost extends LinearLayout
 	 * @param button The button to add
 	 */
 	public void addButton(XUITitleButton button)
-	{
+	{ 
 		this.addView(button);
 		
 		totalChildren = this.getChildCount();
