@@ -13,6 +13,7 @@ import android.content.res.TypedArray;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -74,14 +76,14 @@ public class XUIMenuButton extends LinearLayout
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, this);
-		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);	
+		mLayout = (ViewGroup)mLayoutView;//(ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);	
 	}
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context 
 	 * @param attrs
-	 */
+	 */ 
 	public XUIMenuButton(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
@@ -89,9 +91,7 @@ public class XUIMenuButton extends LinearLayout
 		this.mContext = context; 
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
-		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
-		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
-	
+			 
 		//	Only set the onlick listener if it hasn't already
 		if (!mSetOnClickListener)
 		{			
@@ -119,7 +119,7 @@ public class XUIMenuButton extends LinearLayout
 					} 				
 				}
 			};
-			
+			 
 			this.setOnClickListener(l);
 		}
 	}	 
@@ -152,7 +152,7 @@ public class XUIMenuButton extends LinearLayout
 		else
 		{
 			TextView t = (TextView)((LinearLayout)mLayout.findViewById(R.id.label)).getChildAt(0);
-			t.setText(text);
+			t.setText(text); 
 		}
 	}
 	
@@ -165,9 +165,9 @@ public class XUIMenuButton extends LinearLayout
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(v);
 	}
-
+ 
 	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	protected void onLayout(boolean changed, int l, int t, int r, int b) 
 	{	
 		super.onLayout(changed, l, t, r, b);
 		
@@ -175,7 +175,7 @@ public class XUIMenuButton extends LinearLayout
 	}
 
 	@Override
-	protected void onFinishInflate()
+	protected void onFinishInflate()  
 	{	
 		super.onFinishInflate();
 		
@@ -185,15 +185,19 @@ public class XUIMenuButton extends LinearLayout
 		this.removeAllViews();				
 		
 		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-		mLabel.setTextColor(0xff352B21);		
-		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));
+		mLabel.setTextColor(0xff352B21);		 
+		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>")); 
 		
-		((LinearLayout)mLayout.findViewById(R.id.label)).addView(mLabel);
-		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);		
+		 
+		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
+		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
 		
-		this.addView(mLayoutView);
+		((LinearLayout)mLayout.findViewById(R.id.label)).addView(mLabel);  
+		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);				
+		
+		this.addView(mLayoutView);		
 	}
-		
+	
 	/**
 	 * Gets the content view
 	 * @return The content view

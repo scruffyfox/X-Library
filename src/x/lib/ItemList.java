@@ -59,7 +59,7 @@ public class ItemList<E> extends ArrayList
 	 */
 	public void removeFrom(int from)
 	{
-		removeFrom(from, this.size() - from);
+		removeFrom(from, this.size() - (from + 1));
 	}
 	
 	/**
@@ -69,9 +69,10 @@ public class ItemList<E> extends ArrayList
 	 */
 	public void removeFrom(int from, int length)
 	{
-		for (int index = from; index < length + from - 1; index++)
+		for (int index = from; index <= length + from; index++)
 		{
-			remove(index);
+			//Debug.out("i: " + index);
+			remove(from);
 		}
 	}
 }

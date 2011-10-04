@@ -1,6 +1,5 @@
 package x.lib;
 
-import x.lib.AsyncHttpClient.ConnectionInfo;
 import android.os.Bundle;
 
 /**
@@ -23,9 +22,9 @@ public abstract class AsyncHttpResponse
 		mConnectionInfo = connectionInfo;
 	}
 	
-	public ConnectionInfo getConnectionInfo()
+	protected ConnectionInfo getConnectionInfo()
 	{
-		return mConnectionInfo;
+		return this.mConnectionInfo;
 	}
 	
 	protected Bundle getExtras()

@@ -76,7 +76,7 @@ public class AsyncHttpClient
 	 */
 	public void cancel() 
 	{
-		mHttpLoader.cancel(true);
+		mHttpLoader.cancel(true); 
 	}
 	
 	/**
@@ -564,7 +564,7 @@ public class AsyncHttpClient
 					    mConnectionInfo.connectionResponseCode = responseCode;
 					    mConnectionInfo.connectionResponseMessage = responseMessage;
 					  
-					    // Get the response				    
+					    // Get the response
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
 					    InputStream is = new BufferedInputStream(i);
 					    
@@ -646,7 +646,7 @@ public class AsyncHttpClient
 					    mConnectionInfo.connectionResponseCode = responseCode;
 					    mConnectionInfo.connectionResponseMessage = responseMessage;
 					    				    
-					    // Get the response				    
+					    // Get the response
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
 					    InputStream is = new BufferedInputStream(i);
 					    
@@ -751,28 +751,6 @@ public class AsyncHttpClient
 				mAsyncHttpResponse.onFinish();
 			}
 		}				
-	}
-	
-	/**
-	 * Gives details on the connection made to a server
-	 */
-	class ConnectionInfo 
-	{
-		public String connectionUrl = "";
-		public HttpParams connectionHeaders = null;
-		public long connectionInitiationTime = 0;
-		public long connectionResponseTime = 0;
-		public int connectionResponseCode = 0;
-		public String connectionResponseMessage = "";
-		
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "ConnectionInfo \n[\n\tconnectionHeaders=" + connectionHeaders + ", \n\tconnectionInitiationTime=" + connectionInitiationTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + ", \n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionUrl=" + connectionUrl + "\n]";
-		}
 	}
 }
 

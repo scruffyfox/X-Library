@@ -135,7 +135,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		updateLayout();
 	}
 
-	/**
+	/** 
 	 * Adds a new button to the group
 	 * @param child The new button to add
 	 */
@@ -208,25 +208,32 @@ public class XUIMenuButtonGroup extends LinearLayout
 		{
 			View childView = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildAt(viewIndex);
 			
-			if (childCount == 1)
-			{
-				childView.setBackgroundResource(R.drawable.button_group_all);
-			}		
-			else
-			{
-				if (viewIndex == 0)
+			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1)
+			{			
+				if (childCount == 1)
 				{
-					childView.setBackgroundResource(R.drawable.button_group_top);
-				}
-				else if (viewIndex == childCount - 1)
-				{
-					childView.setBackgroundResource(R.drawable.button_group_bottom);
-				}
+					childView.setBackgroundResource(R.drawable.button_group_all);
+				}		
 				else
 				{
-					childView.setBackgroundResource(R.drawable.button_group_middle);
-				}
-			}						
+					if (viewIndex == 0)
+					{
+						childView.setBackgroundResource(R.drawable.button_group_top);
+					}
+					else if (viewIndex == childCount - 1)
+					{
+						childView.setBackgroundResource(R.drawable.button_group_bottom);
+					}
+					else
+					{
+						childView.setBackgroundResource(R.drawable.button_group_middle);
+					}
+				}	
+			}
+			else
+			{
+				childView.setBackgroundResource(R.drawable.button_group_middle);
+			}
 		}
 	}
 

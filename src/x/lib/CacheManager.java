@@ -65,6 +65,36 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
+	 * Gets an MD5 hash of an input string
+	 * @param input The serializable input data
+	 * @return The MD5 hash of the input string
+	 */
+	public String getMD5(Serializable input)
+	{
+		String hashFileName = "";
+		
+    	try
+    	{
+    		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    		ObjectOutput out = new ObjectOutputStream(bos);   
+    		out.writeObject(input);
+    		byte[] yourBytes = bos.toByteArray(); 
+
+    		out.close();
+    		bos.close();
+    		
+    		MessageDigest md5 = MessageDigest.getInstance("MD5");
+    		hashFileName = Base64.encodeBytes((md5.digest(yourBytes))).replace('/', '.');
+    	}
+    	catch (Exception e)
+    	{
+    		e.printStackTrace();
+    	}
+    	
+    	return hashFileName;
+	}
+	
+	/**
 	 * Gets the total size of the cache in bytes
 	 * @return The size of the cache in bytes
 	 */
@@ -143,6 +173,16 @@ public class CacheManager implements Serializable
 		}		
 		
 		return true;
+	}
+	
+	/**
+	 * Gets the file age in ms
+	 * @param fileName The file to check
+	 * @return The age of the file in ms
+	 */
+	public long getFileAge(String fileName)
+	{
+		return Math.abs(fileModifiedDate(fileName) - System.currentTimeMillis());
 	}
 	
 	/**

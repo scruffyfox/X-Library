@@ -7,6 +7,7 @@ package x.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import x.lib.*;
@@ -102,8 +103,17 @@ public class XUIWebView extends WebView
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{		
 			return true;
-		}
+		}	
 	};
+	
+	private class ViewChromeClient extends WebChromeClient
+	{ 
+		@Override
+		public void onConsoleMessage(String message, int lineNumber, String sourceID)
+		{		
+			Debug.out("WebClient: (" + lineNumber + ") " + message);
+		}
+	}
 	
 	/**
 	 * The interface for page load 
