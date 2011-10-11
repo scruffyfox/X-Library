@@ -76,6 +76,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 	private int childCount = 0;
 	private LayoutInflater mLayoutInflater;
 	private String groupName = "";
+	private OnMenuButtonAdded mOnMenuButtonAdded;
+	private OnMenuButtonRemoved mOnMenuButtonRemoved;
 	
 	/**
 	 * Default Constructor
@@ -108,6 +110,24 @@ public class XUIMenuButtonGroup extends LinearLayout
 	}
 	
 	/**
+	 * Sets the menu button added listener
+	 * @param mOnMenuButtonAdded The listener
+	 */
+	public void setOnMenuButtonAdded(OnMenuButtonAdded mOnMenuButtonAdded)
+	{
+		this.mOnMenuButtonAdded = mOnMenuButtonAdded;
+	}
+	
+	/**
+	 * Sets the on menu button removed listener
+	 * @param mOnMenuButtonRemoved The listener
+	 */
+	public void setOnMenuButtonRemoved(OnMenuButtonRemoved mOnMenuButtonRemoved)
+	{
+		this.mOnMenuButtonRemoved = mOnMenuButtonRemoved;
+	}
+	
+	/**
 	 * Gets all the buttons as an array from the group
 	 * @return The buttons within the group as an XUIMenuButton array
 	 */
@@ -126,6 +146,17 @@ public class XUIMenuButtonGroup extends LinearLayout
 	}
 	
 	/**
+	 * Gets the XUIMenuButton at the specified index
+	 * @param index The index of the view
+	 * @return The view
+	 */
+	public XUIMenuButton getButtonAt(int index)
+	{
+		LinearLayout itemContainer = ((LinearLayout)layoutView.findViewById(R.id.items));
+		return (XUIMenuButton)itemContainer.getChildAt(index);
+	}
+	
+	/**
 	 * Adds a new button to the group
 	 * @param child The new button to add
 	 */
@@ -133,6 +164,11 @@ public class XUIMenuButtonGroup extends LinearLayout
 	{		
 		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child);		
 		updateLayout();
+		
+		if (mOnMenuButtonAdded != null)
+		{
+			mOnMenuButtonAdded.onMenuButtonAdded(child, ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount() - 1);
+		}
 	}
 
 	/** 
@@ -144,6 +180,11 @@ public class XUIMenuButtonGroup extends LinearLayout
 		for (XUIMenuButton b : (XUIMenuButton[])child)
 		{
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(b);
+			
+			if (mOnMenuButtonAdded != null)
+			{
+				mOnMenuButtonAdded.onMenuButtonAdded(b, ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount() - 1);
+			}
 		}
 		
 		updateLayout();
@@ -158,6 +199,11 @@ public class XUIMenuButtonGroup extends LinearLayout
 	{
 		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child, index);
 		updateLayout();
+		
+		if (mOnMenuButtonAdded != null)
+		{
+			mOnMenuButtonAdded.onMenuButtonAdded(child, index);
+		}
 	}
 	
 	/**
@@ -169,6 +215,11 @@ public class XUIMenuButtonGroup extends LinearLayout
 	{
 		((LinearLayout)layoutView.findViewById(R.id.items)).addView(child, params);
 		updateLayout();
+		
+		if (mOnMenuButtonAdded != null)
+		{
+			mOnMenuButtonAdded.onMenuButtonAdded(child, ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount() - 1);
+		}
 	}
 	
 	/**
@@ -177,8 +228,14 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 */
 	public void removeMenuButton(XUIMenuButton view)
 	{	
+		int index = ((LinearLayout)layoutView.findViewById(R.id.items)).indexOfChild(view);
 		((LinearLayout)layoutView.findViewById(R.id.items)).removeView(view);
 		updateLayout();
+		
+		if (mOnMenuButtonRemoved != null)
+		{
+			mOnMenuButtonRemoved.onMenuButtonRemoved(index);
+		}
 	}
 
 	/**
@@ -189,6 +246,11 @@ public class XUIMenuButtonGroup extends LinearLayout
 	{		
 		((LinearLayout)layoutView.findViewById(R.id.items)).removeViewAt(index);
 		updateLayout();
+		
+		if (mOnMenuButtonRemoved != null)
+		{
+			mOnMenuButtonRemoved.onMenuButtonRemoved(index);
+		}
 	}
 	
 	/**
@@ -196,8 +258,17 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 */
 	public void removeAllMenuButtons()
 	{
+		int count = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount();
 		((LinearLayout)layoutView.findViewById(R.id.items)).removeAllViews();
 		updateLayout();
+		
+		for (int index = 0; index < count; index++)
+		{
+			if (mOnMenuButtonRemoved != null)
+			{
+				mOnMenuButtonRemoved.onMenuButtonRemoved(index);
+			}
+		}
 	}
 	
 	private void updateLayout()
@@ -295,5 +366,15 @@ public class XUIMenuButtonGroup extends LinearLayout
 		this.addView(layoutView, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));		
 		
 		((TextView)findViewById(R.id.group_label)).setText(x.lib.StringUtils.capitalize(groupName));
+	}
+	
+	public interface OnMenuButtonAdded
+	{
+		public void onMenuButtonAdded(XUIMenuButton button, int index);
+	}
+	
+	public interface OnMenuButtonRemoved
+	{
+		public void onMenuButtonRemoved(int index);
 	}
 }

@@ -5,6 +5,7 @@
 **/
 package x.ui;
 
+import x.lib.*;
 import android.app.Activity;
 import android.content.Context;
 //import android.content.res.TypedArray;
@@ -68,10 +69,9 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	private int currentChildIndex = 0;
 	private int screenWidth;
 	private int childCount = 0;
-	private boolean canScroll = true;
+	private boolean canScroll = false;
 	private OnImageChangedListener mOnImageChangedLister;
 	private View childView;
-	private int mActiveFeature = 0;	
   
 	/**
 	 * Default Constructor
@@ -81,14 +81,17 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	{
 		super(context);
 		this.context = context;		
-		
+				
 		LinearLayout layout = new LinearLayout(context);
 		layout.setOrientation(LinearLayout.HORIZONTAL);
-		layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		layout.setLayoutParams(new LayoutParams(-2, -1));
+		layout.setBackgroundColor(0xffff0000);
 		
 		this.setVerticalFadingEdgeEnabled(false);
 		this.setHorizontalFadingEdgeEnabled(false);
 		this.addView(layout, 0);
+		
+		setFillViewport(true);
 		
 		init();
 	}
@@ -102,8 +105,6 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	{
 		super(context, attributes);
 		this.context = context;		
-	
-		//TypedArray attrs = context.obtainStyledAttributes(attributes, R.styleable.XUITab);	
 	}		
 	
 	/**
@@ -112,7 +113,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 */
 	public void addImage(View child)
 	{
-		if (!(child instanceof ImageView)) return;
+		//if (!(child instanceof ImageView)) return;
 		
 		((ViewGroup)this.getChildAt(0)).addView(child);
 	}
@@ -124,7 +125,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 */
 	public void addImage(View child, int index)
 	{
-		if (!(child instanceof ImageView)) return;
+		//if (!(child instanceof ImageView)) return;
 		
 		((ViewGroup)this.getChildAt(0)).addView(child, index);
 	}
@@ -136,12 +137,11 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 */
 	public void addImage(View child, android.view.ViewGroup.LayoutParams params)
 	{
-		if (!(child instanceof ImageView)) return;
+		//if (!(child instanceof ImageView)) return;
 		
 		((ViewGroup)this.getChildAt(0)).addView(child, params);
 	}
 	
-
 	/**
 	 * Removes an image at an index
 	 * @param view The view of the image to remove
@@ -167,6 +167,119 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	{
 		((ViewGroup)this.getChildAt(0)).removeAllViews();
 	}
+
+	/**
+	 * Gets an image from an index
+	 * @param index The index of the image view
+	 * @return The ImageView
+	 */
+	public ImageView getImageAt(int index)
+	{
+		return (ImageView)((ViewGroup)this.getChildAt(0)).getChildAt(index);
+	}
+	
+	/**
+	 * Returns the current image view in the view
+	 * @return The current image view
+	 */
+	public ImageView getCurrentImageView()
+	{
+		return getImageAt(currentChildIndex);
+	}
+	
+	/**
+	 * Gets the current view's index
+	 * @return The current view's index
+	 */
+	public int getCurrentIndex()
+	{
+		return currentChildIndex;
+	}
+	
+	/**
+	 * Forces the gallery view to go to the view at a specific index
+	 * This must be called BEFORE onLayout in order to work
+	 * @param index The index to go to
+	 */
+	public void setStartingImageView(int index)
+	{
+		if (index > getImageCount()) 
+		{
+			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getImageCount() +"]");
+		}
+		
+        currentChildIndex = index;        
+	}
+	
+	/**
+	 * Scrolls the view to the specified image index
+	 * @param index The index to go to
+	 */
+	public void scrollToImageAt(int index)
+	{
+		if (index > getImageCount()) 
+		{
+			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getImageCount() +"]");
+		}
+		
+		int featureWidth = getMeasuredWidth();
+        scrollTo(index * featureWidth, 0);
+        
+        if (mOnImageChangedLister != null)
+        {
+        	if (currentChildIndex != index)
+        	{
+        		currentChildIndex = index;
+        		mOnImageChangedLister.onImageChange(index);                		
+        	}                    	
+        }        
+	}
+	
+	/**
+	 * Scrolls the view to the specified image index
+	 * @param index The index to go to
+	 */
+	public void smoothScrollToImageAt(int index)
+	{
+		if (index > getImageCount()) 
+		{
+			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getImageCount() +"]");
+		}
+		
+		int featureWidth = getMeasuredWidth();
+        smoothScrollTo(index * featureWidth, 0);
+        
+        if (mOnImageChangedLister != null)
+        {
+        	if (currentChildIndex != index)
+        	{
+        		currentChildIndex = index;
+        		mOnImageChangedLister.onImageChange(index);                		
+        	}                    	
+        }
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent ev)
+	{
+	return true;
+//		return super.onTouchEvent(ev);
+	}
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev)
+	{
+		// TODO Auto-generated method stub
+		return super.dispatchTouchEvent(ev);		
+	}
+	
+	@Override
+	public boolean onInterceptTouchEvent(MotionEvent ev)
+	{
+		//	THIS ALLOWS SCROLLING ASJD IUASDZBYGUIZSZSDB UFBY D
+		return false;
+		//return super.onInterceptTouchEvent(ev);
+	}
 	
 	int prevX = 0;
 	private void init()
@@ -174,55 +287,61 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		DisplayMetrics dm = new DisplayMetrics();
         ((Activity)this.context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
-
-        mOnImageChangedLister = new OnImageChangedListener()
-		{			
-			public void onImageChange(int newImageIndex)
-			{
-			}
-		};
 				
-		gestureDetector = new GestureDetector(new swipeGestureDetector());
-		setOnTouchListener(new View.OnTouchListener() 
-		{            
-            public boolean onTouch(View v, MotionEvent event) 
-            {
-            	requestFocusFromTouch();
-            	
-                //If the user swipes
-                if (gestureDetector.onTouchEvent(event)) 
-                {
-                    return true;
-                }
-                
-                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
-                {
-                    int scrollX = getScrollX();
-                    int featureWidth = v.getMeasuredWidth();                                                            
-                    mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
-                    
-                    if (scrollX < mActiveFeature * featureWidth)
-                    {                    	                    	
-                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
-                    }
-                    else
-                    {
-                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
-                    }
-                    
-                    int scrollTo = mActiveFeature * featureWidth;
-                    smoothScrollTo(scrollTo, 0);
-                    mOnImageChangedLister.onImageChange(mActiveFeature);
-                    
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        });
-	}
+        setOnTouchListener(null);
+        
+//		gestureDetector = new GestureDetector(new swipeGestureDetector());
+//		setOnTouchListener(new View.OnTouchListener() 
+//		{            
+//            public boolean onTouch(View v, MotionEvent event) 
+//            {	            	            	
+//            	if (!canScroll) return true;
+//            	
+//                //	If the user swipes
+//                if (gestureDetector.onTouchEvent(event)) 
+//                {
+//                    return true;
+//                }                
+//                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+//                {
+//                    int scrollX = getScrollX();
+//                    int featureWidth = v.getMeasuredWidth();                                                            
+//                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
+//                    
+//                    if (scrollX < mActiveFeature * featureWidth)
+//                    {                    	                    	
+//                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
+//                    }
+//                    else if (scrollX > mActiveFeature * featureWidth)
+//                    {
+//                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
+//                    }
+//                    else
+//                    {
+//                    	mActiveFeature = currentChildIndex;
+//                    }
+//                    
+//                    int scrollTo = mActiveFeature * featureWidth;
+//                    smoothScrollTo(scrollTo, 0);
+//                    
+//                    if (mOnImageChangedLister != null)
+//                    {
+//                    	if (currentChildIndex != mActiveFeature)
+//                    	{
+//                    		currentChildIndex = mActiveFeature;
+//                    		mOnImageChangedLister.onImageChange(currentChildIndex);                    		
+//                    	}                    	
+//                    }                    
+//                    
+//                    return true;
+//                }
+//                else
+//                {
+//                    return false;
+//                }
+//            }
+//        });				
+	}		
 	
 	/**
 	 * Sets the image change listener
@@ -233,16 +352,33 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		this.mOnImageChangedLister = imageListener;
 	}
 	
-	private void disableScroll()
+	public void setCanScroll(boolean canScroll)
+	{
+		this.canScroll = canScroll;
+	}
+	
+	public boolean canScroll()
+	{	
+		return canScroll;
+	}
+	
+	public void disableScroll()
 	{
 		canScroll = false;
 	}
 	
-	private void enableScroll()
+	public void enableScroll()
 	{
 		canScroll = true;
 	}
 		
+	@Override
+	protected void onScrollChanged(int l, int t, int oldl, int oldt)
+	{
+		// TODO Auto-generated method stub
+	//	super.onScrollChanged(l, t, oldl, oldt);
+	}
+	
 	/**
 	 * Gets the image count
 	 * @return The image count
@@ -256,7 +392,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	protected void onFinishInflate()
 	{
 		super.onFinishInflate();
-		
+				
 		childCount = ((ViewGroup)getChildAt(0)).getChildCount();
 		init();
 	}
@@ -267,25 +403,49 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		super.onLayout(changed, l, t, r, b);
 		
 		childCount = ((ViewGroup)getChildAt(0)).getChildCount();		
+		
+		if (changed)
+		{				
+			int featureWidth = getMeasuredWidth();            
+            smoothScrollTo(currentChildIndex * featureWidth, 0);
+            
+            if (mOnImageChangedLister != null)
+            {            	
+            	mOnImageChangedLister.onImageChange(currentChildIndex);                		            	                    
+            }
+		}
 	}
 	
 	private class swipeGestureDetector extends SimpleOnGestureListener
-	{				
+	{	
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-		{
+		{			
+			if (!canScroll) return false;
+			
 			return super.onScroll(e1, e2, distanceX, distanceY);
 		}		
 		
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
-		{	
+		{				
+			canScroll = true;
+			if (e1 == null || e2 == null) return false;
+			
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
             {            	
 				int featureWidth = getMeasuredWidth();
-	            mActiveFeature = (mActiveFeature < (childCount - 1)) ? mActiveFeature + 1 : childCount - 1;
+	            int mActiveFeature = (currentChildIndex < (childCount - 1)) ? currentChildIndex + 1 : childCount - 1;
 	            smoothScrollTo(mActiveFeature * featureWidth, 0);
-	            mOnImageChangedLister.onImageChange(mActiveFeature);
+	            
+	            if (mOnImageChangedLister != null)
+	            {
+	            	if (currentChildIndex != mActiveFeature)
+                	{
+	            		currentChildIndex = mActiveFeature;
+                		mOnImageChangedLister.onImageChange(mActiveFeature);                		
+                	}                    	
+	            }
 	            
 	            return true;				            	
             }
@@ -293,9 +453,17 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
             else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
             {    
             	int featureWidth = getMeasuredWidth();
-                mActiveFeature = (mActiveFeature > 0) ? mActiveFeature - 1 : 0;
+                int mActiveFeature = (currentChildIndex > 0) ? currentChildIndex - 1 : 0;
                 smoothScrollTo(mActiveFeature * featureWidth, 0);
-                mOnImageChangedLister.onImageChange(mActiveFeature);
+                
+                if (mOnImageChangedLister != null)
+                {
+                	if (currentChildIndex != mActiveFeature)
+                	{
+                		currentChildIndex = mActiveFeature;
+                		mOnImageChangedLister.onImageChange(mActiveFeature);                		
+                	}                    	
+                }
                 
             	return true;
             }

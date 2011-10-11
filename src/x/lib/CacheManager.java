@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.util.*;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -255,7 +256,19 @@ public class CacheManager implements Serializable
 	 */
 	public boolean addImage(String fileName, Bitmap fileContents)
 	{
-		return addImage(fileName, fileContents, Bitmap.CompressFormat.PNG);
+		return addImage(fileName, fileContents, Bitmap.CompressFormat.PNG, null);
+	}
+	
+	/**
+	 * Adds an image to the cache
+	 * @param fileName The file name for the file
+	 * @param fileContents The contents for the file
+	 * @param l The on file written listener, called after the file was written to cache
+	 * @return true
+	 */
+	public boolean addImage(String fileName, Bitmap fileContents, OnFileWrittenListener l)
+	{
+		return addImage(fileName, fileContents, Bitmap.CompressFormat.PNG, l);
 	}
 	
 	/**
@@ -263,11 +276,12 @@ public class CacheManager implements Serializable
 	 * @param fileName The file name for the file
 	 * @param fileContents The contents for the file
 	 * @param format The compression format for the image
+	 * @param l The on file written listener, called after the file was written to cache
 	 * @return true
 	 */
-	public boolean addImage(String fileName, Bitmap fileContents, Bitmap.CompressFormat format)
+	public boolean addImage(String fileName, Bitmap fileContents, Bitmap.CompressFormat format, OnFileWrittenListener l)
 	{					
-		AddFileRunnable r = new AddFileRunnable(fileName, fileContents, format)
+		AddFileRunnable r = new AddFileRunnable(fileName, fileContents, format, l)
 		{						
 			public void run()
 			{
@@ -281,6 +295,11 @@ public class CacheManager implements Serializable
 					output.flush();
 					output.close();	
 															
+					if (mListener != null)
+					{
+						mListener.onFileWritten(mFileName);
+					}
+					
 					//	Now delete to make up for more room
 					checkCacheLimit();
 				}
@@ -292,7 +311,7 @@ public class CacheManager implements Serializable
 			}
 		};				
 		
-		r.start();
+		((Activity)context).runOnUiThread(r);		
 		
 		return true;
 	}
@@ -455,18 +474,25 @@ public class CacheManager implements Serializable
 		protected String mFileName;
 		protected Bitmap mImage;
 		protected Bitmap.CompressFormat mFormat;		
+		protected OnFileWrittenListener mListener;
 		
 		public AddFileRunnable()
 		{
 			
 		}
 		
-		public AddFileRunnable(String fileName, Bitmap image, Bitmap.CompressFormat format)
+		public AddFileRunnable(String fileName, Bitmap image, Bitmap.CompressFormat format, OnFileWrittenListener l)
 		{
 			mFileName = fileName;
 			mImage = image;
 			mFormat = format;
+			mListener = l;
 		}
+	}
+	
+	public interface OnFileWrittenListener
+	{
+		public void onFileWritten(String fileName);
 	}
 }
 

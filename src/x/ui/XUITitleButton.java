@@ -6,9 +6,17 @@
 package x.ui;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+
+import x.lib.Debug;
+import x.lib.ItemList;
+import x.lib.StringUtils;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -42,7 +50,7 @@ public class XUITitleButton extends ImageButton implements Serializable
 	
 	/**
 	 * Default Constructor
-	 * @param context The application's context
+	 * @param context The application's context 
 	 * @param imageId The image resource of the button
 	 * @param l Set the onclick listener for the button
 	 */
@@ -56,12 +64,46 @@ public class XUITitleButton extends ImageButton implements Serializable
 	
 	/**
 	 * Default Constructor
-	 * @param context The application's context
+	 * @param context The application's context 
 	 * @param attrs The attribute set passed via the SAX parser
 	 */
+	public String onClickStr;
 	public XUITitleButton(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
+		
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.XUITitleButton);		
+		onClickStr = a.getString(R.styleable.XUITitleButton_onClick);
+		
+		if (onClickStr != null && onClickStr.length() > 0)
+		{			
+			setOnClickListener(new OnClickListener()
+			{				
+				public void onClick(View v)
+				{
+					try
+					{
+						ItemList<String> params = new ItemList<String>(onClickStr.split("\\."));
+						String method = params.get(params.size() - 1);						
+						params.remove(params.size() - 1);						
+						
+						Class c = Class.forName(StringUtils.join(params, "."));
+						Method m = c.getMethod(method);
+						m.invoke(this);
+					} 
+					catch (Exception e) 
+					{
+						throw new IllegalArgumentException("No method found");
+					}
+				}
+			});			
+		}
+	}
+	
+	@Override
+	public void setImageResource(int resId)
+	{
+		setImage(resId);
 	}
 	
 	/**
@@ -73,4 +115,13 @@ public class XUITitleButton extends ImageButton implements Serializable
 		mImageId = id;
 		this.setBackgroundResource(mImageId);
 	}	
+	
+	/**
+	 * Gets the current set image id
+	 * @return The id of the image resource
+	 */
+	public int getImageId()
+	{
+		return mImageId;
+	}
 }

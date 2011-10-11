@@ -51,6 +51,14 @@ import android.util.Log;
  */
 public class AsyncHttpClient
 {	
+	public enum RequestMode
+	{
+		POST,
+		GET,
+		PUT,
+		DELETE
+	}
+	
 	private HttpLoader mHttpLoader; 
 	private AsyncHttpResponse mAsyncHttpResponse;
 	
@@ -77,6 +85,114 @@ public class AsyncHttpClient
 	public void cancel() 
 	{
 		mHttpLoader.cancel(true); 
+	}
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 * @param response The response interface for the request call back
+	 */	
+	public void request(RequestMode requestMode, String urlStr, AsyncHttpResponse response)
+	{
+		request(requestMode, urlStr, null, response);
+	}
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 * @param postData The data to be sent to the server
+	 * @param response The response interface for the request call back
+	 */	
+	public void request(RequestMode requestMode, String urlStr, Object postData, AsyncHttpResponse response)
+	{
+		request(requestMode, urlStr, postData, response);
+	}
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 * @param httpHeaders The headers to be sent to the server
+	 * @param response The response interface for the request call back
+	 */	
+	public void request(RequestMode requestMode, String urlStr, HttpParams httpHeaders, AsyncHttpResponse response)
+	{
+		request(requestMode, urlStr, null, httpHeaders, response);
+	}
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 * @param requestParameters The request params
+	 * @param httpHeaders The headers to be sent to the server
+	 * @param response The response interface for the request call back
+	 */	
+	public void request(RequestMode requestMode, String urlStr, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
+	{
+		request(requestMode, urlStr, null, requestParameters, httpHeaders, response);
+	}
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 * @param postData The data to be sent to the server
+	 * @param httpHeaders The request headers for the URL 
+	 * @param response The response interface for the request call back
+	 */	
+	public void request(RequestMode requestMode, String urlStr, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
+	{
+		request(requestMode, urlStr, postData, null, httpHeaders, response);
+	}		
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 * @param postData The data to be sent to the server
+	 * @param requestParameters The request parameters for the URL  
+	 * @param httpHeaders The request headers for the URL 
+	 * @param response The response interface for the request call back
+	 */	
+	public void request(RequestMode requestMode, String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
+	{		
+		mAsyncHttpResponse = response;
+		String url = urlStr;
+		
+		if (requestParameters != null)
+		{
+			url += requestParameters.toString();
+		}
+		
+		switch (requestMode)
+		{
+			case POST:
+			{
+				post(url, postData, requestParameters, httpHeaders, response);	
+				break;
+			}
+			
+			case GET:
+			{
+				get(urlStr, requestParameters, httpHeaders, response);
+				break;
+			}
+			
+			case PUT:
+			{
+				put(url, postData, requestParameters, httpHeaders, response);	
+				break;
+			}
+			
+			case DELETE:
+			{
+				delete(urlStr, requestParameters, httpHeaders, response);
+				break;
+			}
+		}	
 	}
 	
 	/**
@@ -279,7 +395,7 @@ public class AsyncHttpClient
 	 * Initiates a delete request with a server
 	 * @param urlStr The URLs to the server
 	 * @param postData The data to be sent to the server
-	 * @param headers The request headers for the URL 
+	 * @param httpHeaders The request headers for the URL 
 	 * @param response The response interface for the request call back
 	 */	
 	public void post(String urlStr, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
@@ -292,7 +408,7 @@ public class AsyncHttpClient
 	 * @param urlStr The URLs to the server
 	 * @param postData The data to be sent to the server
 	 * @param requestParameters The request parameters for the URL  
-	 * @param headers The request headers for the URL 
+	 * @param httpHeaders The request headers for the URL 
 	 * @param response The response interface for the request call back
 	 */	
 	public void post(String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
@@ -323,7 +439,7 @@ public class AsyncHttpClient
 	 * Initiates a delete request with a server
 	 * @param urlStr The URLs to the server
 	 * @param postData The data to be sent to the server
-	 * @param headers The request headers for the URL 
+	 * @param httpHeaders The request headers for the URL 
 	 * @param response The response interface for the request call back
 	 */	
 	public void put(String urlStr, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
@@ -336,7 +452,7 @@ public class AsyncHttpClient
 	 * @param urlStr The URLs to the server
 	 * @param postData The data to be sent to the server
 	 * @param requestParameters The request parameters for the URL  
-	 * @param headers The request headers for the URL 
+	 * @param httpHeaders The request headers for the URL 
 	 * @param response The response interface for the request call back
 	 */	
 	public void put(String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)

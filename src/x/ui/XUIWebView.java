@@ -16,6 +16,7 @@ public class XUIWebView extends WebView
 {
 	private ViewClient mViewClient;
 	private OnPageLoadListener mOnPageLoadListener;
+	private OnLinkClickedListener mOnLinkClickedListener;
 	
 	/**
 	 * Default constructor
@@ -49,10 +50,19 @@ public class XUIWebView extends WebView
 		this.mOnPageLoadListener = listener;
 	}
 	
+	/**
+	 * Sets the OnLinkClickedListener
+	 * @param listener The new listener
+	 */
+	public void setOnLinkClickedListener(OnLinkClickedListener listener)
+	{
+		this.mOnLinkClickedListener = listener;
+	}
+	
 	private void init()
 	{
 		mViewClient = new ViewClient();
-		setWebViewClient(mViewClient);
+		setWebViewClient(mViewClient);		
 		
 		this.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
 	}
@@ -88,21 +98,35 @@ public class XUIWebView extends WebView
 	
 	private class ViewClient extends WebViewClient
 	{
+		int loadCount = 0;
+		
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
-			if (mOnPageLoadListener != null)
-			{
-				mOnPageLoadListener.onPageLoad();
-			}
+			Debug.out(url);
 			
-			super.onPageFinished(view, url);
+			if (loadCount < 1)
+			{
+				if (mOnPageLoadListener != null && (url.contains("http://") || url.contains("https://") || url.contains("file:///")))
+				{					
+					mOnPageLoadListener.onPageLoad();
+				}
+				
+				loadCount++;
+			}
 		}
 		
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{		
-			return true;
+			if (mOnLinkClickedListener != null)
+			{
+				return mOnLinkClickedListener.onLinkClicked(url);
+			}
+			else
+			{
+				return super.shouldOverrideUrlLoading(view, url);
+			}
 		}	
 	};
 	
@@ -124,5 +148,10 @@ public class XUIWebView extends WebView
 		 * Called when the page has been loaded
 		 */
 		public void onPageLoad();
+	};
+	
+	public interface OnLinkClickedListener
+	{
+		public boolean onLinkClicked(String url);		
 	};
 }
