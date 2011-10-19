@@ -60,7 +60,10 @@ public class XUITitleButtonHost extends LinearLayout
 	{
 		for (XUITitleButton b : button)
 		{
-			this.addView(b);
+			if (b != null)
+			{
+				this.addView(b);
+			}
 		}
 		
 		totalChildren = this.getChildCount();
@@ -76,7 +79,10 @@ public class XUITitleButtonHost extends LinearLayout
 		
 		for (XUITitleButton b : button)
 		{
-			this.addView(b);
+			if (b != null)
+			{
+				this.addView(b);
+			}
 		}
 		
 		totalChildren = this.getChildCount();

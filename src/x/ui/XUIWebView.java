@@ -14,7 +14,6 @@ import x.lib.*;
 
 public class XUIWebView extends WebView
 {
-	private ViewClient mViewClient;
 	private OnPageLoadListener mOnPageLoadListener;
 	private OnLinkClickedListener mOnLinkClickedListener;
 	
@@ -32,10 +31,10 @@ public class XUIWebView extends WebView
 	/**
 	 * Default constructor
 	 * @param context
-	 * @param attr
+	 * @param attr 
 	 */
 	public XUIWebView(Context context, AttributeSet attr)
-	{
+	{ 
 		super(context, attr);
 		
 		init();
@@ -61,7 +60,7 @@ public class XUIWebView extends WebView
 	
 	private void init()
 	{
-		mViewClient = new ViewClient();
+		ViewClient mViewClient = new ViewClient();
 		setWebViewClient(mViewClient);		
 		
 		this.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);

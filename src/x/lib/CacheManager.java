@@ -44,11 +44,11 @@ public class CacheManager implements Serializable
 	}
 
 	/**
-	 * Gets an MD5 hash of an input string
+	 * Gets a base64'd MD5 hash of an input string
 	 * @param input The input string
-	 * @return The MD5 hash of the input string
+	 * @return The base64 MD5 hash of the input string
 	 */
-	public String getMD5(String input)
+	public static String getHash(String input)
 	{
 		String hashFileName = "";
 		
@@ -64,13 +64,13 @@ public class CacheManager implements Serializable
     	
     	return hashFileName;
 	}
-	
+    
 	/**
-	 * Gets an MD5 hash of an input string
+	 * Gets an  base64'd MD5 hash of an input string
 	 * @param input The serializable input data
-	 * @return The MD5 hash of the input string
+	 * @return The base64'd MD5 hash of the input string
 	 */
-	public String getMD5(Serializable input)
+	public static String getHash(Serializable input)
 	{
 		String hashFileName = "";
 		
@@ -93,6 +93,26 @@ public class CacheManager implements Serializable
     	}
     	
     	return hashFileName;
+	}
+	
+	/**
+	 * Gets an MD5 hash of an input string
+	 * @param input The input string
+	 * @return The MD5 hash of the input string
+	 */
+	public String getMD5(String input)
+	{
+		return CacheManager.getHash(input);
+	}
+	
+	/**
+	 * Gets an MD5 hash of an input string
+	 * @param input The serializable input data
+	 * @return The MD5 hash of the input string
+	 */
+	public String getMD5(Serializable input)
+	{
+		return CacheManager.getHash(input);
 	}
 	
 	/**
@@ -248,6 +268,17 @@ public class CacheManager implements Serializable
 		}
 	}
 	
+	public boolean removeImage(String imageName)
+	{
+		return removeFile(imageName);
+	}
+	
+	public boolean removeFile(String fileName)
+	{
+		File f = new File(context.getCacheDir().getPath(), "cache_" + fileName);
+		return f.delete();
+	}
+	
 	/**
 	 * Adds an image to the cache
 	 * @param fileName The file name for the file
@@ -290,7 +321,7 @@ public class CacheManager implements Serializable
 					File outputPath = new File(context.getCacheDir().getPath(), "cache_" + mFileName);
 										
 					FileOutputStream output = new FileOutputStream(outputPath);										
-					mImage.compress(mFormat, 60, output);
+					mImage.compress(mFormat, 40, output);
 								
 					output.flush();
 					output.close();	
@@ -299,6 +330,8 @@ public class CacheManager implements Serializable
 					{
 						mListener.onFileWritten(mFileName);
 					}
+					
+					mImage.recycle();
 					
 					//	Now delete to make up for more room
 					checkCacheLimit();

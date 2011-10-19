@@ -365,7 +365,14 @@ public class XUIMenuButtonGroup extends LinearLayout
 		
 		this.addView(layoutView, new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));		
 		
-		((TextView)findViewById(R.id.group_label)).setText(x.lib.StringUtils.capitalize(groupName));
+		if (groupName != null && groupName.length() > 0)
+		{			
+			((TextView)findViewById(R.id.group_label)).setText(x.lib.StringUtils.capitalize(groupName));
+		}
+		else
+		{
+			((TextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	
+		}
 	}
 	
 	public interface OnMenuButtonAdded

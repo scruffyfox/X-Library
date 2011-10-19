@@ -21,7 +21,7 @@ public class StringUtils
 	 */
 	public static String capitalize(String input)
 	{
-		if (input.length() < 2) return "";
+		if (input == null || input.length() < 2) return "";
 		
 		String[] words = input.split(" ");
 		int length = words.length;

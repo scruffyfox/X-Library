@@ -76,7 +76,9 @@ public class XUIMenuButton extends LinearLayout
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, this);
-		mLayout = (ViewGroup)mLayoutView;//(ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);	
+		mLayout = (ViewGroup)mLayoutView;//(ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
+		
+		init();
 	}
 	
 	/**
@@ -92,6 +94,11 @@ public class XUIMenuButton extends LinearLayout
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 			 
+		init();
+	}	 
+	
+	private void init()
+	{
 		//	Only set the onlick listener if it hasn't already
 		if (!mSetOnClickListener)
 		{			
@@ -122,7 +129,7 @@ public class XUIMenuButton extends LinearLayout
 			 
 			this.setOnClickListener(l);
 		}
-	}	 
+	}
 	
 	@Override
 	public void setOnClickListener(OnClickListener l)
@@ -162,8 +169,19 @@ public class XUIMenuButton extends LinearLayout
 	 */
 	public void setInput(View v)
 	{
+		mContentView = v;
+		
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(v);
+	}
+	
+	/**
+	 * Gets the input view
+	 * @return The input view
+	 */
+	public View getInput()
+	{
+		return mContentView;
 	}
  
 	@Override
@@ -196,14 +214,5 @@ public class XUIMenuButton extends LinearLayout
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);				
 		
 		this.addView(mLayoutView);		
-	}
-	
-	/**
-	 * Gets the content view
-	 * @return The content view
-	 */
-	public View getContentView()
-	{
-		return mContentView;
 	}
 }

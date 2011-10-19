@@ -679,7 +679,7 @@ public class AsyncHttpClient
 					    
 					    mConnectionInfo.connectionResponseCode = responseCode;
 					    mConnectionInfo.connectionResponseMessage = responseMessage;
-					  
+					    					  
 					    // Get the response
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
 					    InputStream is = new BufferedInputStream(i);
@@ -730,6 +730,7 @@ public class AsyncHttpClient
 						conn.setDoOutput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
+						conn.setChunkedStreamingMode(64);
 					    
 					    if (type == PUT)
 					    {
@@ -752,7 +753,7 @@ public class AsyncHttpClient
 					    }
 					    
 					    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-					    wr.write(mSendData.toString());
+					    wr.write(mSendData.toString());					   
 					    wr.flush();
 					    wr.close();
 					    					   

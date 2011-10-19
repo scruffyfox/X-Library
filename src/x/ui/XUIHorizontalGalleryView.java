@@ -69,7 +69,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	private int currentChildIndex = 0;
 	private int screenWidth;
 	private int childCount = 0;
-	private boolean canScroll = false;
+	private boolean canScroll = true;
 	private OnImageChangedListener mOnImageChangedLister;
 	private View childView;
   
@@ -85,7 +85,6 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		LinearLayout layout = new LinearLayout(context);
 		layout.setOrientation(LinearLayout.HORIZONTAL);
 		layout.setLayoutParams(new LayoutParams(-2, -1));
-		layout.setBackgroundColor(0xffff0000);
 		
 		this.setVerticalFadingEdgeEnabled(false);
 		this.setHorizontalFadingEdgeEnabled(false);
@@ -259,27 +258,13 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
         }
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent ev)
-	{
-	return true;
-//		return super.onTouchEvent(ev);
-	}
-	
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev)
-	{
-		// TODO Auto-generated method stub
-		return super.dispatchTouchEvent(ev);		
-	}
-	
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev)
-	{
-		//	THIS ALLOWS SCROLLING ASJD IUASDZBYGUIZSZSDB UFBY D
-		return false;
-		//return super.onInterceptTouchEvent(ev);
-	}
+//	@Override
+//	public boolean onInterceptTouchEvent(MotionEvent ev)
+//	{
+//		//	THIS ALLOWS SCROLLING ASJD IUASDZBYGUIZSZSDB UFBY D
+//		//return false;
+//		return super.onInterceptTouchEvent(ev);
+//	}
 	
 	int prevX = 0;
 	private void init()
@@ -290,57 +275,57 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 				
         setOnTouchListener(null);
         
-//		gestureDetector = new GestureDetector(new swipeGestureDetector());
-//		setOnTouchListener(new View.OnTouchListener() 
-//		{            
-//            public boolean onTouch(View v, MotionEvent event) 
-//            {	            	            	
-//            	if (!canScroll) return true;
-//            	
-//                //	If the user swipes
-//                if (gestureDetector.onTouchEvent(event)) 
-//                {
-//                    return true;
-//                }                
-//                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
-//                {
-//                    int scrollX = getScrollX();
-//                    int featureWidth = v.getMeasuredWidth();                                                            
-//                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
-//                    
-//                    if (scrollX < mActiveFeature * featureWidth)
-//                    {                    	                    	
-//                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
-//                    }
-//                    else if (scrollX > mActiveFeature * featureWidth)
-//                    {
-//                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
-//                    }
-//                    else
-//                    {
-//                    	mActiveFeature = currentChildIndex;
-//                    }
-//                    
-//                    int scrollTo = mActiveFeature * featureWidth;
-//                    smoothScrollTo(scrollTo, 0);
-//                    
-//                    if (mOnImageChangedLister != null)
-//                    {
-//                    	if (currentChildIndex != mActiveFeature)
-//                    	{
-//                    		currentChildIndex = mActiveFeature;
-//                    		mOnImageChangedLister.onImageChange(currentChildIndex);                    		
-//                    	}                    	
-//                    }                    
-//                    
-//                    return true;
-//                }
-//                else
-//                {
-//                    return false;
-//                }
-//            }
-//        });				
+		gestureDetector = new GestureDetector(new swipeGestureDetector());
+		setOnTouchListener(new View.OnTouchListener() 
+		{            
+            public boolean onTouch(View v, MotionEvent event) 
+            {	            	            	
+            	if (!canScroll) return true;
+            	
+                //	If the user swipes
+                if (gestureDetector.onTouchEvent(event)) 
+                {
+                    return true;
+                }                
+                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+                {
+                    int scrollX = getScrollX();
+                    int featureWidth = v.getMeasuredWidth();                                                            
+                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
+                    
+                    if (scrollX < mActiveFeature * featureWidth)
+                    {                    	                    	
+                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
+                    }
+                    else if (scrollX > mActiveFeature * featureWidth)
+                    {
+                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
+                    }
+                    else
+                    {
+                    	mActiveFeature = currentChildIndex;
+                    }
+                    
+                    int scrollTo = mActiveFeature * featureWidth;
+                    smoothScrollTo(scrollTo, 0);
+                    
+                    if (mOnImageChangedLister != null)
+                    {
+                    	if (currentChildIndex != mActiveFeature)
+                    	{
+                    		currentChildIndex = mActiveFeature;
+                    		mOnImageChangedLister.onImageChange(currentChildIndex);                    		
+                    	}                    	
+                    }                    
+                    
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        });				
 	}		
 	
 	/**
@@ -376,7 +361,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	protected void onScrollChanged(int l, int t, int oldl, int oldt)
 	{
 		// TODO Auto-generated method stub
-	//	super.onScrollChanged(l, t, oldl, oldt);
+		super.onScrollChanged(l, t, oldl, oldt);
 	}
 	
 	/**

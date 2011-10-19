@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 public class XUITabParams
 {
 	public Option<String> tabText = new Option("", "");
-	public Option<Integer> tabTextColor = new Option(0x000000, 0x000000);
+	public Option<Integer> tabTextColor = new Option(0xff000000, 0xff000000);
 	public Option<Integer> tabIcon = new Option(-1, -1);
 	public Option<Drawable> tabBackground = new Option(null, null);
 	public Intent intent = null;	

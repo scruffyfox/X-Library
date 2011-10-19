@@ -284,6 +284,16 @@ public class Debug
 	 */
 	public static void logHeap(Class mClass) 
 	{
+		logHeap("", mClass);
+	}
+	
+	/**
+	 * Logs the heap size of the application and any allocation sizes
+	 * @param msg A message to display
+	 * @param mClass The class of the application to check
+	 */
+	public static void logHeap(String msg, Class mClass) 
+	{
 	    Double allocated = new Double(android.os.Debug.getNativeHeapAllocatedSize()) / new Double((1048576));
 	    Double available = new Double(android.os.Debug.getNativeHeapSize() / 1048576.0);
 	    Double free = new Double(android.os.Debug.getNativeHeapFreeSize() / 1048576.0);
@@ -291,7 +301,7 @@ public class Debug
 	    df.setMaximumFractionDigits(2);
 	    df.setMinimumFractionDigits(2);
 
-	    Log.d("MEM", "" + System.currentTimeMillis() + " - DUMP");
+	    Log.d("MEM", "" + System.currentTimeMillis() + " - DUMP: " + msg);
 	    Log.d("MEM", "Memory Heap Debug. ==============================================================================================================");
 	    Log.d("MEM", "Memory Heap Native: Allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free) in [" + mClass.getName() + "]");
 	    Log.d("MEM", "Memory Heap App: Allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory() / 1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory() / 1048576)) + "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory() / 1048576)) + "MB free)");
