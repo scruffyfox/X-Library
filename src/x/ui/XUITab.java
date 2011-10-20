@@ -51,7 +51,8 @@ public class XUITab extends RelativeLayout
 	private TextView tabText;
 	private XUITabParams params;
 	private ViewGroup tabView = null;
-	private OnPostLayoutListener mOnPostLayout = null;
+	private OnPostLayoutListener mOnPostLayout;
+	private OnTabSelectedListener mOnTabSelectedListener;
 	
 	/**
 	 * Default Constructor
@@ -182,6 +183,11 @@ public class XUITab extends RelativeLayout
 		tabText.setText(this.params.tabText.selected);
 		tabText.setTextColor(this.params.tabTextColor.selected);		
 		this.setBackgroundDrawable(this.params.tabBackground.selected);	
+		
+		if (mOnTabSelectedListener != null)
+		{
+			mOnTabSelectedListener.onTabSelected(this);
+		}
 	}
 	
 	/**
@@ -202,6 +208,9 @@ public class XUITab extends RelativeLayout
 		this.setBackgroundDrawable(this.params.tabBackground.deselected);		
 	}
 	
+	/**
+	 * Initiliazes the view
+	 */
 	private void init()
 	{			
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -213,6 +222,9 @@ public class XUITab extends RelativeLayout
 		updateSettings();
 	}	
 	
+	/**
+	 * Updates the settings of the view
+	 */
 	private void updateSettings()
 	{			
 		tabText.setText(this.params.tabText.selected);
@@ -259,6 +271,15 @@ public class XUITab extends RelativeLayout
 		mOnPostLayout = l;
 	}
 	
+	/**
+	 * Sets the tab selected listener
+	 * @param mOnTabSelectedListener The new tab selected listener
+	 */
+	public void setOnTabSelectedListener(OnTabSelectedListener mOnTabSelectedListener)
+	{
+		this.mOnTabSelectedListener = mOnTabSelectedListener;
+	}
+	
 	@Override
 	public void onLayout(boolean changed, int l, int t, int r, int b)
 	{
@@ -281,6 +302,18 @@ public class XUITab extends RelativeLayout
 		 * @param tab The tab that has been inflated
 		 * @param changed If the tab has changed or not
 		 */
-		void onPostLayout(XUITab tab, boolean changed);
+		public void onPostLayout(XUITab tab, boolean changed);
+	}
+	
+	/**
+	 * @brief The listener for when the tab is selected
+	 */
+	public interface OnTabSelectedListener
+	{
+		/**
+		 * Called when the tab has been selected
+		 * @param tab The tab which has been selected
+		 */
+		public void onTabSelected(XUITab tab);
 	}
 }

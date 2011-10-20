@@ -1,10 +1,13 @@
 package x.ui;
 
 import x.lib.Debug;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Window;
 import android.view.View.MeasureSpec;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +33,7 @@ public class XUITitleBar extends RelativeLayout
 	private RelativeLayout mLayout;
 	private String mTitleText = "";
 	private TextView mLabel;
+	private int mGravity;
 	private XUITitleButtonHost mButtonHost;
 	
 	/**
@@ -39,6 +43,7 @@ public class XUITitleBar extends RelativeLayout
 	public XUITitleBar(Context context)
 	{
 		super(context);
+		
 		mContext = context;
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -52,12 +57,14 @@ public class XUITitleBar extends RelativeLayout
 	 */
 	public XUITitleBar(Context context, AttributeSet attrs)
 	{
-		super(context, attrs);	 
+		super(context, attrs);	
+		
 		mContext = context;
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		 
 		TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.XUITitleBar);
 		mTitleText = a.getString(R.styleable.XUITitleBar_title);
+		mGravity = a.getInteger(R.styleable.XUITitleBar_gravity, Gravity.LEFT);
 		
 		init();
 	}
@@ -69,6 +76,7 @@ public class XUITitleBar extends RelativeLayout
 		mButtonHost = ((XUITitleButtonHost)findViewById(R.id.titlebar_buttons));
 						
 		setTitleText(mTitleText);
+		setTitleGravity(mGravity);
 	}
 	
 	/**
@@ -80,6 +88,37 @@ public class XUITitleBar extends RelativeLayout
 		mTitleText = text;
 		mLabel.setText(mTitleText); 
 	} 
+	
+	/**
+	 * Set the gravity of the title label
+	 * @param gravity The new gravity (Only accepts LEFT, RIGHT and CENTER)
+	 */
+	public void setTitleGravity(int gravity)
+	{
+		LayoutParams lp = (LayoutParams)mLabel.getLayoutParams();
+		
+		if (gravity == Gravity.LEFT)
+		{
+			lp.leftMargin = 10;
+		}
+		else if (gravity == Gravity.RIGHT)
+		{
+			lp.leftMargin = 0;
+			lp.rightMargin = 10;
+		}
+		else if (gravity == Gravity.CENTER)
+		{
+			lp.leftMargin = 0;
+			lp.rightMargin = 0;
+		}
+		else
+		{
+			return;
+		}
+		
+		mGravity = gravity;
+		mLabel.setGravity(mGravity | Gravity.CENTER_VERTICAL);
+	}
 	
 	/**
 	 * Sets the titlebar button host

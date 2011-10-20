@@ -12,7 +12,12 @@
 		<attr name="headerBackgroundColor" format="color"/>		
 	</declare-styleable>	
 	<declare-styleable name="XUITitleBar">
-		<attr name="title" format="string" />				
+		<attr name="title" format="string" />
+		<attr name="gravity" format="enum">
+			<enum name="left" value="0x00000003" />
+		    <enum name="center" value="0x00000011" />
+		    <enum name="right" value="0x00000005" />
+		</attr>				
 	</declare-styleable>
 	<declare-styleable name="XUITitleButton">
 		<attr name="onClick" format="string" />				

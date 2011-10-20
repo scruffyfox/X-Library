@@ -221,6 +221,9 @@ public class XUITabHost extends RelativeLayout
 		updateLayout();
 	}		
 	
+	/**
+	 * Updates the layout of the view
+	 */
 	private void updateLayout()
 	{
 		totalChildren = this.getChildCount();		
