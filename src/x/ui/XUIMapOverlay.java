@@ -3,6 +3,7 @@ package x.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import x.lib.Debug;
 import x.lib.IconOverlayItem;
 
 import android.content.Context;
@@ -65,7 +66,7 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 	 */
 	public XUIMapOverlay(Drawable defaultMarker, MapView mapView)
 	{
-		super(boundCenter(defaultMarker));
+		super(boundCenterBottom(defaultMarker));
 		
 		this.mMapView = mapView;
 		mViewOffset = 0;
@@ -81,6 +82,24 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 			}
 		});
 	}		
+	
+	/**
+	 * Sets the click listener for the bubble
+	 * @param mOnBallonClickListener The new click listener
+	 */
+	public void setOnBallonClickListener(OnBallonClickListener mOnBallonClickListener)
+	{
+		this.mOnBallonClickListener = mOnBallonClickListener;
+	}
+	
+	/**
+	 * Sets the long click listener for the bubble
+	 * @param mOnBalloonLongClickListener The new click listener
+	 */
+	public void setOnBalloonLongClickListener(OnBalloonLongClickListener mOnBalloonLongClickListener)
+	{
+		this.mOnBalloonLongClickListener = mOnBalloonLongClickListener;
+	}
 
 	/**
 	 * Adds an overlay item to the stack
@@ -89,7 +108,7 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 	public void addOverlay(OverlayItem item)
 	{
 		mOverlayItems.add(item);
-		populate();
+		populate(); 
 	}
 	
 	@Override
@@ -139,9 +158,9 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 	
 	@Override
 	protected final boolean onTap(int index)
-	{
+	{		
 		mCurrentFocussedIndex = index;
-		mCurrentFocussedItem = createItem(index);
+		mCurrentFocussedItem = createItem(index);		
 
 		boolean isRecycled;
 		if (mBalloonView == null)
@@ -164,7 +183,7 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 		{
 			hideOtherBalloons(mapOverlays);
 		}
-
+				
 		mBalloonView.setData(mCurrentFocussedItem);
 
 		GeoPoint point = mCurrentFocussedItem.getPoint();
@@ -269,6 +288,7 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 		};
 	}
 	
+	@Override
 	protected Item createItem(int i)
 	{
 		return (Item)mOverlayItems.get(i);

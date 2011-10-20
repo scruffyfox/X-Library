@@ -21,13 +21,13 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/balloon_item_icon"
 			android:visibility="gone"
+			android:layout_marginRight="10dp"
 		/>				
 				
 		<LinearLayout 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:layout_marginLeft="10dp"
+			android:orientation="vertical"			
 			android:id="@+id/balloon"
 			android:gravity="top"
 			android:layout_gravity="top"
@@ -42,8 +42,7 @@
 				android:visibility="gone"
 			/>
 			<TextView 
-				android:layout_height="wrap_content"
-				android:maxWidth="150dp"
+				android:layout_height="wrap_content" 				
 				android:layout_width="wrap_content" 
 				android:id="@+id/balloon_item_snippet"
 				android:textSize="12dip" 
