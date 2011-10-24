@@ -271,6 +271,25 @@ public class XUIMenuButtonGroup extends LinearLayout
 		}
 	}
 	
+	/**
+	 * Sets the title of the list group
+	 * @param title The new title for the list group
+	 */
+	public void setTitle(String title)
+	{
+		groupName = title;
+		
+		if (groupName != null && groupName.length() > 0)
+		{			
+			((TextView)findViewById(R.id.group_label)).setText(x.lib.StringUtils.capitalize(groupName));
+			((TextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);	
+		}
+		else
+		{
+			((TextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	
+		}
+	}
+	
 	private void updateLayout()
 	{
 		childCount = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount();
@@ -343,7 +362,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 				{
 					if (viewIndex == 0)
 					{
-						container.setBackgroundResource(R.drawable.button_group_top);
+						container.setBackgroundResource(R.drawable.button_group_top); 
 					}
 					else if (viewIndex == childCount - 1)
 					{
@@ -368,6 +387,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		if (groupName != null && groupName.length() > 0)
 		{			
 			((TextView)findViewById(R.id.group_label)).setText(x.lib.StringUtils.capitalize(groupName));
+			((TextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);
 		}
 		else
 		{

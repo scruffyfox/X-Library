@@ -18,11 +18,13 @@ import android.widget.RelativeLayout;
 public class XUITabParams
 {
 	public Option<String> tabText = new Option("", "");
+	public int tabTextSize = 14;
 	public Option<Integer> tabTextColor = new Option(0xff000000, 0xff000000);
 	public Option<Integer> tabIcon = new Option(-1, -1);
 	public Option<Drawable> tabBackground = new Option(null, null);
 	public Intent intent = null;	
 	public int gravity = 0;
+	public int layoutOrientation = LinearLayout.HORIZONTAL;
 	public RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
 	public LinearLayout.LayoutParams iconLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 	
 	
@@ -58,6 +60,11 @@ public class XUITabParams
 	{
 		public E selected;
 		public E deselected;
+		
+		public Option(E data)
+		{
+			this.selected = this.deselected = data;
+		}
 		
 		public Option(E selected, E deselected)
 		{

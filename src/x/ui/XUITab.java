@@ -146,6 +146,13 @@ public class XUITab extends RelativeLayout
 			return;
 		}
 		
+		if (this.params.intent == null)
+		{
+			Log.e("XUITab", "No Intent for tab");
+			select();
+			return;
+		}
+			
 		Activity a = (Activity)context;				
 		ViewGroup targetContainer = (ViewGroup)a.findViewById(targetView);
         Intent mIntent = this.params.intent;	       
@@ -215,7 +222,7 @@ public class XUITab extends RelativeLayout
 	{			
 		LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		tabView = (ViewGroup)inflater.inflate(R.layout.xuitab, this);
-				
+						
 		imageIcon = (ImageView)tabView.findViewById(R.id.tabIcon);
 		tabText = (TextView)tabView.findViewById(R.id.tabText);		
 				
@@ -228,20 +235,25 @@ public class XUITab extends RelativeLayout
 	private void updateSettings()
 	{			
 		tabText.setText(this.params.tabText.selected);
+		tabText.setTextSize(this.params.tabTextSize);
 		
 		LayoutParams lp = new LayoutParams(this.params.layoutParams.width, this.params.layoutParams.height);
 		lp.leftMargin = this.params.layoutParams.leftMargin;
 		lp.topMargin = this.params.layoutParams.topMargin;
 		lp.rightMargin = this.params.layoutParams.rightMargin;
-		lp.bottomMargin = this.params.layoutParams.bottomMargin;
+		lp.bottomMargin = this.params.layoutParams.bottomMargin;		
 		this.setLayoutParams(lp);	
 		
 		LinearLayout.LayoutParams ilp = new LinearLayout.LayoutParams(this.params.iconLayoutParams.width, this.params.iconLayoutParams.height);
 		ilp.leftMargin = this.params.iconLayoutParams.leftMargin;
 		ilp.topMargin = this.params.iconLayoutParams.topMargin;
 		ilp.rightMargin = this.params.iconLayoutParams.rightMargin;
-		ilp.bottomMargin = this.params.iconLayoutParams.bottomMargin;
+		ilp.bottomMargin = this.params.iconLayoutParams.bottomMargin;		
 		this.imageIcon.setLayoutParams(ilp);
+			
+		LinearLayout tabInsides = ((LinearLayout)tabView.findViewById(R.id.tabInsides));
+		tabInsides.setOrientation(this.params.layoutOrientation);		
+		tabInsides.setGravity(this.params.gravity);
 		
 		if (isSelected)
 		{

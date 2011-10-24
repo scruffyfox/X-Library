@@ -236,7 +236,7 @@ public class XUITabHost extends RelativeLayout
 		{			
 			XUITab child = (XUITab)this.getChildAt(childCount);	
 			LayoutParams childLayout = (LayoutParams)child.getLayoutParams();	
-			int height = childLayout.height < 0 ? this.getHeight() : childLayout.height;					
+			int tabHeight = childLayout.height < 0 ? this.getHeight() : childLayout.height;					
 			int tabWidth = 0;
 			
 			//	If the width is set to fill parent or wrap content
@@ -250,26 +250,59 @@ public class XUITabHost extends RelativeLayout
 				tabWidth = childLayout.width;
 			}		
 			
-			child.layout(currentXPos + childLayout.leftMargin, 0, tabWidth + (currentXPos + childLayout.leftMargin), height);
+			child.layout(currentXPos + childLayout.leftMargin, 0, tabWidth + (currentXPos + childLayout.leftMargin), tabHeight);
 			currentXPos += tabWidth;
 			widthLeft -= tabWidth;	
 			
-			//	Calculate the gravity of the view
-			switch (child.getParams().gravity)
-			{
-				case Gravity.CENTER:
-				{ 
-					LinearLayout tabContainer = (LinearLayout)child.findViewById(R.id.tabInsides);
-					int mWidth = tabContainer.getWidth();
-					int mHeight = tabContainer.getHeight();					
-					int marginLeft = (tabWidth - mWidth) / 2;
-					int marginTop = (height - mHeight) / 2;
-					
-					tabContainer.layout(marginLeft, marginTop, marginLeft + mWidth, marginTop + mHeight);
-					
-					break;
+			int mWidth = 0, mHeight = 0, marginLeft = 0, marginTop = 0;
+			
+			LinearLayout tabContainer = (LinearLayout)child.findViewById(R.id.tabInsides);
+			mWidth = tabContainer.getWidth();
+			mHeight = tabContainer.getHeight();
+			
+			//	Center gravity
+			if ((Gravity.CENTER & child.getParams().gravity) == Gravity.CENTER)
+			{				
+				if ((Gravity.CENTER_HORIZONTAL & child.getParams().gravity) == Gravity.CENTER_HORIZONTAL)
+				{
+					marginLeft = (tabWidth - mWidth) / 2;
 				}
+				else if ((Gravity.CENTER_VERTICAL & child.getParams().gravity) == Gravity.CENTER_VERTICAL)
+				{
+					marginTop = (tabHeight - mHeight) / 2;
+				}
+				else
+				{
+					marginLeft = (tabWidth - mWidth) / 2;
+					marginTop = (tabHeight - mHeight) / 2;
+				}
+			}	
+			
+			//	Left gravity
+			if ((Gravity.LEFT & child.getParams().gravity) == Gravity.LEFT)
+			{												
+				marginLeft = 0;				
 			}
+			
+			//	Right gravity
+			if ((Gravity.RIGHT & child.getParams().gravity) == Gravity.RIGHT)
+			{
+				marginLeft = (tabWidth - mWidth);
+			}
+			
+			//	Top gravity
+			if ((Gravity.TOP & child.getParams().gravity) == Gravity.TOP)
+			{
+				marginTop = 0;
+			}
+			
+			//	Bottom gravity
+			if ((Gravity.BOTTOM & child.getParams().gravity) == Gravity.BOTTOM)
+			{
+				marginTop = (tabHeight - mHeight);
+			}
+			
+			tabContainer.layout(marginLeft, marginTop, marginLeft + mWidth, marginTop + mHeight);
 		}
 	}
 	

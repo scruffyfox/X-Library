@@ -10,6 +10,8 @@ import java.lang.reflect.Method;
 import x.lib.Debug;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +63,7 @@ public class XUIMenuButton extends LinearLayout
 	private LayoutInflater mLayoutInflater;
 	private int mChildCount = 0;
 	private ViewGroup mLayout;
+	private ImageView mImageView;
 	private TextView mLabel;
 	private View mContentView;
 	private boolean mSetOnClickListener;
@@ -184,6 +188,48 @@ public class XUIMenuButton extends LinearLayout
 		return mContentView;
 	}
  
+	/**
+	 * Sets the icon in the menu item
+	 * @param v The new ImageView
+	 */
+	public void setIcon(ImageView v)
+	{
+		mImageView = v;		
+		
+		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
+		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
+	}
+	
+	/**
+	 * Sets the icon in the menu item
+	 * @param b The new bitmap of the icon
+	 */
+	public void setIcon(Bitmap b)
+	{
+		mImageView = new ImageView(mContext);
+		mImageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		mImageView.setImageBitmap(b);
+		
+		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
+		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
+		
+		Debug.out("icon");
+	}
+	
+	/**
+	 * Sets the icon in the menu item
+	 * @param d The new Drawable of the icon
+	 */
+	public void setIcon(Drawable d)
+	{
+		mImageView = new ImageView(mContext);
+		mImageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		mImageView.setImageDrawable(d);
+		
+		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
+		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
+	}
+	
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) 
 	{	
@@ -197,21 +243,60 @@ public class XUIMenuButton extends LinearLayout
 	{	
 		super.onFinishInflate();
 		
-		mLabel = (TextView)getChildAt(0);
-		mContentView = (View)getChildAt(1);
+		/**
+		 * Possible combinations:
+		 * [text]
+		 * [image, text]
+		 * [text, content]
+		 * [image, text, content]
+		 */
+		if (getChildCount() == 1)
+		{
+			mLabel = (TextView)getChildAt(0);
+		}
+		else if (getChildCount() == 2)
+		{			
+			if (getChildAt(0) instanceof TextView)
+			{
+				mLabel = (TextView)getChildAt(0);
+				mContentView = (View)getChildAt(1);
+			}
+			else
+			{
+				mImageView = (ImageView)getChildAt(0);
+				mLabel = (TextView)getChildAt(1);		
+			}
+		}
+		else if (getChildCount() == 3)
+		{
+			mImageView = (ImageView)getChildAt(0);
+			mLabel = (TextView)getChildAt(1);
+			mContentView = (View)getChildAt(2);
+		}
 			
 		this.removeAllViews();				
 		
 		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 		mLabel.setTextColor(0xff352B21);		 
 		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>")); 
-		
 		 
 		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
 		
-		((LinearLayout)mLayout.findViewById(R.id.label)).addView(mLabel);  
-		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);				
+		if (mLabel != null)
+		{			
+			((LinearLayout)mLayout.findViewById(R.id.label)).addView(mLabel);
+		}
+		
+		if (mContentView != null)
+		{			
+			((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);
+		}
+		
+		if (mImageView != null)
+		{
+			((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);			
+		}
 		
 		this.addView(mLayoutView);		
 	}
