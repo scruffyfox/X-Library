@@ -102,8 +102,6 @@ public class XUIWebView extends WebView
 		@Override
 		public void onPageFinished(WebView view, String url)
 		{
-			Debug.out(url);
-			
 			if (loadCount < 1)
 			{
 				if (mOnPageLoadListener != null && (url.contains("http://") || url.contains("https://") || url.contains("file:///")))

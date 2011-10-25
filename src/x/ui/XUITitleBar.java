@@ -66,7 +66,7 @@ public class XUITitleBar extends RelativeLayout
 		mTitleText = a.getString(R.styleable.XUITitleBar_title);
 		mGravity = a.getInteger(R.styleable.XUITitleBar_gravity, Gravity.LEFT);
 		
-		init();
+		init(); 
 	}
 
 	private void init()

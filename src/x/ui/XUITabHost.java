@@ -262,26 +262,25 @@ public class XUITabHost extends RelativeLayout
 			
 			//	Center gravity
 			if ((Gravity.CENTER & child.getParams().gravity) == Gravity.CENTER)
-			{				
+			{	
+				marginLeft = (tabWidth - mWidth) / 2;
+				marginTop = (tabHeight - mHeight) / 2;
+				
 				if ((Gravity.CENTER_HORIZONTAL & child.getParams().gravity) == Gravity.CENTER_HORIZONTAL)
 				{
 					marginLeft = (tabWidth - mWidth) / 2;
 				}
-				else if ((Gravity.CENTER_VERTICAL & child.getParams().gravity) == Gravity.CENTER_VERTICAL)
+				
+				if ((Gravity.CENTER_VERTICAL & child.getParams().gravity) == Gravity.CENTER_VERTICAL)
 				{
 					marginTop = (tabHeight - mHeight) / 2;
-				}
-				else
-				{
-					marginLeft = (tabWidth - mWidth) / 2;
-					marginTop = (tabHeight - mHeight) / 2;
-				}
+				}				
 			}	
 			
 			//	Left gravity
 			if ((Gravity.LEFT & child.getParams().gravity) == Gravity.LEFT)
 			{												
-				marginLeft = 0;				
+				marginLeft = 0;
 			}
 			
 			//	Right gravity
@@ -293,13 +292,13 @@ public class XUITabHost extends RelativeLayout
 			//	Top gravity
 			if ((Gravity.TOP & child.getParams().gravity) == Gravity.TOP)
 			{
-				marginTop = 0;
+				marginTop = 3;
 			}
 			
 			//	Bottom gravity
 			if ((Gravity.BOTTOM & child.getParams().gravity) == Gravity.BOTTOM)
 			{
-				marginTop = (tabHeight - mHeight);
+				marginTop = (tabHeight - mHeight) - 3;
 			}
 			
 			tabContainer.layout(marginLeft, marginTop, marginLeft + mWidth, marginTop + mHeight);

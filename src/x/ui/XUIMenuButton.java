@@ -49,7 +49,7 @@ import android.widget.TextView;
  *		/>
  *		<TextView
  *			android:layout_width="wrap_content"
- *			android:layout_height="wrap_content"
+ *			android:layout_height="wrap_content" 
  *			android:text=""
  *			android:textSize="16dp"
  *		/>
@@ -80,15 +80,15 @@ public class XUIMenuButton extends LinearLayout
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, this);
-		mLayout = (ViewGroup)mLayoutView;//(ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
+		mLayout = (ViewGroup)mLayoutView;
 		
 		init();
 	}
 	
-	/**
+	/** 
 	 * Default Constructor
 	 * @param context 
-	 * @param attrs
+	 * @param attrs 
 	 */ 
 	public XUIMenuButton(Context context, AttributeSet attrs)
 	{
@@ -100,6 +100,18 @@ public class XUIMenuButton extends LinearLayout
 			 
 		init();
 	}	 
+		
+	/**
+	 * Override of the padding method
+	 * @param l Left padding
+	 * @param t Top padding
+	 * @param r Right padding
+	 * @param b Bottom padding
+	 */
+	public void setMenuPadding(int l, int t, int r, int b)
+	{
+		mLayout.getChildAt(0).setPadding(l, t, r, b);
+	}
 	
 	private void init()
 	{
@@ -157,12 +169,16 @@ public class XUIMenuButton extends LinearLayout
 			t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 			t.setTextColor(0xff352B21);		
 			t.setText(Html.fromHtml("<b>" + text + "</b>"));
+			t.setGravity(Gravity.CENTER_VERTICAL);
+			t.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 			
 			((LinearLayout)mLayout.findViewById(R.id.label)).addView(t);
 		}
 		else
 		{
 			TextView t = (TextView)((LinearLayout)mLayout.findViewById(R.id.label)).getChildAt(0);
+			t.setGravity(Gravity.CENTER_VERTICAL);
+			t.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 			t.setText(text); 
 		}
 	}
@@ -198,6 +214,7 @@ public class XUIMenuButton extends LinearLayout
 		
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
+		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
 	
 	/**
@@ -212,8 +229,7 @@ public class XUIMenuButton extends LinearLayout
 		
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
-		
-		Debug.out("icon");
+		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
 	
 	/**
@@ -228,6 +244,7 @@ public class XUIMenuButton extends LinearLayout
 		
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
+		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
 	
 	@Override
@@ -242,7 +259,7 @@ public class XUIMenuButton extends LinearLayout
 	protected void onFinishInflate()  
 	{	
 		super.onFinishInflate();
-		
+	
 		/**
 		 * Possible combinations:
 		 * [text]
@@ -295,9 +312,10 @@ public class XUIMenuButton extends LinearLayout
 		
 		if (mImageView != null)
 		{
-			((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);			
+			((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);		
+			((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 		}
 		
-		this.addView(mLayoutView);		
+		this.addView(mLayoutView);						
 	}
 }

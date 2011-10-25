@@ -8,9 +8,7 @@
     <TextView
     	android:id="@+id/titlebar_label"
     	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:text=""	
-    	android:textSize="@dimen/titlebar_title_size"
+    	android:layout_height="fill_parent"    	
     	android:gravity="center_vertical"
     	android:layout_marginLeft="10dp"
     	style="@style/titlebar_label"

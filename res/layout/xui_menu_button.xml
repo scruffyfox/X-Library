@@ -3,32 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/container"
+    android:layout_height="fill_parent"   
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+    android:paddingRight="12dp" 
 >
 	<RelativeLayout
 		android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"	
+	    android:layout_height="fill_parent"	    
+	    android:id="@+id/container"    		    
 	>
 		<LinearLayout
 			android:id="@+id/icon"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
 			android:gravity="left|center_vertical"
-			android:layout_gravity="left|center_vertical"		
+			android:layout_gravity="left|center_vertical"			
 		/>
 	
 		<LinearLayout
 			android:id="@+id/label"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" 
-			android:gravity="left|center_vertical"
-			android:layout_gravity="left|center_vertical"	
-			android:layout_toLeftOf="@id/icon"	
+			android:layout_height="fill_parent" 
+			android:gravity="center_vertical"
+			android:layout_gravity="center_vertical"	
+			android:layout_toRightOf="@id/icon"	
 		/>
 		
 		<LinearLayout 
@@ -36,7 +36,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:gravity="right|center_vertical"
-			android:layout_gravity="right|center_vertical"
+			android:layout_gravity="right|center_vertical"			
 		/>
 	</RelativeLayout>
 </LinearLayout>

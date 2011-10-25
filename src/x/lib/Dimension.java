@@ -16,6 +16,7 @@ import android.util.TypedValue;
 public class Dimension
 {
 	private DisplayMetrics mDM;
+	private float mRatio = (800.0f / 480.0f);
 	
 	/**
 	 * The default constructor
@@ -25,6 +26,45 @@ public class Dimension
 	{
 		mDM = new DisplayMetrics();
 		context.getWindowManager().getDefaultDisplay().getMetrics(mDM);		
+	}
+	
+	/**
+	 * Sets the ratio for the conversion
+	 * @param width The width of the desired ratio
+	 * @param height The height of the desired ratio
+	 */
+	public void setRatio(int width, int height)
+	{
+		mRatio = ((float)width / (float)height);
+	}
+	
+	/**
+	 * Sets the ratio for the conversion
+	 * @param ratio The new ratio
+	 */
+	public void setRatio(float ratio)
+	{
+		mRatio = ratio;
+	}
+	
+	/** 
+	 * Get the calculated width of the ratio and desired width
+	 * @param width The original width
+	 * @return The new width calculated
+	 */
+	public float getWidthFromRatio(int width)
+	{
+		return mRatio * (float)width;
+	}
+	
+	/**
+	 * Get the calculated height of the ratio and desired height
+	 * @param width The original height
+	 * @return The new height calculated
+	 */
+	public float getHeightFromRatio(int height)
+	{
+		return mRatio * (float)height;
 	}
 	
 	/**
