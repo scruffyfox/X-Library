@@ -27,6 +27,7 @@ import android.util.Log;
  */
 public class CacheManager implements Serializable
 {
+	private String mCachePath;
 	private Context context;
 	private ArrayList<String> fileNames;
 	private String mPackageName;
@@ -41,8 +42,17 @@ public class CacheManager implements Serializable
 		this.context = context;
 		this.mPackageName = packageName;
 		fileNames = new ArrayList<String>();
+		
+		mCachePath = context.getExternalCacheDir().getAbsolutePath();
 	}
 
+	public CacheManager(String path, String packageName)
+	{
+		mCachePath = path;
+		mPackageName = packageName;
+		fileNames = new ArrayList<String>();
+	}
+	
 	/**
 	 * Gets a base64'd MD5 hash of an input string
 	 * @param input The input string
@@ -121,7 +131,7 @@ public class CacheManager implements Serializable
 	 */
 	public long getCacheSize()
 	{
-		File files = this.context.getCacheDir();
+		File files = new File(mCachePath);
 				
 		FileFilter filter = new FileFilter()
 		{
@@ -156,12 +166,13 @@ public class CacheManager implements Serializable
 	{
 		try
 		{
-			File f = new File(this.context.getCacheDir().getAbsolutePath(), "cache_" + fileName);			
+			File f = new File(mCachePath, "cache_" + fileName);			
 			
 			return f.exists();
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -173,7 +184,7 @@ public class CacheManager implements Serializable
 	 */
 	public long fileModifiedDate(String fileName)
 	{
-		File f = new File(this.context.getCacheDir().getAbsoluteFile(), "cache_" + fileName);
+		File f = new File(mCachePath, "cache_" + fileName);
 		
 		return f.lastModified();
 	}
@@ -212,13 +223,22 @@ public class CacheManager implements Serializable
 	 */
 	public void checkCacheLimit()
 	{
-		SharedPreferences mPrefs = context.getSharedPreferences(mPackageName, Context.MODE_WORLD_WRITEABLE);
-        long currentCacheLimit = mPrefs.getInt("cacheLimit", 10) * 1024 * 1024;
-        long currentUsed = getCacheSize();
+		long currentUsed = getCacheSize();
+		long currentCacheLimit;
+		
+		try
+		{
+			SharedPreferences mPrefs = context.getSharedPreferences(mPackageName, Context.MODE_WORLD_WRITEABLE);
+	        currentCacheLimit = mPrefs.getInt("cacheLimit", -1) * 1024 * 1024;
+		}
+		catch (Exception e) 
+		{
+			currentCacheLimit = -1;
+		}
+		
+        if (currentCacheLimit > currentUsed || currentCacheLimit < 0) return;
         
-        if (currentCacheLimit > currentUsed) return;
-        
-		File files = this.context.getCacheDir();		
+		File files = new File(mCachePath);	
 		FileFilter filter = new FileFilter()
 		{
 			public boolean accept(File arg0) 
@@ -312,7 +332,7 @@ public class CacheManager implements Serializable
 			folderName = "/cache_" + folderName;
 		}
 		
-		File f = new File(context.getCacheDir().getPath() + folderName, "cache_" + fileName);
+		File f = new File(mCachePath + folderName, "cache_" + fileName);
 		return f.delete();
 	}
 	
@@ -323,7 +343,7 @@ public class CacheManager implements Serializable
 	 */
 	public boolean removeFolder(String folderName)
 	{
-		File f = new File(context.getCacheDir().getPath() + "/cache_" + folderName);
+		File f = new File(mCachePath + "/cache_" + folderName);
 		
 		File[] fileList = f.listFiles();
 		double totalSize = 0;
@@ -389,14 +409,14 @@ public class CacheManager implements Serializable
 					File outputPath;
 					if (mFolderName != null)
 					{
-						File f = new File(context.getCacheDir().getPath() + "/cache_" + mFolderName);
+						File f = new File(mCachePath + "/cache_" + mFolderName);
 						f.mkdir();
 					
-						outputPath = new File(context.getCacheDir().getPath() + "/cache_" + mFolderName, "cache_" + mFileName);
+						outputPath = new File(mCachePath + "/cache_" + mFolderName, "cache_" + mFileName);
 					}
 					else
 					{
-						outputPath = new File(context.getCacheDir().getPath(), "cache_" + mFileName);
+						outputPath = new File(mCachePath, "cache_" + mFileName);
 					}					
 										
 					FileOutputStream output = new FileOutputStream(outputPath);										
@@ -466,27 +486,48 @@ public class CacheManager implements Serializable
 			public void run()
 			{
 				try
-				{			
-					File outputPath;
-					if (mFolderName != null)
+				{							
+					String outputPath;
+					if (mFolderName != null && mFolderName.length() > 0)
 					{
-						File f = new File(context.getCacheDir().getPath() + "/cache_" + mFolderName);
+						File f = new File(mCachePath + "/cache_" + mFolderName);
 						f.mkdir();
 					
-						outputPath = new File(context.getCacheDir().getPath() + "/cache_" + mFolderName, "cache_" + mFileName);
+						outputPath = "cache_" + mFolderName + "/cache_" + mFileName;
 					}
 					else
 					{
-						outputPath = new File(context.getCacheDir().getPath(), "cache_" + mFileName);
+						outputPath = "cache_" + mFileName;
 					}
 					
-					FileOutputStream output = new FileOutputStream(outputPath);
-					ObjectOutputStream stream = new ObjectOutputStream(output);
-					stream.writeObject(mContents);
-					stream.flush();
-					output.flush();
-					stream.close();
-					output.close();		
+					FileOutputStream fos = null;					
+					try
+					{
+						if (fos == null)
+						{
+							File f = new File(mCachePath + "/" + outputPath);
+							fos = new FileOutputStream(mCachePath + "/" + outputPath);
+						}
+						
+					    fos.write((byte[])mContents);
+					    fos.close();
+					}
+					catch (Exception e)
+					{
+						if (fos == null) 
+						{
+							File f = new File(mCachePath + "/" + outputPath);
+							fos = new FileOutputStream(mCachePath + "/" + outputPath);
+						}
+						
+						ObjectOutputStream stream = new ObjectOutputStream(fos);
+						
+						stream.writeObject(mContents);
+						stream.flush();
+						fos.flush();
+						stream.close();
+						fos.close();		
+					} 
 										
 					if (mListener != null)
 					{
@@ -502,7 +543,7 @@ public class CacheManager implements Serializable
 					
 					checkCacheLimit();
 				}
-			}
+			} 
 		};				
 		
 		r.start();
@@ -519,7 +560,7 @@ public class CacheManager implements Serializable
 	{
 		try
 		{					
-			File file = new File(context.getCacheDir().getAbsolutePath(), "cache_" + fileName);
+			File file = new File(mCachePath, "cache_" + fileName);
 			FileInputStream input = new FileInputStream(file);
 
 			BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -537,6 +578,7 @@ public class CacheManager implements Serializable
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -556,7 +598,7 @@ public class CacheManager implements Serializable
 				folderName = "/cache_" + folderName;
 			}
 			
-			File file = new File(context.getCacheDir().getAbsolutePath() + folderName, "cache_" + fileName);
+			File file = new File(mCachePath + folderName, "cache_" + fileName);
 			FileInputStream input = new FileInputStream(file);
 
 			BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -574,6 +616,7 @@ public class CacheManager implements Serializable
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -598,12 +641,16 @@ public class CacheManager implements Serializable
 	{
 		try
 		{
+			String filePath = mCachePath;
 			if (folderName != null && !folderName.equals(""))
 			{
-				folderName = "/cache_" + folderName;
+				filePath += "/cache_" + folderName + "/";
 			}
 			
-			File file = new File(context.getCacheDir().getAbsolutePath() + "/" + folderName, "cache_" + fileName);
+			File file = new File(filePath, "cache_" + fileName);
+			
+			Debug.out("length: " + file.length());
+			
 			FileInputStream input = new FileInputStream(file);
 			ObjectInputStream stream = new ObjectInputStream(input);
 			Object data = stream.readObject();

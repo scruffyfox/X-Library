@@ -42,7 +42,13 @@ public abstract class AsyncHttpResponse
 	 * The function that gets called when the server response with >= 200 and < 300
 	 * @param response The response message
 	 */
-	public abstract void onSuccess(Object response);
+	public void onSuccess(Object response){};
+	
+	/**
+	 * The function that gets called when the server response with >= 200 and < 300
+	 * @param response The response message
+	 */
+	public void onSuccess(byte[] response){};
 	
 	/**
 	 * The function that gets called when the server response with an array (@see getImages())

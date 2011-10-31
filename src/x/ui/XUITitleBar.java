@@ -87,7 +87,18 @@ public class XUITitleBar extends RelativeLayout
 	{
 		mTitleText = text;
 		mLabel.setText(mTitleText); 
+		mLabel.setContentDescription(mTitleText);
+		mLabel.setFocusable(true);
 	} 
+	
+	/**
+	 * Sets the title bar text size
+	 * @param size The new text size
+	 */
+	public void setTitleTextSize(int size)
+	{
+		mLabel.setTextSize(size);
+	}	
 	
 	/**
 	 * Set the gravity of the title label

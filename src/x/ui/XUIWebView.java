@@ -5,17 +5,22 @@
 **/
 package x.ui;
 
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+
+import x.lib.Debug;
+import x.lib.StringUtils;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import x.lib.*;
 
 public class XUIWebView extends WebView
 {
 	private OnPageLoadListener mOnPageLoadListener;
 	private OnLinkClickedListener mOnLinkClickedListener;
+	public Context mContext;
 	
 	/**
 	 * Default constructor
@@ -24,7 +29,8 @@ public class XUIWebView extends WebView
 	public XUIWebView(Context context)
 	{
 		super(context);
-					
+	
+		mContext = context;
 		init();
 	}
 	
@@ -37,6 +43,7 @@ public class XUIWebView extends WebView
 	{ 
 		super(context, attr);
 		
+		mContext = context;
 		init();
 	}
 	
@@ -60,7 +67,7 @@ public class XUIWebView extends WebView
 	
 	private void init()
 	{
-		ViewClient mViewClient = new ViewClient();
+		ViewClient mViewClient = new ViewClient();		
 		setWebViewClient(mViewClient);		
 		
 		this.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
@@ -104,7 +111,7 @@ public class XUIWebView extends WebView
 		{
 			if (loadCount < 1)
 			{
-				if (mOnPageLoadListener != null && (url.contains("http://") || url.contains("https://") || url.contains("file:///")))
+				if (mOnPageLoadListener != null && (url.contains("http://") || url.contains("https://") || url.contains("file://")))
 				{					
 					mOnPageLoadListener.onPageLoad();
 				}
@@ -115,7 +122,7 @@ public class XUIWebView extends WebView
 		
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url)
-		{		
+		{					
 			if (mOnLinkClickedListener != null)
 			{
 				return mOnLinkClickedListener.onLinkClicked(url);
@@ -135,7 +142,7 @@ public class XUIWebView extends WebView
 			Debug.out("WebClient: (" + lineNumber + ") " + message);
 		}
 	}
-	
+
 	/**
 	 * The interface for page load 
 	 */

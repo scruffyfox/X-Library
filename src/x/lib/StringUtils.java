@@ -138,5 +138,28 @@ public class StringUtils
 		}
 		
 		return newStr;
-	}		
+	}	
+	
+	public static String preview(String str, int limitSize)
+	{
+		int count = limitSize;		
+					
+		if (str.length() > limitSize)
+		{	
+			while (str.charAt(limitSize) != ' ' && limitSize < str.length() - 1)
+			{
+				count++;
+				if (count - limitSize == 12)
+				{ 
+					return str.substring(0, limitSize) + "...";
+				}
+			}
+			
+			return str.substring(0, limitSize) + "...";
+		}
+		else
+		{			
+			return str;
+		}		
+	}
 }

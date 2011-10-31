@@ -38,7 +38,7 @@ import android.widget.TextView;
  *			android:onClick="townClick"  
  *			android:clickable="true"
  *		>
- *			<TextView
+ *			<TextView 
  *				android:layout_width="wrap_content"
  *				android:layout_height="wrap_content"
  *				android:text="Town / City"    					
@@ -74,7 +74,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	private Context mContext;
 	private ViewGroup layoutView = null;
 	private int childCount = 0;
-	private LayoutInflater mLayoutInflater;
+	private LayoutInflater mLayoutInflater; 
 	private String groupName = "";
 	private OnMenuButtonAdded mOnMenuButtonAdded;
 	private OnMenuButtonRemoved mOnMenuButtonRemoved;
@@ -175,7 +175,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * Adds a new button to the group
 	 * @param child The new button to add
 	 */
-	public void addMenuButton(XUIMenuButton... child)
+	public void addMenuButton(XUIMenuButton... child) 
 	{
 		for (XUIMenuButton b : (XUIMenuButton[])child)
 		{
@@ -268,8 +268,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 			{
 				mOnMenuButtonRemoved.onMenuButtonRemoved(index);
 			}
-		}
-	}
+		}		
+	}	
 	
 	/**
 	 * Sets the title of the list group
@@ -296,33 +296,38 @@ public class XUIMenuButtonGroup extends LinearLayout
 		
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{
-			View childView = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildAt(viewIndex);
+			XUIMenuButton childView = (XUIMenuButton)((LinearLayout)layoutView.findViewById(R.id.items)).getChildAt(viewIndex);
 			
 			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
 			{			
 				if (childCount == 1)
 				{
-					childView.setBackgroundResource(R.drawable.button_group_all);
+					//childView.setBackgroundResource(R.drawable.button_group_all);
+					childView.setStateResouces(R.drawable.button_group_all);
 				}		
 				else
 				{
 					if (viewIndex == 0)
 					{
-						childView.setBackgroundResource(R.drawable.button_group_top);
+						//childView.setBackgroundResource(R.drawable.button_group_top);
+						childView.setStateResouces(R.drawable.button_group_top);
 					}
 					else if (viewIndex == childCount - 1)
 					{
-						childView.setBackgroundResource(R.drawable.button_group_bottom);
+						//childView.setBackgroundResource(R.drawable.button_group_bottom);
+						childView.setStateResouces(R.drawable.button_group_bottom);
 					}
 					else
 					{
-						childView.setBackgroundResource(R.drawable.button_group_middle);
+						//childView.setBackgroundResource(R.drawable.button_group_middle);
+						childView.setStateResouces(R.drawable.button_group_middle);
 					}
 				}	
 			}
 			else
 			{
-				childView.setBackgroundResource(R.drawable.button_group_middle);
+				//childView.setBackgroundResource(R.drawable.button_group_middle);
+				childView.setStateResouces(R.drawable.button_group_middle);
 			}
 		}
 	}
@@ -350,33 +355,38 @@ public class XUIMenuButtonGroup extends LinearLayout
 				
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{
-			LinearLayout container = (LinearLayout)views[viewIndex].findViewById(R.id.container).getParent();
+			//LinearLayout container = (LinearLayout)views[viewIndex].findViewById(R.id.container).getParent();
 			
 			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
 			{			
 				if (childCount == 1)
 				{
-					container.setBackgroundResource(R.drawable.button_group_all);
+					//views[viewIndex].setBackgroundResource(R.drawable.button_group_all);
+					views[viewIndex].setStateResouces(R.drawable.button_group_all);
 				}		
 				else
 				{
 					if (viewIndex == 0)
 					{
-						container.setBackgroundResource(R.drawable.button_group_top); 
+						//views[viewIndex].setBackgroundResource(R.drawable.button_group_top); 
+						views[viewIndex].setStateResouces(R.drawable.button_group_top);
 					}
 					else if (viewIndex == childCount - 1)
 					{
-						container.setBackgroundResource(R.drawable.button_group_bottom);
+						//views[viewIndex].setBackgroundResource(R.drawable.button_group_bottom);
+						views[viewIndex].setStateResouces(R.drawable.button_group_bottom);
 					}
 					else
 					{
-						container.setBackgroundResource(R.drawable.button_group_middle);
+						//views[viewIndex].setBackgroundResource(R.drawable.button_group_middle);
+						views[viewIndex].setStateResouces(R.drawable.button_group_middle);
 					}
 				}	
 			}
 			else
 			{
-				container.setBackgroundResource(R.drawable.button_group_middle);
+				//views[viewIndex].setBackgroundResource(R.drawable.button_group_middle);
+				views[viewIndex].setStateResouces(R.drawable.button_group_middle);
 			}
 						
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(views[viewIndex]);			
@@ -391,7 +401,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		} 
 		else
 		{
-			((TextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	
+			((TextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	 
 		}
 	}
 	

@@ -187,6 +187,7 @@ public class XUITab extends RelativeLayout
 			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.selected));
 		}
 		
+		tabText.setContentDescription(this.params.tabText.deselected);
 		tabText.setText(this.params.tabText.selected);
 		tabText.setTextColor(this.params.tabTextColor.selected);		
 		this.setBackgroundDrawable(this.params.tabBackground.selected);	
@@ -202,7 +203,7 @@ public class XUITab extends RelativeLayout
 	 */
 	public void deselect()
 	{
-		isSelected = false; 
+		isSelected = false;  
 		
 		if (this.params.tabIcon.deselected > -1)
 		{
@@ -210,6 +211,7 @@ public class XUITab extends RelativeLayout
 			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.deselected));
 		}
 		
+		tabText.setContentDescription(this.params.tabText.deselected);
 		tabText.setText(this.params.tabText.deselected);
 		tabText.setTextColor(this.params.tabTextColor.deselected);
 		this.setBackgroundDrawable(this.params.tabBackground.deselected);		
@@ -236,6 +238,7 @@ public class XUITab extends RelativeLayout
 	{			
 		tabText.setText(this.params.tabText.selected);
 		tabText.setTextSize(this.params.tabTextSize);
+		tabText.setContentDescription(this.params.tabText.selected);
 		
 		LayoutParams lp = new LayoutParams(this.params.layoutParams.width, this.params.layoutParams.height);
 		lp.leftMargin = this.params.layoutParams.leftMargin;
@@ -274,7 +277,7 @@ public class XUITab extends RelativeLayout
 		return this.params.intent;
 	}
 	
-	/**
+	/** 
 	 * Sets the post layout listener
 	 * @param l The new post layout listener
 	 */
@@ -308,7 +311,7 @@ public class XUITab extends RelativeLayout
 	 */
 	public interface OnPostLayoutListener
 	{
-		/**
+		/** 
 		 * Called when the tab has been inflated. Useful for getting the calculated size to manipulate
 		 * bitmaps with and set as icons or backgrounds.
 		 * @param tab The tab that has been inflated

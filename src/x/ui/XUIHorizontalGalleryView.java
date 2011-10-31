@@ -22,7 +22,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
- * @brief Horizontal gallery view for swiping images similar to the iPhone gallery
+ * @brief Horizontal gallery view for swiping views similar to the iPhone gallery.
+ * @added Added generic children, gallery swiper now supports any children, not just image views.
  * 
  * XML Example
  * @code
@@ -70,7 +71,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	private int screenWidth;
 	private int childCount = 0;
 	private boolean canScroll = true;
-	private OnImageChangedListener mOnImageChangedLister;
+	private OnViewChangedListener mOnViewChangedLister;
 	private View childView;
   
 	/**
@@ -110,7 +111,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Adds an image to the scroller
 	 * @param image The imageview to add
 	 */
-	public void addImage(View child)
+	public void addChildView(View child)
 	{
 		//if (!(child instanceof ImageView)) return;
 		
@@ -122,7 +123,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * @param image The imageview to add
 	 * @param index The index to add the view at
 	 */
-	public void addImage(View child, int index)
+	public void addChildView(View child, int index)
 	{
 		//if (!(child instanceof ImageView)) return;
 		
@@ -134,7 +135,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * @param image The imageview to add
 	 * @param params The params for the new view
 	 */
-	public void addImage(View child, android.view.ViewGroup.LayoutParams params)
+	public void addChildView(View child, android.view.ViewGroup.LayoutParams params)
 	{
 		//if (!(child instanceof ImageView)) return;
 		
@@ -145,7 +146,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Removes an image at an index
 	 * @param view The view of the image to remove
 	 */
-	public void removeImage(View view)
+	public void removeChild(View view)
 	{
 		((ViewGroup)this.getChildAt(0)).removeView(view);
 	}
@@ -154,7 +155,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Removes an image at an index
 	 * @param index The index of the image to remove
 	 */
-	public void removeImageAt(int index)
+	public void removeChildAt(int index)
 	{
 		((ViewGroup)this.getChildAt(0)).removeViewAt(index);
 	}
@@ -162,8 +163,8 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	/**
 	 * Removes all the views
 	 */
-	public void removeAllImages()
-	{
+	public void removeAllChildren()
+	{		
 		((ViewGroup)this.getChildAt(0)).removeAllViews();
 	}
 
@@ -172,18 +173,18 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * @param index The index of the image view
 	 * @return The ImageView
 	 */
-	public ImageView getImageAt(int index)
+	public View getChildViewAt(int index)
 	{
-		return (ImageView)((ViewGroup)this.getChildAt(0)).getChildAt(index);
+		return (View)((ViewGroup)this.getChildAt(0)).getChildAt(index);
 	}
 	
 	/**
 	 * Returns the current image view in the view
 	 * @return The current image view
 	 */
-	public ImageView getCurrentImageView()
+	public View getCurrentChildView()
 	{
-		return getImageAt(currentChildIndex);
+		return getChildViewAt(currentChildIndex);
 	}
 	
 	/**
@@ -200,11 +201,11 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * This must be called BEFORE onLayout in order to work
 	 * @param index The index to go to
 	 */
-	public void setStartingImageView(int index)
+	public void setStartingChildView(int index)
 	{
-		if (index > getImageCount()) 
+		if (index > getChildViewCount()) 
 		{
-			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getImageCount() +"]");
+			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
 		
         currentChildIndex = index;        
@@ -214,23 +215,24 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Scrolls the view to the specified image index
 	 * @param index The index to go to
 	 */
-	public void scrollToImageAt(int index)
+	public void scrollToChildAt(int index)
 	{
-		if (index > getImageCount()) 
+		if (index > getChildViewCount()) 
 		{
-			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getImageCount() +"]");
+			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
 		
 		int featureWidth = getMeasuredWidth();
         scrollTo(index * featureWidth, 0);
         
-        if (mOnImageChangedLister != null)
+        if (currentChildIndex != index)
+    	{
+    		currentChildIndex = index;
+    	}
+        
+        if (mOnViewChangedLister != null)
         {
-        	if (currentChildIndex != index)
-        	{
-        		currentChildIndex = index;
-        		mOnImageChangedLister.onImageChange(index);                		
-        	}                    	
+        	mOnViewChangedLister.onViewChange(index);                		                   	
         }        
 	}
 	
@@ -238,23 +240,24 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Scrolls the view to the specified image index
 	 * @param index The index to go to
 	 */
-	public void smoothScrollToImageAt(int index)
+	public void smoothScrollToChildAt(int index)
 	{
-		if (index > getImageCount()) 
+		if (index > getChildViewCount()) 
 		{
-			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getImageCount() +"]");
+			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
 		
 		int featureWidth = getMeasuredWidth();
         smoothScrollTo(index * featureWidth, 0);
+       
+        if (currentChildIndex != index)
+    	{
+    		currentChildIndex = index;
+    	}
         
-        if (mOnImageChangedLister != null)
-        {
-        	if (currentChildIndex != index)
-        	{
-        		currentChildIndex = index;
-        		mOnImageChangedLister.onImageChange(index);                		
-        	}                    	
+        if (mOnViewChangedLister != null)
+        {        
+       		mOnViewChangedLister.onViewChange(index);                		        	                    
         }
 	}
 	
@@ -309,13 +312,14 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
                     int scrollTo = mActiveFeature * featureWidth;
                     smoothScrollTo(scrollTo, 0);
                     
-                    if (mOnImageChangedLister != null)
-                    {
-                    	if (currentChildIndex != mActiveFeature)
-                    	{
-                    		currentChildIndex = mActiveFeature;
-                    		mOnImageChangedLister.onImageChange(currentChildIndex);                    		
-                    	}                    	
+                    if (currentChildIndex != mActiveFeature)
+                	{
+                		currentChildIndex = mActiveFeature;
+                	}
+                    
+                    if (mOnViewChangedLister != null)
+                    {                    	
+                    	mOnViewChangedLister.onViewChange(currentChildIndex);                    		                    	               	
                     }                    
                     
                     return true;
@@ -332,9 +336,9 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Sets the image change listener
 	 * @param imageListener The new image change listener
 	 */
-	public void setOnImageChange(OnImageChangedListener imageListener)
+	public void setOnViewChange(OnViewChangedListener imageListener)
 	{
-		this.mOnImageChangedLister = imageListener;
+		this.mOnViewChangedLister = imageListener;
 	}
 	
 	public void setCanScroll(boolean canScroll)
@@ -368,17 +372,39 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * Gets the image count
 	 * @return The image count
 	 */
-	public int getImageCount()
+	public int getChildViewCount()
 	{				
 		return ((ViewGroup)this.getChildAt(0)).getChildCount();
 	}	
 	
 	@Override
 	protected void onFinishInflate()
-	{
-		super.onFinishInflate();
+	{	
+		int mChildCount = getChildCount();
+		View[] views = new View[mChildCount];
+		
+		for (int index = 0; index < mChildCount; index++)
+		{
+			views[index] = getChildAt(index);
+		}
+		
+		this.detachAllViewsFromParent(); 
+		
+		LinearLayout layout = new LinearLayout(context);
+		layout.setOrientation(LinearLayout.HORIZONTAL);
+		layout.setLayoutParams(new LayoutParams(-2, -1));
+		
+		for (int index = 0; index < mChildCount; index++)
+		{
+			layout.addView(views[index]);
+		}
+		
+		this.addView(layout);
 				
 		childCount = ((ViewGroup)getChildAt(0)).getChildCount();
+		
+		super.onFinishInflate();
+		
 		init();
 	}
 	
@@ -394,9 +420,9 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 			int featureWidth = getMeasuredWidth();            
             smoothScrollTo(currentChildIndex * featureWidth, 0);
             
-            if (mOnImageChangedLister != null)
+            if (mOnViewChangedLister != null)
             {            	
-            	mOnImageChangedLister.onImageChange(currentChildIndex);                		            	                    
+            	mOnViewChangedLister.onViewChange(currentChildIndex);                		            	                    
             }
 		}
 	}
@@ -423,13 +449,14 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	            int mActiveFeature = (currentChildIndex < (childCount - 1)) ? currentChildIndex + 1 : childCount - 1;
 	            smoothScrollTo(mActiveFeature * featureWidth, 0);
 	            
-	            if (mOnImageChangedLister != null)
-	            {
-	            	if (currentChildIndex != mActiveFeature)
-                	{
-	            		currentChildIndex = mActiveFeature;
-                		mOnImageChangedLister.onImageChange(mActiveFeature);                		
-                	}                    	
+	            if (currentChildIndex != mActiveFeature)
+            	{
+            		currentChildIndex = mActiveFeature;
+            	}
+	            
+	            if (mOnViewChangedLister != null)
+	            {	            	
+                	mOnViewChangedLister.onViewChange(mActiveFeature);                		                                    
 	            }
 	            
 	            return true;				            	
@@ -441,13 +468,14 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
                 int mActiveFeature = (currentChildIndex > 0) ? currentChildIndex - 1 : 0;
                 smoothScrollTo(mActiveFeature * featureWidth, 0);
                 
-                if (mOnImageChangedLister != null)
-                {
-                	if (currentChildIndex != mActiveFeature)
-                	{
-                		currentChildIndex = mActiveFeature;
-                		mOnImageChangedLister.onImageChange(mActiveFeature);                		
-                	}                    	
+                if (currentChildIndex != mActiveFeature)
+            	{
+            		currentChildIndex = mActiveFeature;
+            	}
+                
+                if (mOnViewChangedLister != null)
+                {                	
+                	mOnViewChangedLister.onViewChange(mActiveFeature);                		                	                    
                 }
                 
             	return true;
@@ -458,14 +486,14 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	}
 	
 	/**
-	 * @brief The image change listener
+	 * @brief The view change listener
 	 */
-	public interface OnImageChangedListener
+	public interface OnViewChangedListener
 	{
 		/**
-		 * Called when the image is changed
-		 * @param newImageIndex What index the view is currently on
+		 * Called when the view is changed
+		 * @param newViewIndex What index the view is currently on
 		 */
-		public void onImageChange(int newImageIndex);
+		public void onViewChange(int newViewIndex);
 	};
 }

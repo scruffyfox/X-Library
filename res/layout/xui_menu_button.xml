@@ -7,19 +7,23 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:paddingLeft="12dp"
-    android:paddingRight="12dp" 
+    android:paddingRight="12dp"
+    android:duplicateParentState="true" 
 >
 	<RelativeLayout
 		android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"	    
-	    android:id="@+id/container"    		    
+	    android:id="@+id/container"
+	    android:duplicateParentState="true"    		    
 	>
 		<LinearLayout
 			android:id="@+id/icon"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
 			android:gravity="left|center_vertical"
-			android:layout_gravity="left|center_vertical"			
+			android:layout_gravity="left|center_vertical"
+			android:duplicateParentState="true"			
+			android:layout_marginRight="7dp"
 		/>
 	
 		<LinearLayout
@@ -28,7 +32,8 @@
 			android:layout_height="fill_parent" 
 			android:gravity="center_vertical"
 			android:layout_gravity="center_vertical"	
-			android:layout_toRightOf="@id/icon"	
+			android:layout_toRightOf="@id/icon"
+			android:duplicateParentState="true"	
 		/>
 		
 		<LinearLayout 
@@ -36,7 +41,8 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:gravity="right|center_vertical"
-			android:layout_gravity="right|center_vertical"			
+			android:layout_gravity="right|center_vertical"
+			android:duplicateParentState="true"			
 		/>
 	</RelativeLayout>
 </LinearLayout>

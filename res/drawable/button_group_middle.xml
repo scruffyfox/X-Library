@@ -2,7 +2,7 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android"
  >
- 	<item android:state_pressed="true" >
+	<item android:state_pressed="true">
  		<shape
 		    xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:shape="rectangle">

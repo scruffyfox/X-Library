@@ -22,9 +22,10 @@
 		android:id="@+id/items"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		android:orientation="vertical"
-		android:background="@drawable/button_group_all_faux"
+		android:orientation="vertical"		
 		android:padding="1px"		
+		android:background="@drawable/button_group_all_faux"
+		android:duplicateParentState="true"
 	/>		
 </LinearLayout>
  

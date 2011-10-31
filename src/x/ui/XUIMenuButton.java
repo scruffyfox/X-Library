@@ -9,9 +9,12 @@ import java.lang.reflect.Method;
 
 import x.lib.Debug;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -23,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,7 +63,7 @@ import android.widget.TextView;
 public class XUIMenuButton extends LinearLayout
 {
 	private Context mContext;
-	private View mLayoutView;
+	private ViewGroup mLayoutView;
 	private LayoutInflater mLayoutInflater;
 	private int mChildCount = 0;
 	private ViewGroup mLayout;
@@ -79,7 +83,7 @@ public class XUIMenuButton extends LinearLayout
 		this.mContext = context;
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
-		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, this);
+		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this);
 		mLayout = (ViewGroup)mLayoutView;
 		
 		init();
@@ -139,7 +143,7 @@ public class XUIMenuButton extends LinearLayout
 					else if (input instanceof XUICheckBox)
 					{
 						((XUICheckBox)input).toggle();	
-					} 				
+					}				
 				}
 			};
 			 
@@ -161,25 +165,28 @@ public class XUIMenuButton extends LinearLayout
 	 */
 	public void setLabel(String text)
 	{
-		int childCount = ((LinearLayout)mLayout.findViewById(R.id.label)).getChildCount();
+		int childCount = ((LinearLayout)mLayout.findViewById(R.id.label)).getChildCount();	
+		ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
 		
 		if (childCount < 1)
 		{
 			TextView t = new TextView(mContext);
 			t.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-			t.setTextColor(0xff352B21);		
 			t.setText(Html.fromHtml("<b>" + text + "</b>"));
 			t.setGravity(Gravity.CENTER_VERTICAL);
-			t.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
-			
-			((LinearLayout)mLayout.findViewById(R.id.label)).addView(t);
-		}
+			t.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));	
+			t.setTextColor(list);
+			t.setDuplicateParentStateEnabled(true);
+			((LinearLayout)mLayout.findViewById(R.id.label)).addView(t);						
+		}  
 		else
 		{
 			TextView t = (TextView)((LinearLayout)mLayout.findViewById(R.id.label)).getChildAt(0);
 			t.setGravity(Gravity.CENTER_VERTICAL);
 			t.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
-			t.setText(text); 
+			t.setTextColor(list);
+			t.setDuplicateParentStateEnabled(true);
+			t.setText(text); 	
 		}
 	}
 	
@@ -193,17 +200,26 @@ public class XUIMenuButton extends LinearLayout
 		
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(v);
-	}
+	} 
 	
 	/**
 	 * Gets the input view
 	 * @return The input view
 	 */
-	public View getInput()
-	{
+	public View getInput() 
+	{ 
 		return mContentView;
-	}
- 
+	} 
+
+	/**
+	 * Sets the background state resource
+	 * @param res The drawable resource
+	 */
+	public void setStateResouces(int res)
+	{
+		mLayoutView.setBackgroundResource(res);
+	} 
+	
 	/**
 	 * Sets the icon in the menu item
 	 * @param v The new ImageView
@@ -211,6 +227,7 @@ public class XUIMenuButton extends LinearLayout
 	public void setIcon(ImageView v)
 	{
 		mImageView = v;		
+		mImageView.setDuplicateParentStateEnabled(true);
 		
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
@@ -226,6 +243,7 @@ public class XUIMenuButton extends LinearLayout
 		mImageView = new ImageView(mContext);
 		mImageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mImageView.setImageBitmap(b);
+		mImageView.setDuplicateParentStateEnabled(true);
 		
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
@@ -240,7 +258,26 @@ public class XUIMenuButton extends LinearLayout
 	{
 		mImageView = new ImageView(mContext);
 		mImageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		mImageView.setImageDrawable(d);
+		mImageView.setBackgroundDrawable(d);
+		mImageView.setDuplicateParentStateEnabled(true);
+		mImageView.setFocusable(true);
+		
+		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
+		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
+		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
+	}
+	
+	/**
+	 * Sets the icon in the menu item
+	 * @param res The new Drawable of the icon
+	 */
+	public void setIcon(int res)
+	{
+		mImageView = new ImageView(mContext);
+		mImageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		mImageView.setImageResource(res);
+		mImageView.setDuplicateParentStateEnabled(true);
+		mImageView.setFocusable(true);
 		
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
@@ -279,32 +316,31 @@ public class XUIMenuButton extends LinearLayout
 				mContentView = (View)getChildAt(1);
 			}
 			else
-			{
+			{ 
 				mImageView = (ImageView)getChildAt(0);
 				mLabel = (TextView)getChildAt(1);		
 			}
 		}
 		else if (getChildCount() == 3)
 		{
-			mImageView = (ImageView)getChildAt(0);
-			mLabel = (TextView)getChildAt(1);
-			mContentView = (View)getChildAt(2);
+			mImageView = (ImageView)getChildAt(0); 
+			mLabel = (TextView)getChildAt(1); 
+			mContentView = (View)getChildAt(2); 
 		}
-			
-		this.removeAllViews();				
+
+		this.detachAllViewsFromParent(); 
 		
 		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-		mLabel.setTextColor(0xff352B21);		 
 		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>")); 
-		 
-		mLayoutView = mLayoutInflater.inflate(R.layout.xui_menu_button, null);
+		
+		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
 		
 		if (mLabel != null)
-		{			
-			((LinearLayout)mLayout.findViewById(R.id.label)).addView(mLabel);
+		{						 
+			((LinearLayout)mLayoutView.findViewById(R.id.label)).addView(mLabel);			
 		}
-		
+		 
 		if (mContentView != null)
 		{			
 			((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);
@@ -315,7 +351,5 @@ public class XUIMenuButton extends LinearLayout
 			((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);		
 			((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 		}
-		
-		this.addView(mLayoutView);						
 	}
 }

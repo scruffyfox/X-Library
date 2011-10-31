@@ -7,6 +7,7 @@ package x.lib;
  
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.FilterInputStream;
@@ -193,6 +194,16 @@ public class AsyncHttpClient
 				break;
 			}
 		}	
+	}
+	
+	/**
+	 * Downloads a file from a url as an instance of a byte array
+	 * @param url The url to download
+	 * @param response The response
+	 */
+	public void download(String url, AsyncHttpResponse response)
+	{
+		mHttpLoader.download(url, response);
 	}
 	
 	/**
@@ -473,11 +484,14 @@ public class AsyncHttpClient
 	 */
 	private class HttpLoader extends AsyncTask<String, Void, Object>
 	{
+		private final int DOWNLOAD = 0x00;
 		private final int GET = 0x01;
-		private final int GET_IMAGE = 0x11;
+		private final int GET_IMAGE = 0x11;		
 		private final int POST = 0x02;
 		private final int PUT = 0x03;
 		private final int DELETE = 0x04;
+		
+		private static final int MAXIMUM_POOL_SIZE = 1024;
 		
 		private long mLoadTime = 0;
 		private String mResponse;
@@ -505,6 +519,19 @@ public class AsyncHttpClient
 		public HttpLoader(int timeout)
 		{
 			this.mTimeout = timeout;
+		}
+		
+		/**
+		 * Initiates a download request on the urlStr
+		 * @param urlStr The URL for the request
+		 * @param responseHandler The response handler
+		 */
+		public void download(String urlStr, AsyncHttpResponse responseHandler)
+		{
+			this.mAsyncHttpResponse = responseHandler;
+			type = DOWNLOAD;
+			
+			this.execute(urlStr);
 		}
 		
 		/**
@@ -635,6 +662,59 @@ public class AsyncHttpClient
 			
 			switch (type)
 			{
+				case DOWNLOAD:
+				{					
+					try
+					{					
+						// Send data						
+						URL murl = new URL(url[0]);		
+						System.setProperty("http.keepAlive", "false");
+						
+						HttpURLConnection conn = (HttpURLConnection) murl.openConnection();
+						conn.setDoInput(true);
+						conn.setDoOutput(true);
+						conn.setUseCaches(false);
+						conn.setRequestProperty("Connection", "close");
+						conn.setRequestMethod("GET");	
+												
+					    responseCode = conn.getResponseCode();
+					    responseMessage = conn.getResponseMessage();
+					    
+					    mConnectionInfo.connectionResponseCode = responseCode;
+					    mConnectionInfo.connectionResponseMessage = responseMessage;
+					    					  
+					    // Get the response
+					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
+					    InputStream is = new BufferedInputStream(i);
+					   
+					    ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+						int bufferSize = 8192;
+						byte[] buffer = new byte[bufferSize];
+						
+						int len = 0;						
+						while ((len = is.read(buffer)) != -1)
+						{									
+							byteBuffer.write(buffer, 0, len);
+						}
+						
+						is.close();
+						i.close();
+						conn.disconnect();
+						
+						return byteBuffer.toByteArray();
+					} 
+					catch (EOFException e)
+					{
+						e.printStackTrace();
+						return null;
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+						return null;
+					}
+				}
+				
 				case DELETE:
 				case GET:
 				{
