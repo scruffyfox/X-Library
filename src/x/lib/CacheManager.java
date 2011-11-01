@@ -39,13 +39,25 @@ public class CacheManager implements Serializable
 	 */
 	public CacheManager(Context context, String packageName)
 	{
+		this(context, packageName, false);
+	}
+
+	public CacheManager(Context context, String packageName, boolean useExternalCache)
+	{
 		this.context = context;
 		this.mPackageName = packageName;
 		fileNames = new ArrayList<String>();
 		
-		mCachePath = context.getExternalCacheDir().getAbsolutePath();
+		if (useExternalCache)
+		{
+			mCachePath = context.getExternalCacheDir().getAbsolutePath();
+		}
+		else
+		{
+			mCachePath = context.getCacheDir().getAbsolutePath();	
+		}
 	}
-
+	
 	public CacheManager(String path, String packageName)
 	{
 		mCachePath = path;
@@ -104,27 +116,7 @@ public class CacheManager implements Serializable
     	
     	return hashFileName;
 	}
-	
-	/**
-	 * Gets an MD5 hash of an input string
-	 * @param input The input string
-	 * @return The MD5 hash of the input string
-	 */
-	public String getMD5(String input)
-	{
-		return CacheManager.getHash(input);
-	}
-	
-	/**
-	 * Gets an MD5 hash of an input string
-	 * @param input The serializable input data
-	 * @return The MD5 hash of the input string
-	 */
-	public String getMD5(Serializable input)
-	{
-		return CacheManager.getHash(input);
-	}
-	
+
 	/**
 	 * Gets the total size of the cache in bytes
 	 * @return The size of the cache in bytes
@@ -648,9 +640,6 @@ public class CacheManager implements Serializable
 			}
 			
 			File file = new File(filePath, "cache_" + fileName);
-			
-			Debug.out("length: " + file.length());
-			
 			FileInputStream input = new FileInputStream(file);
 			ObjectInputStream stream = new ObjectInputStream(input);
 			Object data = stream.readObject();
@@ -719,7 +708,7 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
-	 * The class that adds files to the cache in its own thread
+	 * @brief The class that adds files to the cache in its own thread
 	 */
 	private class AddImageRunnable extends Thread
 	{
@@ -745,7 +734,7 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
-	 * The class that adds files to the cache in its own thread
+	 * @brief The class that adds files to the cache in its own thread
 	 */
 	private class AddFileRunnable extends Thread
 	{

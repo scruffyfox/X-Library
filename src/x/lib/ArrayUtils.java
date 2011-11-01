@@ -5,6 +5,8 @@
 **/
 package x.lib;
 
+import java.lang.reflect.Array;
+
 import android.view.View;
 
 /**
@@ -24,6 +26,7 @@ public class ArrayUtils
 		{
 			arr[index] = iterator.doToItem(arr[index], index);
 		}
+		
 		return arr;			
 	}
 	
@@ -39,5 +42,23 @@ public class ArrayUtils
 		 * @return The item to be reassigned to the array
 		 */
 		public Object doToItem(Object item, int position);		
+	}
+	
+	/**
+	 * Create an array with default values
+	 * @param <E> The instance of the new array
+	 * @param size The size of the new array
+	 * @param value The default value
+	 * @return The newly created array
+	 */
+	public static <E> E[] createArray(int size, E value)
+	{
+		E[] array = (E[])Array.newInstance(value.getClass(), size);
+		for (int index = 0; index < size; index++)
+		{
+			array[index] = value;
+		}
+		
+		return array;
 	}
 }
