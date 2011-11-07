@@ -157,8 +157,8 @@ public class XUITab extends RelativeLayout
 		ViewGroup targetContainer = (ViewGroup)a.findViewById(targetView);
         Intent mIntent = this.params.intent;	       
                
-        final Window w = activityManager.startActivity("tag", mIntent);
-        final View wd = w != null ? w.getDecorView() : null;	
+        Window w = activityManager.startActivity("tag", mIntent);
+        View wd = w != null ? w.getDecorView() : null;	
         
         targetContainer.removeAllViews();
         View mLaunchedView = wd; 

@@ -949,6 +949,20 @@ public class AsyncHttpClient
 			}
 		}				
 	}
+	
+	/**
+	 * @brief Listener for when bytes are written to the server
+	 */
+	public interface OnBytesWrittenListener
+	{
+		/**
+		 * Called when the 
+		 * @param index
+		 * @param count
+		 * @param total
+		 */
+		public void onBytesWritten(int index, int count, int total);
+	}
 }
 
 class PatchInputStream extends FilterInputStream

@@ -32,12 +32,6 @@ public class XUITabActivity extends ActivityGroup
 		super.onCreate(savedInstanceState);				
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		return super.onCreateOptionsMenu(menu);
-	}		
-	
 	/**
 	 * Sets the OnBackPressedlistener
 	 * @param listener The new OnBackPressedListener

@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.os.AsyncTask;
 import android.os.FileObserver;
 import android.provider.OpenableColumns;
@@ -768,55 +769,72 @@ public class CacheManager implements Serializable
 		 */
 		public void onFileWritten(String fileName);
 	}
-}
-
-/**
- * @brief The class that serailizes data
- */
-class Serializer implements Serializable
-{
-	/**
-	 * Serializes data into bytes
-	 * @param data The data to be serailized
-	 * @return The serialized data in a byte array
-	 */
-	public static byte[] serializeObject(Object data)
-	{		
-		try
-		{
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ObjectOutput out = new ObjectOutputStream(bos);   
-			out.writeObject(data);
-			byte[] yourBytes = bos.toByteArray(); 		
-			
-			return yourBytes;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}					
-	}
 	
 	/**
-	 * Deserailizes data into an object
-	 * @param data The byte array to be deserialized
-	 * @return The data as an object
+	 * @brief The class that serailizes data
 	 */
-	public static Object desterializeObject(byte[] data)
+	public static class Serializer implements Serializable
 	{
-		try 
+		public static byte[] serializeBitmap(Bitmap data)
 		{
-			ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object objectData = input.readObject();
-			input.close();
-			
-			return objectData;
+			try
+			{
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				data.compress(CompressFormat.PNG, 100, bos);
+				byte[] bytes = bos.toByteArray();
+				
+				return bytes;
+			}
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+				return null;
+			}			
 		}
-		catch (Exception e)
+		
+		/**
+		 * Serializes data into bytes
+		 * @param data The data to be serailized
+		 * @return The serialized data in a byte array
+		 */
+		public static byte[] serializeObject(Object data)
+		{		
+			try
+			{
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				ObjectOutput out = new ObjectOutputStream(bos);   
+				out.writeObject(data);
+				byte[] yourBytes = bos.toByteArray(); 		
+				
+				return yourBytes;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}					
+		}
+		
+		/**
+		 * Deserailizes data into an object
+		 * @param data The byte array to be deserialized
+		 * @return The data as an object
+		 */
+		public static Object desterializeObject(byte[] data)
 		{
-			e.printStackTrace();
-			return null;
+			try 
+			{
+				ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(data));
+				Object objectData = input.readObject();
+				input.close();
+				
+				return objectData;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				return null;
+			}
 		}
 	}
 }

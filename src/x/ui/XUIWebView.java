@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 
 import x.lib.Debug;
-import x.lib.StringUtils;
+import x.util.StringUtils;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebChromeClient;

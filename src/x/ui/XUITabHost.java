@@ -116,14 +116,14 @@ public class XUITabHost extends RelativeLayout
 	public void selectTab(int index)
 	{ 		
 		if (((XUITab)this.getChildAt(index)).isSelected) return;
+				
+		deselectAll();		
+		((XUITab)this.getChildAt(index)).select(mActivityManager, targetView);
 		
 		if (mOnTabSelected != null)
 		{
 			mOnTabSelected.onTabSelect(index);
 		}
-		
-		deselectAll();		
-		((XUITab)this.getChildAt(index)).select(mActivityManager, targetView);
 	}
 	
 	/**
@@ -202,14 +202,14 @@ public class XUITabHost extends RelativeLayout
 		public void onClick(View view)
 		{	
 			if (((XUITab)view).isSelected) return;
-			
-			if (mOnTabSelected != null)
+						
+			deselectAll();								
+	        ((XUITab)view).select(mActivityManager, targetView);
+	        
+	        if (mOnTabSelected != null)
 			{
 				mOnTabSelected.onTabSelect(index);
-			}
-			
-			deselectAll();								
-	        ((XUITab)view).select(mActivityManager, targetView);		       
+			}			
 		}	
 	};
 	

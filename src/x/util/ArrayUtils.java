@@ -3,7 +3,7 @@
  * 
  * @author Callum Taylor
 **/
-package x.lib;
+package x.util;
 
 import java.lang.reflect.Array;
 

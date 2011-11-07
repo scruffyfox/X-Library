@@ -8,7 +8,7 @@
     android:paddingBottom="8dp"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
-    android:duplicateParentState="true" 
+    android:duplicateParentState="true"			
 >
 	<RelativeLayout
 		android:layout_width="fill_parent"
@@ -25,25 +25,26 @@
 			android:duplicateParentState="true"			
 			android:layout_marginRight="7dp"
 		/>
-	
+
 		<LinearLayout
 			android:id="@+id/label"
 			android:layout_width="wrap_content"
-			android:layout_height="fill_parent" 
+			android:layout_height="wrap_content" 
 			android:gravity="center_vertical"
-			android:layout_gravity="center_vertical"	
+			android:layout_gravity="center_vertical"
+			android:layout_centerVertical="true"	
 			android:layout_toRightOf="@id/icon"
 			android:duplicateParentState="true"	
 		/>
-		
+
 		<LinearLayout 
 			android:id="@+id/input_container"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:gravity="right|center_vertical"
 			android:layout_gravity="right|center_vertical"
+			android:layout_centerVertical="true"
 			android:duplicateParentState="true"			
 		/>
 	</RelativeLayout>
 </LinearLayout>
- 

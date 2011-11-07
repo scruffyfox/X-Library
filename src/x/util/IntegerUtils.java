@@ -3,7 +3,7 @@
  * 
  * @author Callum Taylor
 **/
-package x.lib;
+package x.util;
 
 /**
  * @brief The class that gives more manipulation options for integer

@@ -3,11 +3,11 @@
  * 
  * @author Callum Taylor
 **/
-package x.lib;
+package x.util;
 
 import java.util.List;
 
-import x.lib.ArrayUtils.CommandIterator;
+import x.util.ArrayUtils.CommandIterator;
 
 /**
  * @brief Class to extend manipulation to strings
