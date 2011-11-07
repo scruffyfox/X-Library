@@ -327,6 +327,8 @@ public class XUIMenuButton extends LinearLayout
 			mLabel = (TextView)getChildAt(1); 
 			mContentView = (View)getChildAt(2); 
 		}
+		
+		Rect padding = new Rect(this.getPaddingLeft(), this.getPaddingTop(), this.getPaddingRight(), this.getPaddingBottom());
 
 		this.detachAllViewsFromParent(); 
 		
@@ -335,6 +337,8 @@ public class XUIMenuButton extends LinearLayout
 		
 		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
+		
+		setMenuPadding(padding.left, padding.top, padding.right, padding.bottom);
 		
 		if (mLabel != null)
 		{						 
