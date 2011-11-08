@@ -118,9 +118,9 @@ public class XUIMenuButton extends LinearLayout
 	}
 	
 	private void init()
-	{
+	{		
 		//	Only set the onlick listener if it hasn't already
-		if (!mSetOnClickListener)
+		if (!mSetOnClickListener && this.isClickable())
 		{			
 			OnClickListener l = new OnClickListener()
 			{			
@@ -329,7 +329,7 @@ public class XUIMenuButton extends LinearLayout
 		}
 		
 		Rect padding = new Rect(this.getPaddingLeft(), this.getPaddingTop(), this.getPaddingRight(), this.getPaddingBottom());
-
+		
 		this.detachAllViewsFromParent(); 
 		
 		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
