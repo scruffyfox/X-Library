@@ -6,6 +6,9 @@
 package x.util;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
+
+import org.json.JSONArray;
 
 import android.view.View;
 
