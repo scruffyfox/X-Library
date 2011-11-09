@@ -60,8 +60,24 @@ import android.widget.LinearLayout;
  *  
  *  @TODO Add remove all images and remove image (view) support
  */
-public class XUIHorizontalGalleryView extends HorizontalScrollView
+public class XUIHorizontalScrollView extends HorizontalScrollView
 {
+	/**
+	 * Scroll mode of the scroll view
+	 * 
+	 * SMOOTH: Allows smooth scrolling such as like the standard scroll view
+	 * STEP: Allows scrolling such as a gallery view where a fling progresses to the next view
+	 * NONE: Disables scrolling
+	 * 
+	 * Default value: STEP.
+	 */
+	public enum ScrollMode
+	{
+		SMOOTH,
+		STEP,
+		NONE
+	}
+	
 	private Context context;		
 	private GestureDetector gestureDetector;
 	protected int SWIPE_MIN_DISTANCE = 40;
@@ -73,12 +89,13 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	private boolean canScroll = true;
 	private OnViewChangedListener mOnViewChangedLister;
 	private View childView;
+	private ScrollMode mScrollMode = ScrollMode.STEP;
   
 	/**
 	 * Default Constructor
 	 * @param context The application's context
 	 */
-	public XUIHorizontalGalleryView(Context context) 
+	public XUIHorizontalScrollView(Context context) 
 	{
 		super(context);
 		this.context = context;		
@@ -101,7 +118,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 	 * @param context The application's context
 	 * @param attributes The attribute set passed via the SAX parser 
 	 */	
-	public XUIHorizontalGalleryView(Context context, AttributeSet attributes) 
+	public XUIHorizontalScrollView(Context context, AttributeSet attributes) 
 	{
 		super(context, attributes);
 		this.context = context;		
@@ -261,6 +278,16 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
         }
 	}
 	
+	/**
+	 * Sets the scroll mode of the view
+	 * @param scrollMode The new scroll mode
+	 */
+	public void setScrollMode(ScrollMode scrollMode)
+	{
+		this.mScrollMode = scrollMode;
+		init();
+	}
+	
 //	@Override
 //	public boolean onInterceptTouchEvent(MotionEvent ev)
 //	{
@@ -275,61 +302,66 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		DisplayMetrics dm = new DisplayMetrics();
         ((Activity)this.context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
-				
-        setOnTouchListener(null);
-        
-		gestureDetector = new GestureDetector(new swipeGestureDetector());
-		setOnTouchListener(new View.OnTouchListener() 
-		{            
-            public boolean onTouch(View v, MotionEvent event) 
-            {	            	            	
-            	if (!canScroll) return true;
-            	
-                //	If the user swipes
-                if (gestureDetector.onTouchEvent(event)) 
-                {
-                    return true;
-                }                
-                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
-                {
-                    int scrollX = getScrollX();
-                    int featureWidth = v.getMeasuredWidth();                                                            
-                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
-                    
-                    if (scrollX < mActiveFeature * featureWidth)
-                    {                    	                    	
-                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
-                    }
-                    else if (scrollX > mActiveFeature * featureWidth)
-                    {
-                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
-                    }
-                    else
-                    {
-                    	mActiveFeature = currentChildIndex;
-                    }
-                    
-                    int scrollTo = mActiveFeature * featureWidth;
-                    smoothScrollTo(scrollTo, 0);
-                    
-                    if (currentChildIndex != mActiveFeature)
-                	{
-                		currentChildIndex = mActiveFeature;
-                	}
-                    
-                    if (mOnViewChangedLister != null)
-                    {                    	
-                    	mOnViewChangedLister.onViewChange(currentChildIndex);                    		                    	               	
-                    }                    
-                    
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        });				
+				        
+        if (mScrollMode == ScrollMode.STEP)
+        {
+			gestureDetector = new GestureDetector(new swipeGestureDetector());
+			setOnTouchListener(new View.OnTouchListener() 
+			{            
+	            public boolean onTouch(View v, MotionEvent event) 
+	            {	            	            	
+	            	if (!canScroll) return true;
+	            	
+	                //	If the user swipes
+	                if (gestureDetector.onTouchEvent(event)) 
+	                {
+	                    return true;
+	                }                
+	                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+	                {
+	                    int scrollX = getScrollX();
+	                    int featureWidth = v.getMeasuredWidth();                                                            
+	                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
+	                    
+	                    if (scrollX < mActiveFeature * featureWidth)
+	                    {                    	                    	
+	                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
+	                    }
+	                    else if (scrollX > mActiveFeature * featureWidth)
+	                    {
+	                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
+	                    }
+	                    else
+	                    {
+	                    	mActiveFeature = currentChildIndex;
+	                    }
+	                    
+	                    int scrollTo = mActiveFeature * featureWidth;
+	                    smoothScrollTo(scrollTo, 0);
+	                    
+	                    if (currentChildIndex != mActiveFeature)
+	                	{
+	                		currentChildIndex = mActiveFeature;
+	                	}
+	                    
+	                    if (mOnViewChangedLister != null)
+	                    {                    	
+	                    	mOnViewChangedLister.onViewChange(currentChildIndex);                    		                    	               	
+	                    }                    
+	                    
+	                    return true;
+	                }
+	                else
+	                {
+	                    return false;
+	                }
+	            }
+	        });			
+        }
+        else
+        {
+        	setOnTouchListener(null);
+        }
 	}		
 	
 	/**
@@ -341,21 +373,35 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		this.mOnViewChangedLister = imageListener;
 	}
 	
+	/**
+	 * Sets if the view can scroll
+	 * @param canScroll True if the view can scroll, false if not
+	 */
 	public void setCanScroll(boolean canScroll)
 	{
 		this.canScroll = canScroll;
 	}
 	
+	/**
+	 * Gets if the view can scroll
+	 * @return True if the view can scroll, false if not
+	 */
 	public boolean canScroll()
 	{	
 		return canScroll;
 	}
 	
+	/**
+	 * Disables the scrolling of the view
+	 */
 	public void disableScroll()
 	{
 		canScroll = false;
 	}
 	
+	/**
+	 * Enables the scrolling of the view
+	 */
 	public void enableScroll()
 	{
 		canScroll = true;
@@ -442,6 +488,7 @@ public class XUIHorizontalGalleryView extends HorizontalScrollView
 		{				
 			canScroll = true;
 			if (e1 == null || e2 == null) return false;
+			if (mScrollMode == ScrollMode.SMOOTH) return false;
 			
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
             {            	
