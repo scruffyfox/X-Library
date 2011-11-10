@@ -27,7 +27,7 @@ public class ArrayUtils
 		int count = arr.length;
 		for (int index = 0; index < count; index++)
 		{
-			arr[index] = iterator.doToItem(arr[index], index);
+			arr[index] = iterator.apply(arr[index], index);
 		}
 		
 		return arr;			
@@ -44,7 +44,7 @@ public class ArrayUtils
 		 * @param position The position of the item in the array
 		 * @return The item to be reassigned to the array
 		 */
-		public Object doToItem(Object item, int position);		
+		public Object apply(Object item, int position);		
 	}
 	
 	/**
