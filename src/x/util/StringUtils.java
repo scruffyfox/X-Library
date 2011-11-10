@@ -84,7 +84,7 @@ public class StringUtils
 		String[] arr = input.split(splitStr);
 		arr = (String[])ArrayUtils.iterateCommand(arr, new CommandIterator()
 		{			
-			public Object doToItem(Object item, int position)
+			public Object apply(Object item, int position)
 			{
 				item = ((String) item).trim();
 				return item;
