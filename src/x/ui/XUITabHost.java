@@ -6,6 +6,7 @@
 package x.ui;
 
 import x.lib.Debug;
+import x.lib.ItemList;
 import x.ui.R;
 import android.app.LocalActivityManager;
 import android.content.ComponentName;
@@ -114,16 +115,9 @@ public class XUITabHost extends RelativeLayout
 	 * @param index The index of the tab
 	 */
 	public void selectTab(int index)
-	{ 		
-		if (((XUITab)this.getChildAt(index)).isSelected) return;
-				
-		deselectAll();		
-		((XUITab)this.getChildAt(index)).select(mActivityManager, targetView);
-		
-		if (mOnTabSelected != null)
-		{
-			mOnTabSelected.onTabSelect(index);
-		}
+	{ 						
+		XUITab tab = (XUITab)this.getChildAt(index);
+		tab.performClick();		
 	}
 	
 	/**
@@ -153,6 +147,7 @@ public class XUITabHost extends RelativeLayout
 	public void addTab(XUITab tab)
 	{			
 		this.addView(tab);		
+		
 		totalChildren = this.getChildCount();		
 
 		//	Add the onclick for the intent
@@ -206,6 +201,9 @@ public class XUITabHost extends RelativeLayout
 			deselectAll();								
 	        ((XUITab)view).select(mActivityManager, targetView);
 	        
+	        requestFocus();
+			requestFocusFromTouch();
+	        
 	        if (mOnTabSelected != null)
 			{
 				mOnTabSelected.onTabSelect(index);
@@ -253,7 +251,7 @@ public class XUITabHost extends RelativeLayout
 			child.layout(currentXPos + childLayout.leftMargin, 0, tabWidth + (currentXPos + childLayout.leftMargin), tabHeight);
 			currentXPos += tabWidth;
 			widthLeft -= tabWidth;	
-			
+			 
 			int mWidth = 0, mHeight = 0, marginLeft = 0, marginTop = 0;
 			
 			LinearLayout tabContainer = (LinearLayout)child.findViewById(R.id.tabInsides);

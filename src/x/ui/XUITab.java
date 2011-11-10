@@ -121,7 +121,7 @@ public class XUITab extends RelativeLayout
 	{
 		return this.params;
 	}	
-	
+		
 	/**
 	 * Selects the tab
 	 * @param activityManager The tabhost's activity manager
@@ -156,7 +156,7 @@ public class XUITab extends RelativeLayout
 		Activity a = (Activity)context;				
 		ViewGroup targetContainer = (ViewGroup)a.findViewById(targetView);
         Intent mIntent = this.params.intent;	       
-               
+                       
         Window w = activityManager.startActivity("tag", mIntent);
         View wd = w != null ? w.getDecorView() : null;	
         
@@ -181,7 +181,7 @@ public class XUITab extends RelativeLayout
 	{		
 		isSelected = true;
 		
-		if (this.params.tabIcon.selected > -1)
+		if (this.params.tabIcon.selected > -1) 
 		{
 			imageIcon.setVisibility(View.VISIBLE);
 			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.selected));
