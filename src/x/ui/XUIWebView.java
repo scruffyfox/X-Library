@@ -7,11 +7,14 @@ package x.ui;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.URI;
 
 import x.lib.Debug;
 import x.util.StringUtils;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -102,6 +105,9 @@ public class XUIWebView extends WebView
 		loadUrl("javascript: " + functionName + "(" + StringUtils.join(param, ",") + ");");		
 	}
 	
+	/**
+	 * Class to handle page loading and url clicking
+	 */
 	private class ViewClient extends WebViewClient
 	{
 		int loadCount = 0;
@@ -125,21 +131,37 @@ public class XUIWebView extends WebView
 		{					
 			if (mOnLinkClickedListener != null)
 			{
-				return mOnLinkClickedListener.onLinkClicked(url);
+				URI uri = URI.create(url);
+				return mOnLinkClickedListener.onLinkClicked(uri);
 			}
 			else
 			{
 				return super.shouldOverrideUrlLoading(view, url);
 			}
-		}	
+		}
 	};
 	
+	/**
+	 * Class for custom console message handling and alert dialogs
+	 */
 	private class ViewChromeClient extends WebChromeClient
 	{ 
 		@Override
 		public void onConsoleMessage(String message, int lineNumber, String sourceID)
 		{		
 			Debug.out("WebClient: (" + lineNumber + ") " + message);
+		}
+		
+		@Override
+		public boolean onJsAlert(WebView view, String url, String message, JsResult result)
+		{
+			new AlertDialog.Builder(mContext)
+				.setTitle(url)
+				.setMessage(message)
+				.setPositiveButton("Close", null)
+				.show();
+			
+			return super.onJsAlert(view, url, message, result);
 		}
 	}
 
@@ -156,6 +178,6 @@ public class XUIWebView extends WebView
 	
 	public interface OnLinkClickedListener
 	{
-		public boolean onLinkClicked(String url);		
+		public boolean onLinkClicked(URI url);		
 	};
 }
