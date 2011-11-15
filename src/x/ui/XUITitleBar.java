@@ -139,6 +139,7 @@ public class XUITitleBar extends RelativeLayout
 	{
 		removeView(mButtonHost);
 		
+		buttonHost.setGravity(Gravity.RIGHT);
 		mButtonHost = buttonHost;
 		addView(mButtonHost);		
 	}
