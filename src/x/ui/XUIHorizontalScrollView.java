@@ -8,6 +8,7 @@ package x.ui;
 import x.lib.*;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 //import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -17,9 +18,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.ViewParent;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+import android.widget.ScrollView;
 
 /**
  * @brief Horizontal gallery view for swiping views similar to the iPhone gallery.
@@ -71,12 +75,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 * 
 	 * Default value: STEP.
 	 */
-	public enum ScrollMode
-	{
-		SMOOTH,
-		STEP,
-		NONE
-	}
+	public static final int SMOOTH = 0x10;
+	public static final int STEP = 0x01;
+	public static final int NONE = 0x00;
 	
 	private Context context;		
 	private GestureDetector gestureDetector;
@@ -89,7 +90,11 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	private boolean canScroll = true;
 	private OnViewChangedListener mOnViewChangedLister;
 	private View childView;
-	private ScrollMode mScrollMode = ScrollMode.STEP;
+	private int mScrollMode;
+	private ScrollView mParentScrollView;
+	
+	private boolean mScrollingVertically = false;
+	private boolean mScrollingHorizontally = false;
   
 	/**
 	 * Default Constructor
@@ -102,7 +107,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 				
 		LinearLayout layout = new LinearLayout(context);
 		layout.setOrientation(LinearLayout.HORIZONTAL);
-		layout.setLayoutParams(new LayoutParams(-2, -1));
+		layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 		
 		this.setVerticalFadingEdgeEnabled(false);
 		this.setHorizontalFadingEdgeEnabled(false);
@@ -121,7 +126,10 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	public XUIHorizontalScrollView(Context context, AttributeSet attributes) 
 	{
 		super(context, attributes);
-		this.context = context;		
+		this.context = context;	
+		
+		TypedArray attrs = context.obtainStyledAttributes(attributes, R.styleable.XUIHorizontalScrollView);	
+		mScrollMode = attrs.getInt(R.styleable.XUIHorizontalScrollView_swipeMode, STEP);				
 	}		
 	
 	/**
@@ -130,8 +138,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void addChildView(View child)
 	{
-		//if (!(child instanceof ImageView)) return;
-		
 		((ViewGroup)this.getChildAt(0)).addView(child);
 	}
 	
@@ -142,8 +148,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void addChildView(View child, int index)
 	{
-		//if (!(child instanceof ImageView)) return;
-		
 		((ViewGroup)this.getChildAt(0)).addView(child, index);
 	}
 	
@@ -154,8 +158,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void addChildView(View child, android.view.ViewGroup.LayoutParams params)
 	{
-		//if (!(child instanceof ImageView)) return;
-		
 		((ViewGroup)this.getChildAt(0)).addView(child, params);
 	}
 	
@@ -282,19 +284,11 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 * Sets the scroll mode of the view
 	 * @param scrollMode The new scroll mode
 	 */
-	public void setScrollMode(ScrollMode scrollMode)
+	public void setScrollMode(int scrollMode)
 	{
 		this.mScrollMode = scrollMode;
 		init();
 	}
-	
-//	@Override
-//	public boolean onInterceptTouchEvent(MotionEvent ev)
-//	{
-//		//	THIS ALLOWS SCROLLING ASJD IUASDZBYGUIZSZSDB UFBY D
-//		//return false;
-//		return super.onInterceptTouchEvent(ev);
-//	}
 	
 	int prevX = 0;
 	private void init()
@@ -302,8 +296,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		DisplayMetrics dm = new DisplayMetrics();
         ((Activity)this.context).getWindowManager().getDefaultDisplay().getMetrics(dm);
         screenWidth = dm.widthPixels;
-				        
-        if (mScrollMode == ScrollMode.STEP)
+				         
+        if (mScrollMode == STEP || mScrollMode == SMOOTH)
         {
 			gestureDetector = new GestureDetector(new swipeGestureDetector());
 			setOnTouchListener(new View.OnTouchListener() 
@@ -311,7 +305,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	            public boolean onTouch(View v, MotionEvent event) 
 	            {	            	            	
 	            	if (!canScroll) return true;
-	            	
+	            			     
 	                //	If the user swipes
 	                if (gestureDetector.onTouchEvent(event)) 
 	                {
@@ -319,6 +313,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	                }                
 	                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
 	                {
+	                	mScrollingHorizontally = false;
+            			mScrollingVertically = false;
+	                	
 	                    int scrollX = getScrollX();
 	                    int featureWidth = v.getMeasuredWidth();                                                            
 	                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
@@ -360,8 +357,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
         }
         else
         {
+        	gestureDetector = null;
         	setOnTouchListener(null);
-        }
+        } 
 	}		
 	
 	/**
@@ -405,14 +403,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	public void enableScroll()
 	{
 		canScroll = true;
-	}
-		
-	@Override
-	protected void onScrollChanged(int l, int t, int oldl, int oldt)
-	{
-		// TODO Auto-generated method stub
-		super.onScrollChanged(l, t, oldl, oldt);
-	}
+	}		
 	
 	/**
 	 * Gets the image count
@@ -426,6 +417,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	@Override
 	protected void onFinishInflate()
 	{	
+		Debug.out(getRootView().toString());
+		
 		int mChildCount = getChildCount();
 		View[] views = new View[mChildCount];
 		
@@ -438,7 +431,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		
 		LinearLayout layout = new LinearLayout(context);
 		layout.setOrientation(LinearLayout.HORIZONTAL);
-		layout.setLayoutParams(new LayoutParams(-2, -1));
+		layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 		
 		for (int index = 0; index < mChildCount; index++)
 		{
@@ -473,22 +466,63 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		}
 	}
 	
+	@Override
+	protected void onAttachedToWindow()
+	{	
+		super.onAttachedToWindow();
+		
+		ViewParent v = getParent();		
+		while (true)
+		{
+			v = v.getParent();
+			
+			if (v == null) break;
+			
+			if (v instanceof ScrollView)
+			{				
+				mParentScrollView = (ScrollView)v;
+				break;
+			}
+		}		
+	}
+
+	/**
+	 * @brief The swipe detector listener for the fling and scroll checks
+	 */
 	private class swipeGestureDetector extends SimpleOnGestureListener
 	{	
 		@Override
-		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-		{			
-			if (!canScroll) return false;
+		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) 
+		{
+			mScrollingHorizontally = Math.abs(distanceX) > Math.abs(distanceY);
 			
-			return super.onScroll(e1, e2, distanceX, distanceY);
-		}		
+			//	Stop the parent views from scrolling if we're scrolling
+			if (mScrollingHorizontally && mParentScrollView != null)
+			{				
+				mParentScrollView.requestDisallowInterceptTouchEvent(true);				
+			}
+			
+			return false;
+		}
+
+		@Override
+		public void onShowPress(MotionEvent arg0) 
+		{
+		}
+
+		@Override
+		public boolean onSingleTapUp(MotionEvent arg0) 
+		{
+			return false;
+		}	
 		
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
 		{				
 			canScroll = true;
 			if (e1 == null || e2 == null) return false;
-			if (mScrollMode == ScrollMode.SMOOTH) return false;
+			if (mScrollMode == SMOOTH) return true;
+			if (mScrollingVertically) return false;
 			
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
             {            	

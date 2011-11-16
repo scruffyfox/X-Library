@@ -6,6 +6,13 @@
 	<declare-styleable name="XUIMenuButtonGroup">	
 		<attr name="groupName" format="string"/>		
 	</declare-styleable>
+	<declare-styleable name="XUIHorizontalScrollView">	
+		<attr name="swipeMode" format="enum">
+			<enum name="smooth" value="0x10" />
+		    <enum name="step" value="0x01" />
+		    <enum name="none" value="0x00" />
+		</attr>			
+	</declare-styleable>
 	<declare-styleable name="PullToRefreshListView">	
 		<attr name="textColor" format="color"/>
 		<attr name="subTextColor" format="color"/>
