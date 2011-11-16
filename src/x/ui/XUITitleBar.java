@@ -20,6 +20,7 @@ import android.widget.TextView;
  * 		android:layout_width="fill_parent"
  * 		android:layout_height="wrap_content"
  * 		xui:label="Home Screen"
+ * 		xui:gravity="left"
  * 		android:background
  *	/>
  * @endcode
@@ -68,6 +69,10 @@ public class XUITitleBar extends RelativeLayout
 		
 		init(); 
 	}
+	
+	/**
+	 * Initializes the view
+	 */
 	private void init()
 	{ 
 		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.xui_titlebar, this);

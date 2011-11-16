@@ -201,9 +201,6 @@ public class XUITabHost extends RelativeLayout
 			deselectAll();								
 	        ((XUITab)view).select(mActivityManager, targetView);
 	        
-	        requestFocus();
-			requestFocusFromTouch();
-	        
 	        if (mOnTabSelected != null)
 			{
 				mOnTabSelected.onTabSelect(index);
