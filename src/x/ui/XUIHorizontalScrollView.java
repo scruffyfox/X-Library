@@ -32,12 +32,13 @@ import android.widget.ScrollView;
  * 
  * XML Example
  * @code
- * <x.ui.XUIHorizontalGalleryView
+ * <x.ui.XUIHorizontalScrollView
  *		android:layout_width="fill_parent"
  *		android:layout_height="fill_parent"
  *		android:fadingEdge="none"	
  *		android:scrollbars="none"
  *		android:id="@+id/galleryView"
+ *		xui:scrollMode="step"
  *	>							
  *		<LinearLayout
  *			android:layout_width="wrap_content"
@@ -45,7 +46,7 @@ import android.widget.ScrollView;
  *			android:orientation="horizontal"			
  *		>								
  *		</LinearLayout>
- *	</x.ui.XUIHorizontalGalleryView>
+ *	</x.ui.XUIHorizontalScrollView>
  *  @endcode
  *  
  *  Code Example
@@ -59,11 +60,12 @@ import android.widget.ScrollView;
  *	  image.setScaleType(ScaleType.FIT_XY);		
  *	  image.setDrawingCacheQuality(ImageView.DRAWING_CACHE_QUALITY_LOW);
  *	
- *	  galleryView.addImage(image);		
+ *	  galleryView.addChildView(image);		
  *  }
  *  @endcode
  *  
  *  @TODO Add remove all images and remove image (view) support
+ *  @TODO Add attr option for force child to screen dimension
  */
 public class XUIHorizontalScrollView extends HorizontalScrollView
 {
@@ -313,6 +315,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	                }                
 	                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
 	                {
+	                	if (mScrollMode == SMOOTH) return true;
+	                	
 	                	mScrollingHorizontally = false;
             			mScrollingVertically = false;
 	                	
@@ -417,7 +421,19 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	@Override
 	protected void onFinishInflate()
 	{	
-		childCount = getChildViewCount();		
+		if (getChildCount() < 1)		
+		{
+			LinearLayout layout = new LinearLayout(context);
+			layout.setOrientation(LinearLayout.HORIZONTAL);
+			layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+			
+			this.setVerticalFadingEdgeEnabled(false);
+			this.setHorizontalFadingEdgeEnabled(false);
+			this.addView(layout, 0);
+		}
+		
+		childCount = getChildViewCount();
+		
 		super.onFinishInflate();
 		
 		init();
