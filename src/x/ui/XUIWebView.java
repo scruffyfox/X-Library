@@ -13,6 +13,7 @@ import x.lib.Debug;
 import x.util.StringUtils;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -23,6 +24,7 @@ public class XUIWebView extends WebView
 {
 	private OnPageLoadListener mOnPageLoadListener;
 	private OnLinkClickedListener mOnLinkClickedListener;
+	private OnAlertListener mOnAlertListener;
 	public Context mContext;
 	
 	/**
@@ -68,10 +70,24 @@ public class XUIWebView extends WebView
 		this.mOnLinkClickedListener = listener;
 	}
 	
+	/**
+	 * Sets the alert listener
+	 * @param mOnAlertListener
+	 */
+	public void setOnAlertListener(OnAlertListener listener)
+	{
+		this.mOnAlertListener = listener;
+	}
+	
+	/**
+	 * Initializes the view
+	 */
 	private void init()
 	{
 		ViewClient mViewClient = new ViewClient();		
-		setWebViewClient(mViewClient);		
+		setWebViewClient(mViewClient);	
+		
+		setWebChromeClient(new ViewChromeClient());
 		
 		this.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
 	}
@@ -131,13 +147,14 @@ public class XUIWebView extends WebView
 		{					
 			if (mOnLinkClickedListener != null)
 			{
-				URI uri = URI.create(url);
-				return mOnLinkClickedListener.onLinkClicked(uri);
+				Uri uri = Uri.parse(url);
+				if (mOnLinkClickedListener.onLinkClicked(uri))
+				{
+					return true;
+				}
 			}
-			else
-			{
-				return super.shouldOverrideUrlLoading(view, url);
-			}
+			
+			return super.shouldOverrideUrlLoading(view, url);			
 		}
 	};
 	
@@ -155,18 +172,21 @@ public class XUIWebView extends WebView
 		@Override
 		public boolean onJsAlert(WebView view, String url, String message, JsResult result)
 		{
-			new AlertDialog.Builder(mContext)
-				.setTitle(url)
-				.setMessage(message)
-				.setPositiveButton("Close", null)
-				.show();
+			if (mOnAlertListener != null)
+			{
+				if (mOnAlertListener.onAlert(message, url))
+				{
+					result.cancel();					
+					return true;
+				}
+			}			
 			
-			return super.onJsAlert(view, url, message, result);
-		}
+			return super.onJsAlert(view, url, message, result);			
+		}				
 	}
 
 	/**
-	 * The interface for page load 
+	 * @brief The interface for page load 
 	 */
 	public interface OnPageLoadListener
 	{
@@ -176,8 +196,30 @@ public class XUIWebView extends WebView
 		public void onPageLoad();
 	};
 	
+	/**
+	 * @brief The interface for the onclick event in the page.
+	 */ 
 	public interface OnLinkClickedListener
 	{
-		public boolean onLinkClicked(URI url);		
+		/**
+		 * Called when a link is clicked in the web page
+		 * @param url The url of the clicked link
+		 * @return True if the event is handled, false if not.
+		 */
+		public boolean onLinkClicked(Uri url);		
+	};
+	
+	/**
+	 * @brief The interface for when javascript triggers an alert
+	 */
+	public interface OnAlertListener
+	{
+		/**
+		 * Called when the javascript alert method is called
+		 * @param message The message in the alert
+		 * @param url The url of the page the alert called from
+		 * @return
+		 */
+		public boolean onAlert(String message, String url);
 	};
 }
