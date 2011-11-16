@@ -27,6 +27,7 @@ import android.widget.ScrollView;
 
 /**
  * @brief Horizontal gallery view for swiping views similar to the iPhone gallery.
+ * @brief Horizontal gallery view must have only one direct child when inflating from XML.
  * @added Added generic children, gallery swiper now supports any children, not just image views.
  * 
  * XML Example
@@ -89,7 +90,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	private int childCount = 0;
 	private boolean canScroll = true;
 	private OnViewChangedListener mOnViewChangedLister;
-	private View childView;
 	private int mScrollMode;
 	private ScrollView mParentScrollView;
 	
@@ -417,31 +417,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	@Override
 	protected void onFinishInflate()
 	{	
-		Debug.out(getRootView().toString());
-		
-		int mChildCount = getChildCount();
-		View[] views = new View[mChildCount];
-		
-		for (int index = 0; index < mChildCount; index++)
-		{
-			views[index] = getChildAt(index);
-		}
-		
-		this.detachAllViewsFromParent(); 
-		
-		LinearLayout layout = new LinearLayout(context);
-		layout.setOrientation(LinearLayout.HORIZONTAL);
-		layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
-		
-		for (int index = 0; index < mChildCount; index++)
-		{
-			layout.addView(views[index]);
-		}
-		
-		this.addView(layout);
-				
-		childCount = ((ViewGroup)getChildAt(0)).getChildCount();
-		
+		childCount = getChildViewCount();		
 		super.onFinishInflate();
 		
 		init();
