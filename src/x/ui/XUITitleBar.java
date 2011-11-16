@@ -68,10 +68,9 @@ public class XUITitleBar extends RelativeLayout
 		
 		init(); 
 	}
-
 	private void init()
 	{ 
-		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.titlebar, this);
+		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.xui_titlebar, this);
 		mLabel = (TextView)findViewById(R.id.titlebar_label);
 		mButtonHost = ((XUITitleButtonHost)findViewById(R.id.titlebar_buttons));
 						
