@@ -55,7 +55,7 @@ public class Konami implements OnTouchListener
 	
 	private static final int SWIPE_MIN_DISTANCE = 0;
     private static final int SWIPE_THRESHOLD_VELOCITY = 500;
-	private int[] mGestureList;
+	private ItemList<Integer> mGestureList;
 	private int mCurrentPtr = 0;
 	private GestureDetector mGestureScanner;		
     private int[] mCode = {UP, UP, DOWN, DOWN, LEFT, RIGHT, LEFT, RIGHT, TAP, TAP, TAP};
@@ -66,9 +66,19 @@ public class Konami implements OnTouchListener
      */
     public Konami()
 	{		
-    	mGestureList = new int[32];
-		mGestureScanner = new GestureDetector(new gestureDetector());
+    	mGestureList = new ItemList<Integer>();
+		mGestureScanner = new GestureDetector(new gestureDetector());		
 	}
+    
+    /**
+     * Default constructor
+     * @param listener The listener for successful code
+     */
+    public Konami(OnKonamiCodeListener listener)
+    {
+    	this();
+    	setOnKonamiCodeListener(listener);    	
+    }
     
     /**
      * Default Constructor
@@ -82,14 +92,16 @@ public class Konami implements OnTouchListener
 			throw new Exception("Konami code too long");
 		}
     	
-    	mGestureList = new int[32];
+    	mGestureList = new ItemList<Integer>();
 		mCode = konamiCode;
 		mGestureScanner = new GestureDetector(new gestureDetector());
 	}    
 	
 	public boolean onTouch(View v, MotionEvent event) 
-	{
-		return mGestureScanner.onTouchEvent(event);
+	{		
+		mGestureScanner.onTouchEvent(event);
+		
+		return true;
 	}		
 	
 	/**
@@ -121,10 +133,10 @@ public class Konami implements OnTouchListener
 		@Override
 		public boolean onSingleTapUp(MotionEvent e)
 		{			
-        	mGestureList[mCurrentPtr++] = TAP;
+        	mGestureList.add(TAP);
         	checkCode();
         	
-			return false;
+			return true;
 		}
 		
 		@Override
@@ -135,51 +147,54 @@ public class Konami implements OnTouchListener
 	            // right to left swipe
 	            if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
 	            {	            	
-	            	mGestureList[mCurrentPtr++] = LEFT;	            	
+	            	mGestureList.add(LEFT);
 	            }  
 	            // left to right swipe
 	            else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) 
 	            {	            	
-	            	mGestureList[mCurrentPtr++] = RIGHT;	            
+	            	mGestureList.add(RIGHT);
 	            }
 	            // down to up swipe
 	            else if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) 
 	            {
-	            	mGestureList[mCurrentPtr++] = UP;	            	
+	            	mGestureList.add(UP);
 	            }  
 	            // up to down swiper
 	            else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) 
 	            {	            	
-	            	mGestureList[mCurrentPtr++] = DOWN;	            	
+	            	mGestureList.add(DOWN);	 
 	            }	          
 	        } 
 			catch (Exception e) 
 	        {
 	            // nothing
+				e.printStackTrace();
 	        }
-					
-			checkCode();
 			
-			return false;
+			//	If the last gesture matches the end of the code, make a check
+			if (mGestureList.get(mGestureList.size() - 1) == mCode[mCode.length - 1])
+			{
+				checkCode();
+			}
+			
+			return true;
 		}
 		
 		private void checkCode()
-		{
+		{			
 			//	Check the array for code
 			int totalCorrect = 0;
 			for (int loop = 0; loop < mCurrentPtr; loop++)
 			{
 				//	Check if it is correct
-				if (mCode[loop] == mGestureList[loop])
+				if (mCode[loop] == mGestureList.get(loop))
 				{					
 					totalCorrect++;
 				}
 				else
 				{
 					//	Reset the gesture list
-					mGestureList = new int[32];
-					mCurrentPtr = 0;
-					
+					mGestureList.clear();										
 					break;
 				}
 			}
@@ -193,8 +208,7 @@ public class Konami implements OnTouchListener
 				}
 				
 				//	Reset the gesture list
-				mGestureList = new int[32];
-				mCurrentPtr = 0;				
+				mGestureList.clear();						
 			}
 		}
 	};
