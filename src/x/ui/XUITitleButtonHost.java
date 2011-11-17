@@ -5,6 +5,8 @@
 **/
 package x.ui;
 
+import java.util.Collection;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -50,6 +52,15 @@ public class XUITitleButtonHost extends LinearLayout
 		this.addView(button);
 		
 		totalChildren = this.getChildCount();
+	}
+	
+	/**
+	 * Adds an array of buttons to the container
+	 * @param button The buttons to add 
+	 */
+	public void addButtons(Collection<XUITitleButton> button)
+	{
+		addButtons((XUITitleButton[])button.toArray(new XUITitleButton[button.size()]));
 	}
 	
 	/**
