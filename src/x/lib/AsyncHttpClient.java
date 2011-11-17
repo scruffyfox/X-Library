@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
@@ -787,6 +788,14 @@ public class AsyncHttpClient
 					{
 						e.printStackTrace();
 						return "";
+					}
+					catch (UnknownHostException e)
+					{
+						e.printStackTrace();
+						mConnectionInfo.connectionResponseCode = 0;
+						mConnectionInfo.connectionResponseMessage = "";
+						
+						return null;
 					}
 					catch (Exception e)
 					{
