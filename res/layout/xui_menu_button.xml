@@ -6,8 +6,8 @@
     android:layout_height="fill_parent"   
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="8dp"
     android:duplicateParentState="true"			
 >
 	<RelativeLayout
@@ -35,7 +35,7 @@
 			android:layout_centerVertical="true"	
 			android:layout_toRightOf="@id/icon"
 			android:duplicateParentState="true"	
-		/>
+		/> 
 
 		<LinearLayout 
 			android:id="@+id/input_container"
