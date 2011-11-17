@@ -1,5 +1,7 @@
 package x.ui;
 
+import java.util.ArrayList;
+
 import x.lib.Debug;
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +9,7 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.MeasureSpec;
 import android.widget.RelativeLayout;
@@ -25,7 +28,7 @@ import android.widget.TextView;
  *	/>
  * @endcode
  * 
- * TODO: Add support for child XUITitleButtonHost in XML 
+ * TODO: So far only accepts XUITitleButtonHost as a child.
  */
 public class XUITitleBar extends RelativeLayout
 {
@@ -203,5 +206,31 @@ public class XUITitleBar extends RelativeLayout
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{						
 		super.onMeasure(MeasureSpec.makeMeasureSpec(widthMeasureSpec, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec((int)mContext.getResources().getDimension(R.dimen.titlebar_size), MeasureSpec.EXACTLY));
+	}
+	
+	@Override
+	protected void onFinishInflate()
+	{
+		super.onFinishInflate();
+		
+		ArrayList<XUITitleButton> titleButtons = new ArrayList<XUITitleButton>();
+		
+		int childCount = getChildCount();
+		for (int index = 0; index < childCount; index++)
+		{
+			if (getChildAt(index) instanceof XUITitleButtonHost)
+			{
+				int buttonCount = ((ViewGroup)getChildAt(index)).getChildCount();
+				ViewGroup buttons = ((ViewGroup)getChildAt(index));
+				for (int childIndex = 0; childIndex < buttonCount; childIndex++)
+				{
+					titleButtons.add((XUITitleButton)buttons.getChildAt(childIndex));
+				}								
+				
+				buttons.removeAllViews();
+			}
+		}
+				
+		mButtonHost.addButtons(titleButtons);
 	}
 }
