@@ -162,13 +162,7 @@ public class XUIWebView extends WebView
 	 * Class for custom console message handling and alert dialogs
 	 */
 	private class ViewChromeClient extends WebChromeClient
-	{ 
-		@Override
-		public void onConsoleMessage(String message, int lineNumber, String sourceID)
-		{		
-			Debug.out("WebClient: (" + lineNumber + ") " + message);
-		}
-		
+	{ 		
 		@Override
 		public boolean onJsAlert(WebView view, String url, String message, JsResult result)
 		{
