@@ -1,5 +1,4 @@
 /**
- * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
  * 
  * @author Callum Taylor
 **/
@@ -405,13 +404,28 @@ public class XUIMenuButtonGroup extends LinearLayout
 		}
 	}
 	
+	/**
+	 * @brief Interface for when a button gets added to the group
+	 */
 	public interface OnMenuButtonAdded
 	{
+		/**
+		 * Called when a button is added to the group
+		 * @param button The button that has been added
+		 * @param index The index of the button
+		 */
 		public void onMenuButtonAdded(XUIMenuButton button, int index);
 	}
 	
+	/**
+	 * @brief Interface for when a button gets removed from the group
+	 */
 	public interface OnMenuButtonRemoved
 	{
+		/**
+		 * Called when a button is removed from the group
+		 * @param index The index of the button that was removed
+		 */
 		public void onMenuButtonRemoved(int index);
 	}
 }
