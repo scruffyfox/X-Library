@@ -16,11 +16,20 @@ public class XUICheckBox extends ImageView implements Checkable
 	private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};	
 	private OnCheckedChangeListener mOnCheckedChangeListener;
 	
+	/**
+	 * Default constructor
+	 * @param context
+	 */
 	public XUICheckBox(Context context)
 	{
 		super(context); 
 	}
 	
+	/**
+	 * Default constructor
+	 * @param context
+	 * @param attrs
+	 */
 	public XUICheckBox(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
@@ -37,11 +46,17 @@ public class XUICheckBox extends ImageView implements Checkable
 		refreshDrawableState();
 	}
 	
+	/**
+	 * Toggles the checked status of the checkbox
+	 */
 	public void toggle()
 	{
 		setChecked(!mIsChecked);
 	}
 	
+	/**
+	 * Sets if the checkbox is checked or not
+	 */
 	public void setChecked(boolean isChecked)
 	{
 		if (mIsChecked != isChecked)
@@ -57,6 +72,10 @@ public class XUICheckBox extends ImageView implements Checkable
 		}
 	}
 	
+	/**
+	 * Sets the oncheckecchange listener 
+	 * @param l The new listener
+	 */
 	public void setOnCheckedChangeListener(OnCheckedChangeListener l)
 	{
 		mOnCheckedChangeListener = l;
@@ -75,6 +94,9 @@ public class XUICheckBox extends ImageView implements Checkable
 	    return drawableState;
 	}
 	
+	/**
+	 * Returns if the checkbox is checked
+	 */
 	public boolean isChecked()
 	{		
 		return mIsChecked;
@@ -94,8 +116,16 @@ public class XUICheckBox extends ImageView implements Checkable
 		setChecked(false);
 	}
 	
+	/**
+	 * @breif Interface for when the checkbox gets checked or unchecked
+	 */
 	public interface OnCheckedChangeListener
 	{
+		/**
+		 * Called when the checkbox is toggled
+		 * @param view The checkbox toggled
+		 * @param isChecked The new state of the checkbox
+		 */
 		public void onCheckChanged(XUICheckBox view, boolean isChecked);
 	}
 }
