@@ -162,37 +162,44 @@ public class BitmapUtils
 	{
 		switch (currentOrientation)
 		{
-			case 2:	//	Horizontal
+			//	Horizontal
+			case 2:
 			{
 				return flip(bm, FLIP_HORIZONTAL);
 			}
 			
-			case 3:	//	180 rotate left
+			//	180 rotate left
+			case 3:	
 			{
 				return rotate(bm, -180);
 			}
 			
-			case 4:	//	Vertical flip
+			//	Vertical flip
+			case 4:	
 			{
 				return flip(bm, FLIP_VERTICAL);
 			}
 			
-			case 5:	//	Vertical flip + 90 rotate right
+			//	Vertical flip + 90 rotate right
+			case 5:
 			{
 				return rotate(flip(bm, FLIP_VERTICAL), 90);				
 			}
 		
-			case 6:	//	90 rotate right
+			//	90 rotate right
+			case 6:	
 			{
 				return rotate(bm, 90);
 			}
 		
-			case 7:	//	horizontal flip + 90 rotate right
+			//	horizontal flip + 90 rotate right
+			case 7:	
 			{
 				return rotate(flip(bm, FLIP_HORIZONTAL), 90);				
 			}
 		
-			case 8:	//	90 rotate left
+			//	90 rotate left
+			case 8:	
 			{
 				return rotate(bm, 90);				
 			}
