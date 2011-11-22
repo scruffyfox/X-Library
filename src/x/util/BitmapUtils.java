@@ -153,7 +153,26 @@ public class BitmapUtils
 	}
 	
 	/**
-	 * Fixes the orientation of a bitmap
+	 * Crops a bitmap at the given indexes. Original bitmap is recycled after this method is called.
+	 * @param bm The bitmap to crop
+	 * @param startX The start x coord starting in TOP LEFT
+	 * @param startY The start y coord starting in TOP LEFT
+	 * @param width The width of the crop
+	 * @param height The height of the crop
+	 * @return The newly cropped bitmap.
+	 */
+	public static Bitmap crop(Bitmap bm, int startX, int startY, int width, int height)
+	{
+		Bitmap newBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		Canvas canvas = new Canvas(newBitmap);
+		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(startX, startY, width, height), new Paint(Paint.ANTI_ALIAS_FLAG));
+		
+		bm.recycle();		
+		return newBitmap;
+	}
+	
+	/**
+	 * Fixes the orientation of a bitmap. Original bitmap is recycled after this method is called
 	 * @param bm The bitmap to fix
 	 * @param currentOrientation The current orientation as discripted in {@link ExifInterface}
 	 * @return The fixed bitmap
@@ -201,7 +220,7 @@ public class BitmapUtils
 			//	90 rotate left
 			case 8:	
 			{
-				return rotate(bm, 90);				
+				return rotate(bm, -90);				
 			}
 		}
 		
