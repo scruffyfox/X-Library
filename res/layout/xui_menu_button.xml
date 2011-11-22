@@ -6,9 +6,9 @@
     android:layout_height="fill_parent"   
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:paddingLeft="4dp"
+    android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:duplicateParentState="true"			
+    android:duplicateParentState="true"			    
 >
 	<RelativeLayout
 		android:layout_width="fill_parent"

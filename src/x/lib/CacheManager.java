@@ -211,6 +211,40 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
+	 * Gets the absolute file path of a file in cache
+	 * @param fileName The file name
+	 * @return The absolute file path 
+	 */
+	public String getFilePath(String fileName)
+	{
+		return getFilePath("", fileName);
+	}
+	
+	/**
+	 * Gets the absolute file path of a file in cache
+	 * @param folderName the folder name
+	 * @param fileName The file name 
+	 * @return The absolute file path 
+	 */
+	public String getFilePath(String folderName, String fileName)
+	{
+		try
+		{	
+			if (folderName != null && !folderName.equals(""))
+			{
+				folderName = "/cache_" + folderName;
+			}
+			
+			File file = new File(mCachePath + folderName, "cache_" + fileName);
+			return file.getAbsolutePath();
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
+	
+	/**
 	 * Checks if the cache has reached the user's cache limit stored in user preference as "cacheLimit"
 	 * and removes the oldest files to make space
 	 */

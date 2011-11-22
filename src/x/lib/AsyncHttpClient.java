@@ -90,6 +90,15 @@ public class AsyncHttpClient
 	}
 	
 	/**
+	 * Sets the bytes written listener
+	 * @param mOnBytesWrittenListener Thew new listener
+	 */
+	public void setOnBytesWrittenListener(OnBytesWrittenListener mOnBytesWrittenListener)
+	{		
+		mHttpLoader.setOnBytesWrittenListener(mOnBytesWrittenListener);		
+	}
+	
+	/**
 	 * Initiates a request with a server
 	 * @param requestMode The request mode for the connection
 	 * @param urlStr The URLs to the server
@@ -505,6 +514,7 @@ public class AsyncHttpClient
 		private int responseCode = 0;
 		private String responseMessage;
 		public ConnectionInfo mConnectionInfo = new ConnectionInfo();
+		private OnBytesWrittenListener mOnBytesWrittenListener;		
 		
 		/**
 		 * Default Constructor
@@ -520,6 +530,15 @@ public class AsyncHttpClient
 		public HttpLoader(int timeout)
 		{
 			this.mTimeout = timeout;
+		}
+		
+		/**
+		 * Sets the bytes written listener
+		 * @param mOnBytesWrittenListener The new listener
+		 */
+		public void setOnBytesWrittenListener(OnBytesWrittenListener mOnBytesWrittenListener)
+		{
+			this.mOnBytesWrittenListener = mOnBytesWrittenListener;
 		}
 		
 		/**
