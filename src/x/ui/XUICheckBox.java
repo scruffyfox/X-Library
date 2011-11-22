@@ -15,6 +15,7 @@ public class XUICheckBox extends ImageView implements Checkable
 	private boolean mIsChecked;
 	private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};	
 	private OnCheckedChangeListener mOnCheckedChangeListener;
+	private boolean mSetOnClickListener = false;
 	
 	/**
 	 * Default constructor
@@ -33,17 +34,22 @@ public class XUICheckBox extends ImageView implements Checkable
 	public XUICheckBox(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		
-		setOnClickListener(new OnClickListener()
-		{			
-			public void onClick(View v)
-			{
-				((XUICheckBox)v).toggle();
-			}
-		});		
-		 
+				
 		//setBackgroundResource(R.drawable.xui_checkbox_drawable);
 		refreshDrawableState();
+		
+		//	Only set the default click listener if there is none set
+		//	in the XML layout
+		if (!mSetOnClickListener)
+		{
+			setOnClickListener(new OnClickListener()
+			{			
+				public void onClick(View v)
+				{
+					((XUICheckBox)v).toggle();
+				}
+			});					 
+		}
 	}
 	
 	/**
@@ -72,12 +78,19 @@ public class XUICheckBox extends ImageView implements Checkable
 		}
 	}
 	
+	@Override
+	public void setOnClickListener(OnClickListener l)
+	{
+		mSetOnClickListener = true;
+		super.setOnClickListener(l);
+	}
+	
 	/**
 	 * Sets the oncheckecchange listener 
 	 * @param l The new listener
 	 */
 	public void setOnCheckedChangeListener(OnCheckedChangeListener l)
-	{
+	{		
 		mOnCheckedChangeListener = l;
 	}
 
