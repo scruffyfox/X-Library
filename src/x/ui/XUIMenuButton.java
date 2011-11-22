@@ -119,7 +119,7 @@ public class XUIMenuButton extends LinearLayout
 	
 	private void init()
 	{		
-		//	Only set the onlick listener if it hasn't already
+		//	Only set the onlick listener if it hasn't already		
 		if (!mSetOnClickListener && this.isClickable())
 		{			
 			OnClickListener l = new OnClickListener()
@@ -150,6 +150,13 @@ public class XUIMenuButton extends LinearLayout
 			this.setOnClickListener(l);
 		}
 	}
+	
+	@Override
+	public void setClickable(boolean clickable)
+	{		
+		super.setClickable(clickable);
+		init();
+	};
 	
 	@Override
 	public void setOnClickListener(OnClickListener l)
@@ -332,8 +339,12 @@ public class XUIMenuButton extends LinearLayout
 		
 		this.detachAllViewsFromParent(); 
 		
+		ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
+
 		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>")); 
+		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));		
+		mLabel.setTextColor(list);
+		mLabel.setDuplicateParentStateEnabled(true);
 		
 		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
