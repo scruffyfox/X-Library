@@ -163,12 +163,15 @@ public class BitmapUtils
 	 */
 	public static Bitmap crop(Bitmap bm, int startX, int startY, int width, int height)
 	{
-		Bitmap newBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		Canvas canvas = new Canvas(newBitmap);
-		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(startX, startY, width, height), new Paint(Paint.ANTI_ALIAS_FLAG));
-		
-		bm.recycle();		
-		return newBitmap;
+		int w = width;
+	    int h = height;
+	    
+	    Bitmap ret = Bitmap.createBitmap(w, h, bm.getConfig());
+	    Canvas canvas = new Canvas(ret);
+	    canvas.drawBitmap(bm, -startX, -startY, null);
+	    bm.recycle();
+	    
+	    return ret;
 	}
 	
 	/**
