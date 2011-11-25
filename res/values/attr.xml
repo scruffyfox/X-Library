@@ -7,7 +7,8 @@
 		<attr name="groupName" format="string"/>		
 	</declare-styleable>
 	<declare-styleable name="XUIHorizontalScrollView">	
-		<attr name="swipeMode" format="enum">
+		<attr name="fillWidth" format="boolean" />
+		<attr name="swipeMode" format="enum"> 
 			<enum name="smooth" value="0x10" />
 		    <enum name="step" value="0x01" />
 		    <enum name="none" value="0x00" />
@@ -23,7 +24,7 @@
 		<attr name="gravity" format="enum">
 			<enum name="left" value="0x00000003" />
 		    <enum name="center" value="0x00000011" />
-		    <enum name="right" value="0x00000005" />
+		    <enum name="right" value="0x00000005" /> 
 		</attr>				
 	</declare-styleable>
 	<declare-styleable name="XUITitleButton">
