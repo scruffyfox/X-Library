@@ -280,7 +280,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		
 		if (groupName != null && groupName.length() > 0)
 		{			
-			((TextView)findViewById(R.id.group_label)).setText(x.util.StringUtils.capitalize(groupName));
+			((TextView)findViewById(R.id.group_label)).setText((groupName));
 			((TextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);	
 		}
 		else
