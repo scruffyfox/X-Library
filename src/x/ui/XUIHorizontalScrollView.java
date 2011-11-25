@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import android.widget.ScrollView;
  * @brief Horizontal gallery view for swiping views similar to the iPhone gallery.
  * @brief Horizontal gallery view must have only one direct child when inflating from XML.
  * @added Added generic children, gallery swiper now supports any children, not just image views.
+ * @added Ability to set child views to force the size of the scroller (width)
  * 
  * XML Example
  * @code
@@ -64,8 +66,10 @@ import android.widget.ScrollView;
  *  }
  *  @endcode
  *  
+ *  @note To force the child to the width of the scroller, you can either set xui:fillWidth="true" in the XML for the XUIHorizontalScrollView or you can set the width of the child to -3px (XML) or -3 (Layout Params)
+ *  @note Alernatively you can use the {@link XUIHorizontalScrollView.LayoutParams} option fillWidth to force it.
+ *  
  *  @TODO Add remove all images and remove image (view) support
- *  @TODO Add attr option for force child to screen dimension
  */
 public class XUIHorizontalScrollView extends HorizontalScrollView
 {
@@ -94,10 +98,27 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	private OnViewChangedListener mOnViewChangedLister;
 	private int mScrollMode;
 	private ScrollView mParentScrollView;
+	public boolean mFillWidth = false;
 	
 	private boolean mScrollingVertically = false;
-	private boolean mScrollingHorizontally = false;
+	private boolean mScrollingHorizontally = false;	
   
+	/**
+	 * Layout params for XUIHoizontalScrollView	 
+	 */
+	class LayoutParams extends FrameLayout.LayoutParams
+	{
+		/**
+		 * Sets the child's width to the width of the scroll view
+		 */
+		public boolean fillWidth = false;
+		
+		public LayoutParams(int arg0, int arg1)
+		{
+			super(arg0, arg1);
+		}
+	}
+	
 	/**
 	 * Default Constructor
 	 * @param context The application's context
@@ -131,7 +152,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		this.context = context;	
 		
 		TypedArray attrs = context.obtainStyledAttributes(attributes, R.styleable.XUIHorizontalScrollView);	
-		mScrollMode = attrs.getInt(R.styleable.XUIHorizontalScrollView_swipeMode, STEP);				
+		mScrollMode = attrs.getInt(R.styleable.XUIHorizontalScrollView_swipeMode, STEP);	
+		mFillWidth = attrs.getBoolean(R.styleable.XUIHorizontalScrollView_fillWidth, false);
 	}		
 	
 	/**
@@ -140,6 +162,13 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void addChildView(View child)
 	{
+		if (child.getLayoutParams().width == -3 || ((XUIHorizontalScrollView.LayoutParams)child.getLayoutParams()).fillWidth)
+		{
+			LayoutParams params = new LayoutParams(getMeasuredWidth(), child.getLayoutParams().height);
+			addChildView(child, params);
+			return;
+		}
+		
 		((ViewGroup)this.getChildAt(0)).addView(child);
 	}
 	
@@ -150,22 +179,40 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void addChildView(View child, int index)
 	{
+		if (child.getLayoutParams().width == -3 || ((XUIHorizontalScrollView.LayoutParams)child.getLayoutParams()).fillWidth)
+		{
+			LayoutParams params = new LayoutParams(getMeasuredWidth(), child.getLayoutParams().height);
+			addChildView(child, index, params);
+			return;
+		}
+		
 		((ViewGroup)this.getChildAt(0)).addView(child, index);
 	}
 	
 	/**
-	 * Adds an image to the scroller
-	 * @param image The imageview to add
+	 * Adds a view to the scroller
+	 * @param image The view to add
 	 * @param params The params for the new view
 	 */
 	public void addChildView(View child, android.view.ViewGroup.LayoutParams params)
-	{
+	{		
 		((ViewGroup)this.getChildAt(0)).addView(child, params);
 	}
 	
 	/**
-	 * Removes an image at an index
-	 * @param view The view of the image to remove
+	 * Adds a view to the scroller
+	 * @param image The view to add
+	 * @param index The index of the view to add
+	 * @param params The params for the new view
+	 */
+	public void addChildView(View child, int index, android.view.ViewGroup.LayoutParams params)
+	{
+		((ViewGroup)this.getChildAt(0)).addView(child, index, params);
+	}
+	
+	/**
+	 * Removes a view at an index
+	 * @param view The view to remove
 	 */
 	public void removeChild(View view)
 	{
@@ -173,8 +220,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * Removes an image at an index
-	 * @param index The index of the image to remove
+	 * Removes a view at an index
+	 * @param index The index of the view to remove
 	 */
 	public void removeChildAt(int index)
 	{
@@ -190,9 +237,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 
 	/**
-	 * Gets an image from an index
-	 * @param index The index of the image view
-	 * @return The ImageView
+	 * Gets a view from an index
+	 * @param index The index of the view
+	 * @return The View
 	 */
 	public View getChildViewAt(int index)
 	{
@@ -200,8 +247,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * Returns the current image view in the view
-	 * @return The current image view
+	 * Returns the current view in the view
+	 * @return The current view
 	 */
 	public View getCurrentChildView()
 	{
@@ -233,7 +280,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * Scrolls the view to the specified image index
+	 * Scrolls the view to the specified view index
 	 * @param index The index to go to
 	 */
 	public void scrollToChildAt(int index)
@@ -258,7 +305,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * Scrolls the view to the specified image index
+	 * Scrolls the view to the specified view index
 	 * @param index The index to go to
 	 */
 	public void smoothScrollToChildAt(int index)
@@ -367,12 +414,12 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}		
 	
 	/**
-	 * Sets the image change listener
-	 * @param imageListener The new image change listener
+	 * Sets the view change listener
+	 * @param l The new view change listener
 	 */
-	public void setOnViewChange(OnViewChangedListener imageListener)
+	public void setOnViewChange(OnViewChangedListener l)
 	{
-		this.mOnViewChangedLister = imageListener;
+		this.mOnViewChangedLister = l;
 	}
 	
 	/**
@@ -410,8 +457,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}		
 	
 	/**
-	 * Gets the image count
-	 * @return The image count
+	 * Gets the view count
+	 * @return The view count
 	 */
 	public int getChildViewCount()
 	{				
@@ -438,23 +485,34 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		
 		init();
 	}
-	
+
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{
 		super.onLayout(changed, l, t, r, b);
 		
-		childCount = ((ViewGroup)getChildAt(0)).getChildCount();		
+		childCount = ((ViewGroup)getChildAt(0)).getChildCount();	
 		
 		if (changed)
 		{				
-			int featureWidth = getMeasuredWidth();            
-            smoothScrollTo(currentChildIndex * featureWidth, 0);
+			int featureWidth = getMeasuredWidth();            			
+            smoothScrollTo(currentChildIndex * featureWidth, 0);      
+            
+            childCount = getChildViewCount();
+    		for (int index = 0; index < childCount; index++)
+    		{		
+    			View child = getChildViewAt(index);
+    			
+    			if (child.getLayoutParams().width == -3 || mFillWidth)
+    			{
+    				child.setLayoutParams(new LinearLayout.LayoutParams(getMeasuredWidth(), child.getLayoutParams().height));
+    			}
+    		}
             
             if (mOnViewChangedLister != null)
             {            	
             	mOnViewChangedLister.onViewChange(currentChildIndex);                		            	                    
-            }
+            }                        
 		}
 	}
 	
