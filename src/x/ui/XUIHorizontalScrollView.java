@@ -98,7 +98,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	private OnViewChangedListener mOnViewChangedLister;
 	private int mScrollMode;
 	private ScrollView mParentScrollView;
-	public boolean mFillWidth = false;
+	private boolean mFillWidth = false;
 	
 	private boolean mScrollingVertically = false;
 	private boolean mScrollingHorizontally = false;	
@@ -106,7 +106,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	/**
 	 * Layout params for XUIHoizontalScrollView	 
 	 */
-	class LayoutParams extends FrameLayout.LayoutParams
+	public static class LayoutParams extends ViewGroup.LayoutParams
 	{
 		/**
 		 * Sets the child's width to the width of the scroll view
@@ -157,12 +157,21 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}		
 	
 	/**
+	 * Sets if the children should fill the parent. Must be called before adding children
+	 * @param fill The new fill mode
+	 */
+	public void setFillWidth(boolean fill)
+	{
+		mFillWidth = fill;
+	}
+	
+	/**
 	 * Adds an image to the scroller
 	 * @param image The imageview to add
 	 */
 	public void addChildView(View child)
 	{
-		if (child.getLayoutParams().width == -3 || ((XUIHorizontalScrollView.LayoutParams)child.getLayoutParams()).fillWidth)
+		if (child.getLayoutParams().width == -3 || mFillWidth)
 		{
 			LayoutParams params = new LayoutParams(getMeasuredWidth(), child.getLayoutParams().height);
 			addChildView(child, params);
@@ -179,7 +188,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void addChildView(View child, int index)
 	{
-		if (child.getLayoutParams().width == -3 || ((XUIHorizontalScrollView.LayoutParams)child.getLayoutParams()).fillWidth)
+		if (child.getLayoutParams().width == -3 || mFillWidth)
 		{
 			LayoutParams params = new LayoutParams(getMeasuredWidth(), child.getLayoutParams().height);
 			addChildView(child, index, params);
