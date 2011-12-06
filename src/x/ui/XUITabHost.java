@@ -14,10 +14,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -107,16 +110,16 @@ public class XUITabHost extends RelativeLayout
 	 */
 	public void setup(LocalActivityManager activityManager)
 	{
-		this.mActivityManager = activityManager;
+		this.mActivityManager = activityManager;		
 	}
 	
 	/**
 	 * Selects a tab at a specific index
 	 * @param index The index of the tab
 	 */
-	public void selectTab(int index)
+	public void selectTab(final int index)
 	{ 						
-		XUITab tab = (XUITab)this.getChildAt(index);
+		XUITab tab = (XUITab)getChildAt(index);
 		tab.performClick();		
 	}
 	
@@ -145,7 +148,10 @@ public class XUITabHost extends RelativeLayout
 	 * @param tab The new tab to add
 	 */
 	public void addTab(XUITab tab)
-	{			
+	{		
+		tab.setFocusable(false);
+		tab.setFocusableInTouchMode(false);
+		
 		this.addView(tab);		
 		
 		totalChildren = this.getChildCount();		
@@ -161,6 +167,9 @@ public class XUITabHost extends RelativeLayout
 	 */
 	public void addTab(XUITab tab, XUITabParams params)
 	{
+		tab.setFocusable(false);
+		tab.setFocusableInTouchMode(false);
+		
 		tab.setParams(params);				
 		this.addView(tab);		
 		totalChildren = this.getChildCount();		
@@ -177,6 +186,9 @@ public class XUITabHost extends RelativeLayout
 	 */
 	public void addTab(XUITab tab, XUITabParams params, int position)
 	{
+		tab.setFocusable(false);
+		tab.setFocusableInTouchMode(false);
+		
 		tab.setParams(params);				
 		this.addView(tab, position);		
 		totalChildren = this.getChildCount();		
@@ -196,7 +208,7 @@ public class XUITabHost extends RelativeLayout
 		
 		public void onClick(View view)
 		{	
-			if (((XUITab)view).isSelected) return;
+			if (((XUITab)view).isSelected()) return;
 						
 			deselectAll();								
 	        ((XUITab)view).select(mActivityManager, targetView);
@@ -204,7 +216,7 @@ public class XUITabHost extends RelativeLayout
 	        if (mOnTabSelected != null)
 			{
 				mOnTabSelected.onTabSelect(index);
-			}			
+			}		         
 		}	
 	};
 	
