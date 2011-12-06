@@ -184,7 +184,7 @@ public class Konami implements OnTouchListener
 		{			
 			//	Check the array for code
 			int totalCorrect = 0;
-			for (int loop = 0; loop < mCurrentPtr; loop++)
+			for (int loop = 0; loop < mGestureList.size(); loop++)
 			{
 				//	Check if it is correct
 				if (mCode[loop] == mGestureList.get(loop))
