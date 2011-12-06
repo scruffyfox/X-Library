@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -66,10 +67,9 @@ import android.widget.ScrollView;
  *  }
  *  @endcode
  *  
- *  @note To force the child to the width of the scroller, you can either set xui:fillWidth="true" in the XML for the XUIHorizontalScrollView or you can set the width of the child to -3px (XML) or -3 (Layout Params)
- *  @note Alernatively you can use the {@link XUIHorizontalScrollView.LayoutParams} option fillWidth to force it.
+ *  @note To force the child to the width of the scroller, set the width of the child to FILL_PARENT or MATCH_PARENT
  *  
- *  @TODO Add remove all images and remove image (view) support
+ *  @TODO Add remove all views and remove view support
  */
 public class XUIHorizontalScrollView extends HorizontalScrollView
 {
@@ -88,8 +88,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	
 	private Context context;		
 	private GestureDetector gestureDetector;
-	protected int SWIPE_MIN_DISTANCE = 40;
-	protected int SWIPE_THRESHOLD_VELOCITY = 100;
+	protected int SWIPE_MIN_DISTANCE = 10;
+	protected int SWIPE_THRESHOLD_VELOCITY = 20;
 	private boolean touchDown = false;
 	private int currentChildIndex = 0;
 	private int screenWidth;
@@ -98,26 +98,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	private OnViewChangedListener mOnViewChangedLister;
 	private int mScrollMode;
 	private ScrollView mParentScrollView;
-	private boolean mFillWidth = false;
 	
 	private boolean mScrollingVertically = false;
 	private boolean mScrollingHorizontally = false;	
-  
-	/**
-	 * Layout params for XUIHoizontalScrollView	 
-	 */
-	public static class LayoutParams extends ViewGroup.LayoutParams
-	{
-		/**
-		 * Sets the child's width to the width of the scroll view
-		 */
-		public boolean fillWidth = false;
-		
-		public LayoutParams(int arg0, int arg1)
-		{
-			super(arg0, arg1);
-		}
-	}
 	
 	/**
 	 * Default Constructor
@@ -152,55 +135,32 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		this.context = context;	
 		
 		TypedArray attrs = context.obtainStyledAttributes(attributes, R.styleable.XUIHorizontalScrollView);	
-		mScrollMode = attrs.getInt(R.styleable.XUIHorizontalScrollView_swipeMode, STEP);	
-		mFillWidth = attrs.getBoolean(R.styleable.XUIHorizontalScrollView_fillWidth, false);
+		mScrollMode = attrs.getInt(R.styleable.XUIHorizontalScrollView_scrollMode, STEP);	
+		attrs.recycle();		
 	}		
 	
 	/**
-	 * Sets if the children should fill the parent. Must be called before adding children
-	 * @param fill The new fill mode
-	 */
-	public void setFillWidth(boolean fill)
-	{
-		mFillWidth = fill;
-	}
-	
-	/**
 	 * Adds an image to the scroller
-	 * @param image The imageview to add
+	 * @param child The view to add
 	 */
 	public void addChildView(View child)
 	{
-		if (child.getLayoutParams().width == -3 || mFillWidth)
-		{
-			LayoutParams params = new LayoutParams(getMeasuredWidth(), child.getLayoutParams().height);
-			addChildView(child, params);
-			return;
-		}
-		
 		((ViewGroup)this.getChildAt(0)).addView(child);
 	}
 	
 	/**
 	 * Adds an image to the scroller
-	 * @param image The imageview to add
+	 * @param child The view to add
 	 * @param index The index to add the view at
 	 */
 	public void addChildView(View child, int index)
 	{
-		if (child.getLayoutParams().width == -3 || mFillWidth)
-		{
-			LayoutParams params = new LayoutParams(getMeasuredWidth(), child.getLayoutParams().height);
-			addChildView(child, index, params);
-			return;
-		}
-		
 		((ViewGroup)this.getChildAt(0)).addView(child, index);
 	}
 	
 	/**
 	 * Adds a view to the scroller
-	 * @param image The view to add
+	 * @param chile The view to add
 	 * @param params The params for the new view
 	 */
 	public void addChildView(View child, android.view.ViewGroup.LayoutParams params)
@@ -210,7 +170,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	
 	/**
 	 * Adds a view to the scroller
-	 * @param image The view to add
+	 * @param child The view to add
 	 * @param index The index of the view to add
 	 * @param params The params for the new view
 	 */
@@ -300,7 +260,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		}
 		
 		int featureWidth = getMeasuredWidth();
-        scrollTo(index * featureWidth, 0);
+        scrollTo(getChildViewAt(index).getLeft(), 0);
         
         if (currentChildIndex != index)
     	{
@@ -325,7 +285,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		}
 		
 		int featureWidth = getMeasuredWidth();
-        smoothScrollTo(index * featureWidth, 0);
+        smoothScrollTo(getChildViewAt(index).getLeft(), 0);
        
         if (currentChildIndex != index)
     	{
@@ -350,14 +310,13 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	
 	int prevX = 0;
 	private void init()
-	{
-		DisplayMetrics dm = new DisplayMetrics();
-        ((Activity)this.context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
-				         
+	{		
+        Dimension dm = new Dimension(getContext());
+        screenWidth = dm.getScreenWidth();
+        				         
         if (mScrollMode == STEP || mScrollMode == SMOOTH)
         {
-			gestureDetector = new GestureDetector(new swipeGestureDetector());
+			gestureDetector = new GestureDetector(new SwipeGestureDetector());
 			setOnTouchListener(new View.OnTouchListener() 
 			{            
 	            public boolean onTouch(View v, MotionEvent event) 
@@ -367,7 +326,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	                //	If the user swipes
 	                if (gestureDetector.onTouchEvent(event)) 
 	                {
-	                    return true;
+	                	return true;
 	                }                
 	                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
 	                {
@@ -378,29 +337,40 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	                	
 	                    int scrollX = getScrollX();
 	                    int featureWidth = v.getMeasuredWidth();                                                            
-	                    int mActiveFeature = ((scrollX + (featureWidth / 2)) / featureWidth);
+	                    int mActiveFeature = currentChildIndex;            	                    
+	                    	                    
+	                    View nextChild = getChildViewAt(getCurrentIndex() + 1);
+	                    View currentChild = getCurrentChildView();
+	                    	                    
+	                    int currentChildLeft = 0;
+	                    int nextChildLeft = 0;
 	                    
-	                    if (scrollX < mActiveFeature * featureWidth)
+	                    if (currentChild != null)
+	                    {
+	                    	currentChildLeft = currentChild.getLeft();
+	                    }
+	                    
+	                    if (nextChild != null)
+	                    {
+	                    	nextChildLeft = nextChild.getLeft();
+	                    }
+	                    
+	                    if (scrollX < (currentChildLeft - (featureWidth / 2)))
 	                    {                    	                    	
-	                    	mActiveFeature -= mActiveFeature - 1 < 0 ? 0 : 1;
+	                    	mActiveFeature -= currentChildIndex - 1 < 0 ? 0 : 1;
 	                    }
-	                    else if (scrollX > mActiveFeature * featureWidth)
+	                    else if (scrollX > (nextChildLeft - (featureWidth / 2)))
 	                    {
-	                    	mActiveFeature += mActiveFeature + 1 >= childCount ? 0 : 1;
-	                    }
-	                    else
-	                    {
-	                    	mActiveFeature = currentChildIndex;
+	                    	mActiveFeature += currentChildIndex + 1 >= childCount ? 0 : 1;
 	                    }
 	                    
-	                    int scrollTo = mActiveFeature * featureWidth;
-	                    smoothScrollTo(scrollTo, 0);
+	                    smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
 	                    
 	                    if (currentChildIndex != mActiveFeature)
 	                	{
 	                		currentChildIndex = mActiveFeature;
 	                	}
-	                    
+	                    	                    
 	                    if (mOnViewChangedLister != null)
 	                    {                    	
 	                    	mOnViewChangedLister.onViewChange(currentChildIndex);                    		                    	               	
@@ -473,56 +443,61 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	{				
 		return ((ViewGroup)this.getChildAt(0)).getChildCount();
 	}	
-	
+	 
 	@Override
 	protected void onFinishInflate()
 	{	
+		super.onFinishInflate();
+				
 		if (getChildCount() < 1)		
 		{
 			LinearLayout layout = new LinearLayout(context);
 			layout.setOrientation(LinearLayout.HORIZONTAL);
-			layout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+			layout.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 			
 			this.setVerticalFadingEdgeEnabled(false);
 			this.setHorizontalFadingEdgeEnabled(false);
 			this.addView(layout, 0);
 		}
 		
-		childCount = getChildViewCount();
-		
-		super.onFinishInflate();
+		childCount = getChildViewCount();				
 		
 		init();
 	}
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
-	{
-		super.onLayout(changed, l, t, r, b);
-		
+	{				
 		childCount = ((ViewGroup)getChildAt(0)).getChildCount();	
 		
 		if (changed)
 		{				
 			int featureWidth = getMeasuredWidth();            			
-            smoothScrollTo(currentChildIndex * featureWidth, 0);      
-            
+            smoothScrollTo(currentChildIndex * featureWidth, 0); 
+                        
             childCount = getChildViewCount();
     		for (int index = 0; index < childCount; index++)
     		{		
     			View child = getChildViewAt(index);
-    			
-    			if (child.getLayoutParams().width == -3 || mFillWidth)
-    			{
-    				child.setLayoutParams(new LinearLayout.LayoutParams(getMeasuredWidth(), child.getLayoutParams().height));
-    			}
+    			    			
+    			if (child.getLayoutParams().width == LayoutParams.MATCH_PARENT)
+    			{     				    				
+    				child.getLayoutParams().width = featureWidth;
+    				child.measure(MeasureSpec.makeMeasureSpec(featureWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));    				
+    				requestLayout();
+    			}    			    			
     		}
+    		
+    		getChildAt(0).measure(MeasureSpec.makeMeasureSpec(childCount * featureWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+    		requestLayout();
             
             if (mOnViewChangedLister != null)
             {            	
             	mOnViewChangedLister.onViewChange(currentChildIndex);                		            	                    
             }                        
 		}
+		
+		super.onLayout(changed, l, t, r, b);		
 	}
 	
 	@Override
@@ -535,8 +510,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		{
 			v = v.getParent();
 			
-			if (v == null) break;
-			
+			if (v == null) break;			
 			if (v instanceof ScrollView)
 			{				
 				mParentScrollView = (ScrollView)v;
@@ -548,7 +522,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	/**
 	 * @brief The swipe detector listener for the fling and scroll checks
 	 */
-	private class swipeGestureDetector extends SimpleOnGestureListener
+	private class SwipeGestureDetector extends SimpleOnGestureListener
 	{	
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) 
@@ -587,7 +561,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
             {            	
 				int featureWidth = getMeasuredWidth();
 	            int mActiveFeature = (currentChildIndex < (childCount - 1)) ? currentChildIndex + 1 : childCount - 1;
-	            smoothScrollTo(mActiveFeature * featureWidth, 0);
+	            Debug.out(getChildViewAt(mActiveFeature).getLeft());	            
+	            smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
 	            
 	            if (currentChildIndex != mActiveFeature)
             	{
@@ -606,7 +581,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
             {    
             	int featureWidth = getMeasuredWidth();
                 int mActiveFeature = (currentChildIndex > 0) ? currentChildIndex - 1 : 0;
-                smoothScrollTo(mActiveFeature * featureWidth, 0);
+                Debug.out(getChildViewAt(mActiveFeature).getLeft());
+                smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
                 
                 if (currentChildIndex != mActiveFeature)
             	{
