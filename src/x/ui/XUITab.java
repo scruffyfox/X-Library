@@ -43,7 +43,7 @@ import android.widget.TextView;
  */
 public class XUITab extends RelativeLayout 
 {
-	public boolean isSelected = false;
+	private boolean isSelected = false;
 	protected Context context;		
 	
 	//	View Elements
@@ -51,6 +51,7 @@ public class XUITab extends RelativeLayout
 	private TextView tabText;
 	private XUITabParams params;
 	private ViewGroup tabView = null;
+	private ViewGroup mContentView;
 	private OnPostLayoutListener mOnPostLayout;
 	private OnTabSelectedListener mOnTabSelectedListener;
 	
@@ -64,7 +65,7 @@ public class XUITab extends RelativeLayout
 		this.context = context;				
 		
 		params = new XUITabParams();
-		params.tabText = new XUITabParams.Option("", "");
+		params.tabText = new XUITabParams.Option("");
 		params.layoutParams = new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.FILL_PARENT);
 		
 		init();
@@ -127,6 +128,7 @@ public class XUITab extends RelativeLayout
 	 * @param activityManager The tabhost's activity manager
 	 * @param targetView The target container
 	 */
+	private View mLaunchedView;
 	public void select(LocalActivityManager activityManager, int targetView)
 	{
 		if (isSelected) return;
@@ -154,25 +156,26 @@ public class XUITab extends RelativeLayout
 		}
 			
 		Activity a = (Activity)context;				
-		ViewGroup targetContainer = (ViewGroup)a.findViewById(targetView);
+		ViewGroup mContentView = (ViewGroup)a.findViewById(targetView);
         Intent mIntent = this.params.intent;	       
                        
-        Window w = activityManager.startActivity("tag", mIntent);
-        View wd = w != null ? w.getDecorView() : null;	
+        Window w = activityManager.startActivity("" + System.currentTimeMillis(), mIntent);
+        View mLaunchedView = w != null ? w.getDecorView() : null;	
         
-        targetContainer.removeAllViews();
-        View mLaunchedView = wd; 
-
+        mContentView.removeAllViewsInLayout();
+        
         if (mLaunchedView != null) 
         {
             mLaunchedView.setVisibility(View.VISIBLE);
             mLaunchedView.setFocusableInTouchMode(true);
-            ((ViewGroup) mLaunchedView).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            ((ViewGroup)mLaunchedView).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         } 
                 
-        targetContainer.addView(mLaunchedView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));                
+        mContentView.addView(mLaunchedView, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        mContentView.requestFocus();
+        
         select();
-	}
+	}		
 	
 	/**
 	 * Selects the tab
@@ -187,7 +190,7 @@ public class XUITab extends RelativeLayout
 			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.selected));
 		}
 		
-		tabText.setContentDescription(this.params.tabText.deselected);
+		tabText.setContentDescription(this.params.tabText.deselected != null ? this.params.tabText.deselected : this.params.tabText.selected);
 		tabText.setText(this.params.tabText.selected);
 		tabText.setTextColor(this.params.tabTextColor.selected);		
 		this.setBackgroundDrawable(this.params.tabBackground.selected);	
@@ -208,13 +211,13 @@ public class XUITab extends RelativeLayout
 		if (this.params.tabIcon.deselected > -1)
 		{
 			imageIcon.setVisibility(View.VISIBLE);
-			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.deselected));
+			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.deselected != null ? this.params.tabIcon.deselected : this.params.tabIcon.selected));
 		}
 		
-		tabText.setContentDescription(this.params.tabText.deselected);
-		tabText.setText(this.params.tabText.deselected);
+		tabText.setContentDescription(this.params.tabText.deselected != null ? this.params.tabText.deselected : this.params.tabText.selected);
+		tabText.setText(this.params.tabText.deselected != null ? this.params.tabText.deselected : this.params.tabText.selected);
 		tabText.setTextColor(this.params.tabTextColor.deselected);
-		this.setBackgroundDrawable(this.params.tabBackground.deselected);		
+		this.setBackgroundDrawable(this.params.tabBackground.deselected != null ? this.params.tabBackground.deselected : this.params.tabBackground.selected);		
 	}
 	
 	/**
@@ -304,6 +307,14 @@ public class XUITab extends RelativeLayout
 		{
 			mOnPostLayout.onPostLayout(this, changed);
 		}
+	}
+	
+	/**
+	 * Get if the tab is selected or not
+	 */
+	public boolean isSelected()
+	{
+		return isSelected;
 	}
 	
 	/**
