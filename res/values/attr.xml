@@ -8,7 +8,7 @@
 	</declare-styleable>
 	<declare-styleable name="XUIHorizontalScrollView">	
 		<attr name="fillWidth" format="boolean" />
-		<attr name="swipeMode" format="enum"> 
+		<attr name="scrollMode" format="enum"> 
 			<enum name="smooth" value="0x10" />
 		    <enum name="step" value="0x01" />
 		    <enum name="none" value="0x00" />
@@ -20,8 +20,9 @@
 		<attr name="headerBackgroundColor" format="color"/>		
 	</declare-styleable>	
 	<declare-styleable name="XUITitleBar">
-		<attr name="title" format="string" />
-		<attr name="gravity" format="enum">
+		<attr name="label" format="string" />
+		<attr name="labelIcon" format="reference" />
+		<attr name="gravity" format="enum"> 
 			<enum name="left" value="0x00000003" />
 		    <enum name="center" value="0x00000011" />
 		    <enum name="right" value="0x00000005" /> 
@@ -29,5 +30,8 @@
 	</declare-styleable>
 	<declare-styleable name="XUITitleButton">
 		<attr name="onClick" format="string" />				
+	</declare-styleable>
+	<declare-styleable name="XUITextView">
+	    <attr name="font" format="string" />
 	</declare-styleable>
 </resources>
