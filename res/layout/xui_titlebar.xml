@@ -4,21 +4,22 @@
 	android:layout_width="fill_parent"
 	android:layout_height="46dp"
 	android:layout_gravity="center_vertical"
->
+>   	
 	<TextView
-	    	android:id="@+id/titlebar_label"
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="fill_parent"    	
-	    	android:gravity="center_vertical"
-	    	android:layout_marginLeft="10dp"
-	    	style="@style/titlebar_label"
+    	android:id="@+id/titlebar_label"
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"    	
+    	android:gravity="center_vertical"
+    	android:layout_marginLeft="10dp"
+    	style="@style/titlebar_label"
     />
 	
 	<x.ui.XUITitleButtonHost
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-	    	android:gravity="right"
-	    	android:layout_alignParentRight="true"
-	    	android:id="@+id/titlebar_buttons"
+	   	android:layout_width="fill_parent"
+	   	android:layout_height="wrap_content"
+	   	android:gravity="right"
+	   	android:layout_alignParentRight="true"
+	   	android:id="@+id/titlebar_buttons"
     />       
 </RelativeLayout>
+ 
