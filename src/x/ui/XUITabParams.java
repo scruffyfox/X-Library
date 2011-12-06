@@ -59,11 +59,11 @@ public class XUITabParams
 	public static class Option<E>
 	{
 		public E selected;
-		public E deselected;
+		public E deselected;		
 		
 		public Option(E data)
 		{
-			this.selected = this.deselected = data;
+			this.selected = data;
 		}
 		
 		public Option(E selected, E deselected)
