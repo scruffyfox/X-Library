@@ -9,9 +9,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.WindowManager;
 
 /**
  * @brief Calculates the dimension value 
+ * @TODO Add support for orientation detection on width/height ratios
  */
 public class Dimension
 {
@@ -22,13 +25,15 @@ public class Dimension
 	 * The default constructor
 	 * @param context The activity context 
 	 */
-	public Dimension(Activity context)
+	public Dimension(Context context)
 	{
 		mDM = new DisplayMetrics();
-		context.getWindowManager().getDefaultDisplay().getMetrics(mDM);		
-		
+		WindowManager window = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE); 
+	    Display display = window.getDefaultDisplay();
+	    display.getMetrics(mDM);
+	    
 		mRatioWidth = (float)getScreenWidth() / 480.0f;
-		mRatioWidth = (float)getScreenHeight() / 800.0f;
+		mRatioHeight = (float)getScreenHeight() / 800.0f;
 	}
 	
 	/**
@@ -39,7 +44,7 @@ public class Dimension
 	public void setRatio(int width, int height)
 	{
 		mRatioWidth = (float)getScreenWidth() / width;
-		mRatioWidth = (float)getScreenHeight() / height;
+		mRatioHeight = (float)getScreenHeight() / height;
 	}
 	
 	/** 
@@ -54,7 +59,7 @@ public class Dimension
 	
 	/**
 	 * Get the calculated height of the ratio and desired height
-	 * @param width The original height
+	 * @param height The original height
 	 * @return The new height calculated
 	 */
 	public float getHeightFromRatio(int height)
@@ -161,5 +166,14 @@ public class Dimension
 	public float getScreenDensity()
 	{
 		return mDM.density;
+	}
+	
+	/**
+	 * Gets the value of the density
+	 * @return The density of the screen
+	 */
+	public int getDensityName()
+	{
+		return mDM.densityDpi;
 	}
 }
