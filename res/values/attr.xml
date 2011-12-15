@@ -34,4 +34,7 @@
 	<declare-styleable name="XUITextView">
 	    <attr name="font" format="string" />
 	</declare-styleable>
+	<declare-styleable name="XUILinearLayout">
+	    <attr name="childSpacing" format="dimension" />
+	</declare-styleable>
 </resources>
