@@ -1,10 +1,13 @@
-package x.ui;
+package x.lib;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import x.lib.Debug;
-import x.lib.IconOverlayItem;
+import x.type.IconOverlayItem;
+import x.ui.R;
+import x.ui.R.drawable;
+import x.ui.R.id;
+import x.ui.R.layout;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -55,7 +58,7 @@ import com.google.android.maps.OverlayItem;
  *	map.invalidate();
  * @endcode
  */
-public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
+public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 {
 	private ArrayList<OverlayItem> mOverlayItems = new ArrayList<OverlayItem>();
 	private MapView mMapView;
@@ -75,7 +78,7 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 	 * Default constructor
 	 * @param mapView The map view
 	 */
-	public XUIMapOverlay(MapView mapView)
+	public MapOverlay(MapView mapView)
 	{			
 		this(mapView.getContext().getResources().getDrawable(R.drawable.map_pin), mapView);
 	}
@@ -85,7 +88,7 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 	 * @param defaultMarker The default pin
 	 * @param mapView The map view
 	 */
-	public XUIMapOverlay(Drawable defaultMarker, MapView mapView)
+	public MapOverlay(Drawable defaultMarker, MapView mapView)
 	{
 		super(boundCenterBottom(defaultMarker));
 		
@@ -264,9 +267,9 @@ public class XUIMapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Ite
 	{
 		for (Overlay overlay : overlays)
 		{
-			if (overlay instanceof XUIMapOverlay<?> && overlay != this)
+			if (overlay instanceof MapOverlay<?> && overlay != this)
 			{
-				((XUIMapOverlay<?>) overlay).hideBalloon();
+				((MapOverlay<?>) overlay).hideBalloon();
 			}
 		}
 	}
