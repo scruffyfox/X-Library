@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import java.util.ArrayList;
@@ -12,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.MeasureSpec;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,9 +28,10 @@ import android.widget.TextView;
  * 	<x.ui.XUITitleBar
  * 		android:layout_width="fill_parent"
  * 		android:layout_height="wrap_content"
+ * 		xui:labelIcon="@drawable/logo"
  * 		xui:label="Home Screen"
  * 		xui:gravity="left"
- * 		android:background
+ * 		android:background="#ffffffff"
  *	/>
  * @endcode
  * 
@@ -35,10 +42,12 @@ public class XUITitleBar extends RelativeLayout
 	private Context mContext;
 	private LayoutInflater mLayoutInflater;
 	private RelativeLayout mLayout;
-	private String mTitleText = "";
-	private TextView mLabel;
-	private int mGravity;
 	private XUITitleButtonHost mButtonHost;
+	private TextView mLabel;
+	private ImageView mLabelImage;
+	private String mTitleText = "";
+	private int mTitleIconDrawable = -1;	
+	private int mGravity;
 	
 	/**
 	 * Default Constructor
@@ -67,7 +76,8 @@ public class XUITitleBar extends RelativeLayout
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		 
 		TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.XUITitleBar);
-		mTitleText = a.getString(R.styleable.XUITitleBar_title);
+		mTitleText = a.getString(R.styleable.XUITitleBar_label);
+		mTitleIconDrawable = a.getResourceId(R.styleable.XUITitleBar_labelIcon, -1);
 		mGravity = a.getInteger(R.styleable.XUITitleBar_gravity, Gravity.LEFT);
 		
 		init(); 
@@ -79,7 +89,7 @@ public class XUITitleBar extends RelativeLayout
 	private void init()
 	{ 
 		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.xui_titlebar, this);
-		mLabel = (TextView)findViewById(R.id.titlebar_label);
+		mLabel = (TextView)findViewById(R.id.titlebar_label); 
 		mButtonHost = ((XUITitleButtonHost)findViewById(R.id.titlebar_buttons));
 						
 		setTitleText(mTitleText);
