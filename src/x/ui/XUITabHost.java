@@ -6,7 +6,7 @@
 package x.ui;
 
 import x.lib.Debug;
-import x.lib.ItemList;
+import x.type.ItemList;
 import x.ui.R;
 import android.app.LocalActivityManager;
 import android.content.ComponentName;
@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -61,11 +62,12 @@ import android.widget.RelativeLayout;
  */
 public class XUITabHost extends RelativeLayout
 {
-	private Context context;
-	private int totalChildren;
-	private int targetView = -1;
+	private Context mContext;
+	private int mTotalChildren;
+	private int mTargetView = -1;
 	private LocalActivityManager mActivityManager;
 	private OnTabSelectedListener mOnTabSelected;
+	private Animation mContentAnimation;
 	
 	/**
 	 * Default constructor
@@ -74,7 +76,7 @@ public class XUITabHost extends RelativeLayout
 	public XUITabHost(Context context) 
 	{
 		super(context);
-		this.context = context;
+		this.mContext = context;
 		
 		mOnTabSelected = null;
 	} 
@@ -87,13 +89,19 @@ public class XUITabHost extends RelativeLayout
 	public XUITabHost(Context context, AttributeSet attributes)
 	{
 		super(context, attributes);
-		this.context = context;			
+		this.mContext = context;			
 		
 		TypedArray attrs = context.obtainStyledAttributes(attributes, R.styleable.XUITabHost);		
-		targetView = attrs.getResourceId(R.styleable.XUITabHost_targetContainer, -1);
+		mTargetView = attrs.getResourceId(R.styleable.XUITabHost_targetContainer, -1);
 		
 		mOnTabSelected = null;
 	}	
+	
+	@Override
+	public void setAnimation(Animation animation)
+	{	
+		mContentAnimation = animation;
+	}
 	
 	/**
 	 * Sets the tab select listener
@@ -120,7 +128,9 @@ public class XUITabHost extends RelativeLayout
 	public void selectTab(final int index)
 	{ 						
 		XUITab tab = (XUITab)getChildAt(index);
+		tab.setSoundEffectsEnabled(false);
 		tab.performClick();		
+		tab.setSoundEffectsEnabled(true);
 	}
 	
 	/**
@@ -136,7 +146,7 @@ public class XUITabHost extends RelativeLayout
 	 */
 	public void deselectAll()
 	{
-		for (int childCount = 0; childCount < totalChildren; childCount++)
+		for (int childCount = 0; childCount < mTotalChildren; childCount++)
 		{
 			XUITab tab = (XUITab)this.getChildAt(childCount);
 			tab.deselect();
@@ -154,10 +164,10 @@ public class XUITabHost extends RelativeLayout
 		
 		this.addView(tab);		
 		
-		totalChildren = this.getChildCount();		
+		mTotalChildren = this.getChildCount();		
 
 		//	Add the onclick for the intent
-		tab.setOnClickListener(new customTabClickListener(totalChildren - 1));	
+		tab.setOnClickListener(new CustomTabClickListener(mTotalChildren - 1));	
 	}
 	
 	/**
@@ -172,10 +182,10 @@ public class XUITabHost extends RelativeLayout
 		
 		tab.setParams(params);				
 		this.addView(tab);		
-		totalChildren = this.getChildCount();		
+		mTotalChildren = this.getChildCount();		
 
 		//	Add the onclick for the intent
-		tab.setOnClickListener(new customTabClickListener(totalChildren - 1));	
+		tab.setOnClickListener(new CustomTabClickListener(mTotalChildren - 1));	
 	}
 	
 	/**
@@ -191,27 +201,48 @@ public class XUITabHost extends RelativeLayout
 		
 		tab.setParams(params);				
 		this.addView(tab, position);		
-		totalChildren = this.getChildCount();		
+		mTotalChildren = this.getChildCount();		
 
 		//	Add the onclick for the intent
-		tab.setOnClickListener(new customTabClickListener(position));
+		tab.setOnClickListener(new CustomTabClickListener(position));
 	}
 	
-	private class customTabClickListener implements OnClickListener
+	/**
+	 * Gets the total tab count in the tab host
+	 * @return The total count of children
+	 */
+	public int getTabCount()
+	{
+		return mTotalChildren;
+	}
+	
+	/**
+	 * @brief Custom tab click listener which accepts index of tab 
+	 */
+	private class CustomTabClickListener implements OnClickListener
 	{
 		private int index;
 		
-		public customTabClickListener(int index)
+		/**
+		 * Default constructor
+		 * @param index
+		 */
+		public CustomTabClickListener(int index)
 		{
 			this.index = index;
 		}
-		
+				
 		public void onClick(View view)
-		{	
+		{				
 			if (((XUITab)view).isSelected()) return;
-						
+			
+			if (mContentAnimation != null)
+			{
+				((XUITab)view).setAnimation(mContentAnimation);
+			}
+			
 			deselectAll();								
-	        ((XUITab)view).select(mActivityManager, targetView);
+	        ((XUITab)view).select(mActivityManager, mTargetView);
 	        
 	        if (mOnTabSelected != null)
 			{
@@ -233,13 +264,13 @@ public class XUITabHost extends RelativeLayout
 	 */
 	private void updateLayout()
 	{
-		totalChildren = this.getChildCount();		
+		mTotalChildren = this.getChildCount();		
 		
 		//	Get how much width is left in the container for the tabs
 		int widthLeft = this.getMeasuredWidth();
 		int currentXPos = 0;				
 		
-		for (int childCount = 0; childCount < totalChildren; childCount++)
+		for (int childCount = 0; childCount < mTotalChildren; childCount++)
 		{			
 			XUITab child = (XUITab)this.getChildAt(childCount);	
 			LayoutParams childLayout = (LayoutParams)child.getLayoutParams();	
@@ -250,7 +281,7 @@ public class XUITabHost extends RelativeLayout
 			if (childLayout.width < 0)
 			{							
 				//	get how many tabs are left and devide the space equally
-				tabWidth = widthLeft / (totalChildren - childCount);						
+				tabWidth = widthLeft / (mTotalChildren - childCount);						
 			}
 			else
 			{		
