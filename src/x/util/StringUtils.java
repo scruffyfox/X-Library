@@ -140,6 +140,12 @@ public class StringUtils
 		return newStr;
 	}	
 	
+	/**
+	 * Sub strings a string to the set length and appends with elipses. This method does not cut off mid-word
+	 * @param str The string to preview
+	 * @param limitSize The max size of the string
+	 * @return The newly formatted string
+	 */
 	public static String preview(String str, int limitSize)
 	{
 		int count = limitSize;		
@@ -161,5 +167,15 @@ public class StringUtils
 		{			
 			return str;
 		}		
+	}
+	
+	/**
+	 * Checks if a string is empty
+	 * @param str The string to check
+	 * @return False if the string is not empty, true if is.
+	 */
+	public static boolean isEmpty(String str)
+	{
+		return str != null && str.length() < 1;
 	}
 }
