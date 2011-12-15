@@ -1,4 +1,5 @@
 /**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
  * 
  * @author Callum Taylor
 **/

@@ -1,3 +1,8 @@
+/**
+ * x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.util;
 
 import java.io.ByteArrayOutputStream;
@@ -33,7 +38,7 @@ public class BitmapUtils
 	{
 		Bitmap newBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		Canvas canvas = new Canvas(newBitmap);
-		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG));
+		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint());
 		
 		bm.recycle();
 		
