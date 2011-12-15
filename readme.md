@@ -1,7 +1,7 @@
 Read Me
 =======
 X Library is an open source Android control, library and utility library written by Callum Taylor.
-The library has been used on many Android apps including First Aid by British Red Cross ([Link][rca]), Chef+ by The Staff Canteen (TBA) and Eye Check by Boots Opticians (TBA).
+The library has been used on many Android apps including Jackson Stops &amp; Staff ([Link][jss]), First Aid by British Red Cross ([Link][rca]), Chef+ by The Staff Canteen (TBA) and Eye Check by Boots Opticians (TBA).
 
 Installation
 ------------
@@ -21,6 +21,7 @@ Demo
 ----
 There is a library demo for the UI elements and can be found [Here][demo]
 
+[jss]: http://market.android.com/details?id=uk.co.jacksonstops.property
 [rca]: http://market.android.com/details?id=com.cube.rca
 [doc]: http://scruffyfox.github.com/X-Library
 [demo]: http://github.com/scruffyfox/X-Library-Demo
