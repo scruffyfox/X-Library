@@ -1,14 +1,16 @@
-package x.lib;
+package x.type;
 
+import x.lib.MapOverlay;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.widget.SeekBar;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 
 /**
- * Overlay item class that is used in MapViews to display a bubble of information over a point on a map view. Used commonly with XUIMapOverlay
+ * Overlay item class that is used in MapViews to display a bubble of information over a point on a map view. Used commonly with {@link MapOverlay}
  */
 public class IconOverlayItem extends OverlayItem
 {

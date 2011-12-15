@@ -1,4 +1,5 @@
-package x.lib;
+package x.type;
+
 
 /**
  * Gives details on the connection made to a server

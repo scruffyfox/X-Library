@@ -1,7 +1,8 @@
-package x.lib;
+package x.type;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
 
 /**
  * @brief Http Params to be used with AsyncHttpClient (Key, Value pair class)

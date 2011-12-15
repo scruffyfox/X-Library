@@ -3,7 +3,7 @@
  * 
  * @author Callum Taylor
 **/
-package x.lib;
+package x.type;
 
 import java.util.ArrayList;
 
