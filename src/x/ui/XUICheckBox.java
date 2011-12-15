@@ -8,7 +8,22 @@ import android.widget.ImageView;
 import android.widget.Checkable;
 
 /**
- * @brief This is a custom version of CheckBox
+ * @brief This is a custom version of CheckBox. Allows custom drawables for on/off states and includes interface for when checkbox state changes
+ * 
+ * Example Drawable
+ * @code
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <selector xmlns:android="http://schemas.android.com/apk/res/android">
+ *     <item 
+ * 			android:state_checked="true"
+ *         	android:drawable="@drawable/tick" 
+ *     />
+ *     
+ *     <item
+ *     		android:drawable="@drawable/tick_off" 
+ *     />
+ * </selector>  
+ * @endcode
  */
 public class XUICheckBox extends ImageView implements Checkable
 {
