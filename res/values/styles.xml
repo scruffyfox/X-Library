@@ -16,5 +16,9 @@
 	<style name="no_frame"> 
 	    <item name="android:windowFrame">@null</item>
 	    <item name="android:windowContentOverlay">@null</item>
-	</style>		
+	    <item name="android:windowNoTitle">true</item>
+	</style>	
+	<style name="no_window" parent="@android:style/Theme.Dialog" >
+    	<item name="android:windowBackground">@null</item>
+    </style>	
 </resources>
