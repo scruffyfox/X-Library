@@ -47,7 +47,8 @@ import android.widget.ScrollView;
  *			android:layout_width="wrap_content"
  *			android:layout_height="wrap_content"
  *			android:orientation="horizontal"			
- *		>								
+ *		>				
+ *			<!-- Content here -->				
  *		</LinearLayout>
  *	</x.ui.XUIHorizontalScrollView>
  *  @endcode
@@ -472,7 +473,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		
 		if (changed)
 		{				
-			int featureWidth = getMeasuredWidth();            			
+			int featureWidth = getMeasuredWidth();  
+			int totalWidth = featureWidth * childCount;
             smoothScrollTo(currentChildIndex * featureWidth, 0); 
                         
             childCount = getChildViewCount();
@@ -481,14 +483,22 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
     			View child = getChildViewAt(index);
     			    			
     			if (child.getLayoutParams().width == LayoutParams.MATCH_PARENT)
-    			{     				    				
+    			{   
+    				int height = child.getHeight();
+    				
+    				if (child.getLayoutParams().height == LayoutParams.MATCH_PARENT)
+    				{
+    					height = MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY);
+    				}    				    				
+    				
+    				totalWidth = child.getRight();
     				child.getLayoutParams().width = featureWidth;
-    				child.measure(MeasureSpec.makeMeasureSpec(featureWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));    				
+    				child.measure(MeasureSpec.makeMeasureSpec(featureWidth, MeasureSpec.EXACTLY), height);    				
     				requestLayout();
     			}    			    			
     		}
     		
-    		getChildAt(0).measure(MeasureSpec.makeMeasureSpec(childCount * featureWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
+    		getChildAt(0).measure(MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.AT_MOST));
     		requestLayout();
             
             if (mOnViewChangedLister != null)
@@ -561,7 +571,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
             {            	
 				int featureWidth = getMeasuredWidth();
 	            int mActiveFeature = (currentChildIndex < (childCount - 1)) ? currentChildIndex + 1 : childCount - 1;
-	            Debug.out(getChildViewAt(mActiveFeature).getLeft());	            
 	            smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
 	            
 	            if (currentChildIndex != mActiveFeature)
@@ -581,7 +590,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
             {    
             	int featureWidth = getMeasuredWidth();
                 int mActiveFeature = (currentChildIndex > 0) ? currentChildIndex - 1 : 0;
-                Debug.out(getChildViewAt(mActiveFeature).getLeft());
                 smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
                 
                 if (currentChildIndex != mActiveFeature)
