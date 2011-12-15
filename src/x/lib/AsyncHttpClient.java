@@ -34,6 +34,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import x.type.ConnectionInfo;
+import x.type.HttpParams;
+
 import android.R.integer;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
@@ -66,7 +69,7 @@ public class AsyncHttpClient
 	
 	/**
 	 * Default constructor
-	 */
+	 */ 
 	public AsyncHttpClient()
 	{
 		mHttpLoader = new HttpLoader(0);
@@ -83,7 +86,7 @@ public class AsyncHttpClient
 	
 	/**
 	 * Cancels the request
-	 */
+	 */ 
 	public void cancel() 
 	{
 		mHttpLoader.cancel(true); 
@@ -986,7 +989,7 @@ public class AsyncHttpClient
 		/**
 		 * Called when the 
 		 * @param index
-		 * @param count
+		 * @param count 
 		 * @param total
 		 */
 		public void onBytesWritten(int index, int count, int total);

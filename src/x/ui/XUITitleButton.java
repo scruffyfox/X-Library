@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import x.lib.Debug;
-import x.lib.ItemList;
+import x.type.ItemList;
 import x.util.StringUtils;
 
 import android.content.Context;

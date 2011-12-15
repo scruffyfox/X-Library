@@ -1,5 +1,6 @@
 package x.lib;
 
+import x.type.ConnectionInfo;
 import android.os.Bundle;
 
 /**
