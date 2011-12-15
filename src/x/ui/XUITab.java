@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -54,6 +56,7 @@ public class XUITab extends RelativeLayout
 	private ViewGroup mContentView;
 	private OnPostLayoutListener mOnPostLayout;
 	private OnTabSelectedListener mOnTabSelectedListener;
+	private Animation mAnimation;
 	
 	/**
 	 * Default Constructor
@@ -102,6 +105,12 @@ public class XUITab extends RelativeLayout
 		super.onFinishInflate();	
 						
 		init();
+	}
+	
+	@Override
+	public void setAnimation(Animation animation)
+	{
+		mAnimation = animation;
 	}
 	
 	/**
@@ -172,7 +181,7 @@ public class XUITab extends RelativeLayout
         } 
                 
         mContentView.addView(mLaunchedView, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        mContentView.requestFocus();
+        mContentView.requestFocus();        
         
         select();
 	}		
