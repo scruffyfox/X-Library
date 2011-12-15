@@ -6,7 +6,10 @@
 package x.util;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.json.JSONArray;
 
@@ -48,6 +51,25 @@ public class ArrayUtils
 	}
 	
 	/**
+	 * Gets the index of an object in an array
+	 * @param item The item to find
+	 * @param array The array to look in
+	 * @return The index of the item if found, if not -1 is returned
+	 */
+	public static <E> int indexOf(E item, E array)
+	{
+		for (int index = 0; index < ((E[])array).length; index++)
+		{
+			if (((E[])array)[index].equals(item))
+			{
+				return index;
+			}
+		}
+		
+		return -1;
+	}
+	
+	/** 
 	 * Create an array with default values
 	 * @param <E> The instance of the new array
 	 * @param size The size of the new array
@@ -63,5 +85,23 @@ public class ArrayUtils
 		}
 		
 		return array;
+	}
+	
+	/**
+	 * Shuffles a collection
+	 * @param array The collection to shuffle
+	 */
+	public static void shuffle(Collection array)
+	{
+		Collections.shuffle((List<?>)array);
+	}
+	
+	/**
+	 * Shuffles an array
+	 * @param array The array to shuffle
+	 */
+	public static <E> void shuffle(E array)
+	{		
+		Collections.shuffle(Arrays.asList(array));
 	}
 }
