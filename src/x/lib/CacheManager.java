@@ -343,7 +343,7 @@ public class CacheManager implements Serializable
 	 */
 	public boolean removeFile(String fileName)
 	{
-		return removeFile(null, fileName);
+		return removeFile("", fileName);
 	}
 	
 	/**
@@ -354,7 +354,7 @@ public class CacheManager implements Serializable
 	 */
 	public boolean removeFile(String folderName, String fileName)
 	{
-		if (folderName != null)
+		if (!folderName.equals(""))
 		{	
 			folderName = "/cache_" + folderName;
 		}
