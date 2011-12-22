@@ -3,6 +3,8 @@ package x.type;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import x.lib.Debug;
+
 
 /**
  * @brief Http Params to be used with AsyncHttpClient (Key, Value pair class)
@@ -21,16 +23,56 @@ public class HttpParams implements Serializable
 	
 	/**
 	 * Default constructor
+	 * @param params The url formatted string to parse
+	 */
+	public HttpParams(String params)
+	{
+		queryString = new ItemList<String[]>();
+		parseString(params);
+	}
+	
+	/**
+	 * Default constructor
 	 * @param params The parameters to be added (In the format [{key, value}, {key, value}]
 	 */
 	public HttpParams(String[]... params)
-	{
+	{		
 		queryString = new ItemList<String[]>();
 		for (String[] param : params)
 		{
+			if (param == null) continue;
+						
 			addParam(param[0], param[1]);
 		}
-	}	
+	}
+	
+	/**
+	 * Parses a string into the param type. Format has to be ?key=value&key2=value2. Does not require ? at the start.
+	 * @param url
+	 */
+	public void parseString(String url)
+	{
+		if (url.length() > 0)
+		{
+			int questionMarkIndex = Math.max(0, url.indexOf("?") + 1);
+			String shortUrl = url.substring(questionMarkIndex, url.length());
+			String[] params = shortUrl.split("&");
+
+			for (String param : params) 
+			{
+				String[] value = param.split("=");
+				
+				if (value.length < 2)
+				{
+					addParam(value[0], "");
+				}
+				else
+				{
+					addParam(value[0], value[1]);
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Setting a parameter with the key to the value (Will add if it doesnt exist already)
