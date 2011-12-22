@@ -490,8 +490,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
     				{
     					height = MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY);
     				}    				    				
-    				
-    				totalWidth = child.getRight();
+    				    				
     				child.getLayoutParams().width = featureWidth;
     				child.measure(MeasureSpec.makeMeasureSpec(featureWidth, MeasureSpec.EXACTLY), height);    				
     				requestLayout();
