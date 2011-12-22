@@ -70,7 +70,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	private int mCurrentFocussedIndex;
 	
 	//	Listeners
-	private OnBallonClickListener mOnBallonClickListener;
+	private OnBalloonClickListener mOnBalloonClickListener;
 	private OnBalloonLongClickListener mOnBalloonLongClickListener;
 	private OnBalloonOpenedListener mBalloonOpenedListener;
 	
@@ -111,9 +111,9 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 * Sets the click listener for the bubble
 	 * @param mOnBallonClickListener The new click listener
 	 */
-	public void setOnBallonClickListener(OnBallonClickListener mOnBallonClickListener)
+	public void setOnBallonClickListener(OnBalloonClickListener mOnBalloonClickListener)
 	{
-		this.mOnBallonClickListener = mOnBallonClickListener;
+		this.mOnBalloonClickListener = mOnBalloonClickListener;
 	}
 	
 	/**
@@ -304,9 +304,9 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		{			
 			public void onClick(View arg0)
 			{
-				if (mOnBallonClickListener != null)
+				if (mOnBalloonClickListener != null)
 				{
-					mOnBallonClickListener.onBalloonClick(mCurrentFocussedIndex, mCurrentFocussedItem);
+					mOnBalloonClickListener.onBalloonClick(mCurrentFocussedIndex, mCurrentFocussedItem);
 				}
 			}				
 		};
@@ -327,7 +327,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 * Interface for when the balloon is clicked
 	 * @param <Item> Template of the class (must extend OverlayItem) 
 	 */
-	public interface OnBallonClickListener<Item>
+	public interface OnBalloonClickListener<Item>
 	{
 		/**
 		 * Method called when the balloon is clicked
@@ -408,16 +408,19 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 				title.setVisibility(GONE);
 			}
 			 
-			Bitmap drawable;
-			if ((drawable = ((IconOverlayItem)i).getDrawable()) != null)
-			{						
-				int width = drawable.getWidth();
-				int height = drawable.getHeight();  
-				
-				imageIcon.setVisibility(VISIBLE);
-				imageIcon.setBackgroundDrawable(new BitmapDrawable(drawable));
-				imageIcon.setLayoutParams(new RelativeLayout.LayoutParams(width, height));			
-			}			
+			if (i instanceof IconOverlayItem)
+			{
+				Bitmap drawable;
+				if ((drawable = ((IconOverlayItem)i).getDrawable()) != null)
+				{						
+					int width = drawable.getWidth();
+					int height = drawable.getHeight();  
+					
+					imageIcon.setVisibility(VISIBLE);
+					imageIcon.setBackgroundDrawable(new BitmapDrawable(drawable));
+					imageIcon.setLayoutParams(new RelativeLayout.LayoutParams(width, height));			
+				}
+			}
 			
 			if (i.getSnippet() != null)
 			{
