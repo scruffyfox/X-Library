@@ -174,18 +174,12 @@ public class AsyncHttpClient
 	public void request(RequestMode requestMode, String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
 	{		
 		mAsyncHttpResponse = response;
-		String url = urlStr;
-		
-		if (requestParameters != null)
-		{
-			url += requestParameters.toString();
-		}
 		
 		switch (requestMode)
 		{
 			case POST:
 			{
-				post(url, postData, requestParameters, httpHeaders, response);	
+				post(urlStr, postData, requestParameters, httpHeaders, response);	
 				break;
 			}
 			
@@ -197,7 +191,7 @@ public class AsyncHttpClient
 			
 			case PUT:
 			{
-				put(url, postData, requestParameters, httpHeaders, response);	
+				put(urlStr, postData, requestParameters, httpHeaders, response);	
 				break;
 			}
 			
@@ -348,30 +342,35 @@ public class AsyncHttpClient
 	/**
 	 * Initiates a delete request with a server
 	 * @param endpoint The URLs to the server
-	 * @param requestParameters The request parameters for the URL
 	 * @param response The response interface for the request call back
 	 */
-	public void delete(String endpoint, String requestParameters, AsyncHttpResponse response)
+	public void delete(String endpoint, AsyncHttpResponse response)
 	{
-		String urlStr = endpoint;
-		if (requestParameters != null && requestParameters.length() > 0)
-		{
-			urlStr += urlStr.charAt(urlStr.length() - 1) == '?' ? "" : "?";
-			urlStr += requestParameters;
-		}
-		
-		delete(urlStr, null, null, response);	
+		delete(endpoint, "", null, response);	
 	}
 	
 	/**
 	 * Initiates a delete request with a server
 	 * @param endpoint The URLs to the server
+	 * @param requestParameters The request parameters for the URL
 	 * @param response The response interface for the request call back
 	 */
-	public void delete(String endpoint, AsyncHttpResponse response)
-	{
-		delete(endpoint, null, null, response);	
-	}
+	public void delete(String endpoint, String requestParameters, AsyncHttpResponse response)
+	{				
+		delete(endpoint, new HttpParams(requestParameters), null, response);	
+	}		
+	
+	/**
+	 * Initiates a delete request with a server
+	 * @param endpoint The URLs to the server
+	 * @param requestParameters The request parameters for the URL
+	 * @param headers The headers to be esnt to the server
+	 * @param response The response interface for the request call back
+	 */
+	public void delete(String endpoint, String requestParameters, HttpParams headers, AsyncHttpResponse response)
+	{				
+		delete(endpoint, new HttpParams(requestParameters), headers, response);	
+	}		
 	
 	/**
 	 * Initiates a delete request with a server
@@ -388,7 +387,7 @@ public class AsyncHttpClient
 	 * Initiates a delete request with a server
 	 * @param endpoint The URLs to the server
 	 * @param requestParameters The request parameters for the URL 
-	 * @param headers The request headers for the URL 
+	 * @param headers The headers for the URL 
 	 * @param response The response interface for the request call back
 	 */	
 	public void delete(String endpoint, HttpParams requestParameters, HttpParams headers, AsyncHttpResponse response)
