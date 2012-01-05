@@ -1,5 +1,5 @@
 /**
- * x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * @brief x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
  * 
  * @author Callum Taylor
 **/
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.http.HttpClientConnection;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -56,6 +57,9 @@ import android.util.Log;
  */
 public class AsyncHttpClient
 {	
+	/**
+	 * @brief The request mode enumerator for making AsyncHttp requests	 
+	 */
 	public enum RequestMode
 	{
 		POST,
@@ -492,10 +496,12 @@ public class AsyncHttpClient
 	}
 	
 	/**
-	 * This class is the main AsyncTask loader for the requests
+	 * @brief This class is the main AsyncTask loader for the requests
 	 */
 	private class HttpLoader extends AsyncTask<String, Void, Object>
 	{
+		public ConnectionInfo mConnectionInfo = new ConnectionInfo();
+		
 		private final int DOWNLOAD = 0x00;
 		private final int GET = 0x01;
 		private final int GET_IMAGE = 0x11;		
@@ -513,9 +519,6 @@ public class AsyncHttpClient
 		private int mTimeout = 10000;
 		private Object mSendData;
 		private HttpParams mHttpParams;
-		private int responseCode = 0;
-		private String responseMessage;
-		public ConnectionInfo mConnectionInfo = new ConnectionInfo();
 		private OnBytesWrittenListener mOnBytesWrittenListener;		
 		
 		/**
@@ -653,8 +656,7 @@ public class AsyncHttpClient
 		};
 				
 		
-		@Override
-		protected void onPreExecute()
+		@Override protected void onPreExecute()
 		{
 			if (mAsyncHttpResponse != null)
 			{
@@ -669,8 +671,7 @@ public class AsyncHttpClient
 			}
 		}
 		
-		@Override
-		protected Object doInBackground(String... url)
+		@Override protected Object doInBackground(String... url)
 		{				
 			mLoadTime = System.currentTimeMillis();
 			
@@ -699,11 +700,8 @@ public class AsyncHttpClient
 						conn.setRequestProperty("Connection", "close");
 						conn.setRequestMethod("GET");	
 												
-					    responseCode = conn.getResponseCode();
-					    responseMessage = conn.getResponseMessage();
-					    
-					    mConnectionInfo.connectionResponseCode = responseCode;
-					    mConnectionInfo.connectionResponseMessage = responseMessage;
+					    mConnectionInfo.connectionResponseCode = conn.getResponseCode();
+					    mConnectionInfo.connectionResponseMessage = conn.getResponseMessage();
 					    					  
 					    // Get the response
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
@@ -776,25 +774,32 @@ public class AsyncHttpClient
 						    }
 						}
 												
-					    responseCode = conn.getResponseCode();
-					    responseMessage = conn.getResponseMessage();
+					    mConnectionInfo.connectionResponseCode = conn.getResponseCode();					    					    				    					  
 					    
-					    mConnectionInfo.connectionResponseCode = responseCode;
-					    mConnectionInfo.connectionResponseMessage = responseMessage;
-					    					  
-					    // Get the response
-					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
+					    PatchInputStream i; 
+					    if ((mConnectionInfo.connectionResponseCode / 100) != 2)
+					    {
+					    	i = new PatchInputStream(conn.getErrorStream());
+					    }
+					    else
+					    {
+					    	i = new PatchInputStream(conn.getInputStream());
+					    }
+					    
+					    // Get the response					    
 					    InputStream is = new BufferedInputStream(i);
 					    
 					    InputStreamReader reader = new InputStreamReader(is);
-					    BufferedReader rd = new BufferedReader(reader);				    
+					    BufferedReader rd = new BufferedReader(reader);		
 					    String line;
 					    StringBuilder sb = new StringBuilder();
-						
-						while ((line = rd.readLine()) != null)
-						{
-							sb.append(line);
-						}
+					    
+					    while ((line = rd.readLine()) != null) 
+					    {
+					    	sb.append(line);
+					    }
+					    				    
+					    mConnectionInfo.connectionResponseMessage = sb.toString();
 						
 						reader.close();
 						is.close();
@@ -808,7 +813,7 @@ public class AsyncHttpClient
 					catch (EOFException e)
 					{
 						e.printStackTrace();
-						return "";
+						return null;
 					}
 					catch (UnknownHostException e)
 					{
@@ -835,11 +840,10 @@ public class AsyncHttpClient
 					    
 					    System.setProperty("http.keepAlive", "false");
 						
-						HttpURLConnection conn = (HttpURLConnection) murl.openConnection();
+						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
 						conn.setDoInput(true);
 						conn.setDoOutput(true);
-						conn.setUseCaches(false);
-						conn.setRequestProperty("Connection", "close");
+						conn.setUseCaches(false);						
 						conn.setChunkedStreamingMode(64);
 					    
 					    if (type == PUT)
@@ -861,20 +865,25 @@ public class AsyncHttpClient
 						    	conn.setRequestProperty(mHeaders.get(headerIndex)[0], mHeaders.get(headerIndex)[1]);
 						    }
 					    }
-					    
+					    					    
 					    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 					    wr.write(mSendData.toString());					   
 					    wr.flush();
 					    wr.close();
 					    					   
-					   	responseCode = conn.getResponseCode();
-					    responseMessage = conn.getResponseMessage();		
+					    mConnectionInfo.connectionResponseCode = conn.getResponseCode();					    					    				    					  
 					    
-					    mConnectionInfo.connectionResponseCode = responseCode;
-					    mConnectionInfo.connectionResponseMessage = responseMessage;
-					    				    
-					    // Get the response
-					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
+					    PatchInputStream i; 
+					    if ((mConnectionInfo.connectionResponseCode / 100) != 2)
+					    {
+					    	i = new PatchInputStream(conn.getErrorStream());
+					    }
+					    else
+					    {
+					    	i = new PatchInputStream(conn.getInputStream());
+					    }
+					    
+					    // Get the response					    
 					    InputStream is = new BufferedInputStream(i);
 					    
 					    InputStreamReader reader = new InputStreamReader(is);
@@ -887,6 +896,8 @@ public class AsyncHttpClient
 					    	sb.append(line);
 					    }
 					    				    
+					    mConnectionInfo.connectionResponseMessage = sb.toString();
+					    
 					    rd.close();
 					    is.close();
 					    i.close();
@@ -918,17 +929,12 @@ public class AsyncHttpClient
 						conn.setDoOutput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
-						                    
-						responseCode = conn.getResponseCode();
-					    responseMessage = conn.getResponseMessage();			
-					    
-					    mConnectionInfo.connectionResponseCode = responseCode;
-					    mConnectionInfo.connectionResponseMessage = responseMessage;
+				
+					    mConnectionInfo.connectionResponseCode = conn.getResponseCode();
+					    mConnectionInfo.connectionResponseMessage = conn.getResponseMessage();
 						
-	                    BitmapFactory.Options opts = new BitmapFactory.Options();                
-	        			
-	        			PatchInputStream stream = new PatchInputStream(conn.getInputStream());
-	        			
+	                    BitmapFactory.Options opts = new BitmapFactory.Options();                	        			
+	        			PatchInputStream stream = new PatchInputStream(conn.getInputStream());	        			
 	                    Bitmap bm = BitmapFactory.decodeStream(stream, null, opts);
 	                    
 	                    conn.disconnect();                        
@@ -949,8 +955,7 @@ public class AsyncHttpClient
 			}
 		}	
 		
-		@Override
-		protected void onPostExecute(Object result)
+		@Override protected void onPostExecute(Object result)
 		{
 			super.onPostExecute(result);	
 			mTimeoutHandler.removeCallbacks(timeoutRunnable);
@@ -959,9 +964,9 @@ public class AsyncHttpClient
 			{				
 				mAsyncHttpResponse.beforeFinish();
 			
-				if (result != null || (responseCode >= 200 && responseCode < 300))
+				if (((mConnectionInfo.connectionResponseCode / 100) == 2))
 				{								
-					mAsyncHttpResponse.onSuccess(result);						
+					mAsyncHttpResponse.onSuccess(result == null ? "" : result);						
 				}
 				else 
 				{
@@ -972,7 +977,7 @@ public class AsyncHttpClient
 						mAsyncHttpResponse.onFailure(result);				
 					}
 								
-					mAsyncHttpResponse.onFailure(responseCode, responseMessage);
+					mAsyncHttpResponse.onFailure(mConnectionInfo.connectionResponseCode, mConnectionInfo.connectionResponseMessage);
 				}	
 				
 				mAsyncHttpResponse.onFinish();
