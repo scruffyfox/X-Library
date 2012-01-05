@@ -871,7 +871,8 @@ public class AsyncHttpClient
 					    wr.flush();
 					    wr.close();
 					    					   
-					    mConnectionInfo.connectionResponseCode = conn.getResponseCode();					    					    				    					  
+					    mConnectionInfo.connectionResponseCode = conn.getResponseCode();	
+					    mConnectionInfo.connectionSentData = mSendData.toString();
 					    
 					    PatchInputStream i; 
 					    if ((mConnectionInfo.connectionResponseCode / 100) != 2)
