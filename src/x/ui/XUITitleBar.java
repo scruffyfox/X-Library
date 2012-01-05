@@ -22,7 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
- * Title bar class used to template a title bar with/without buttons in Android.
+ * @brief Title bar class used to template a title bar with/without buttons in Android.
+ * You can override the text style in the title bar by overriding @style/titlebar_label in the style XML
  * 
  * @code
  * 	<x.ui.XUITitleBar

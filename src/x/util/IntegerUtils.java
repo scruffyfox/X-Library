@@ -1,5 +1,5 @@
 /**
- * x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * @brief x util is the utility library which includes the method extentions for common data types
  * 
  * @author Callum Taylor
 **/

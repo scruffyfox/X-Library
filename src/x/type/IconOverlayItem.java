@@ -1,3 +1,8 @@
+/**
+ * @brief x type is the type library which includes the commonly used data types in the X Library lib
+ * 
+ * @author Callum Taylor
+**/
 package x.type;
 
 import x.lib.MapOverlay;
@@ -10,7 +15,7 @@ import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 
 /**
- * Overlay item class that is used in MapViews to display a bubble of information over a point on a map view. Used commonly with {@link MapOverlay}
+ * @brief Overlay item class that is used in MapViews to display a bubble of information over a point on a map view. Used commonly with {@link MapOverlay}
  */
 public class IconOverlayItem extends OverlayItem
 {

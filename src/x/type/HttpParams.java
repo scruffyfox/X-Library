@@ -1,3 +1,8 @@
+/**
+ * @brief x type is the type library which includes the commonly used data types in the X Library lib
+ * 
+ * @author Callum Taylor
+**/
 package x.type;
 
 import java.io.Serializable;

@@ -1,3 +1,8 @@
+/**
+ * @brief x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.lib;
 
 import java.util.ArrayList;
@@ -38,7 +43,7 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 /**
- * Map overlay for use to display points with a balloon popup for map views.
+ * @brief Map overlay for use to display points with a balloon popup for map views.
  * @param <Item> The item template (Generally use IconOverlayItem included with x.lib)
  * 
  * Example usage of the overlay. Note the XUIMapOverlay is a container for <b>multiple points</b>. Do not make Individual instances for each point.

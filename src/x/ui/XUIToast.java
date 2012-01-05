@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 /**
- * Simple Toast extention to accept listener for when the Toast has finished displaying
+ * @brief Simple Toast extention to accept listener for when the Toast has finished displaying
  */
 public class XUIToast extends Toast
 {

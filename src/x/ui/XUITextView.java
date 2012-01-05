@@ -18,7 +18,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 /**
- * Custom text view class which gives additional support for XML font loading
+ * @brief Custom text view class which gives additional support for XML font loading
  * 
  * Example code of loading fonts
  * @code

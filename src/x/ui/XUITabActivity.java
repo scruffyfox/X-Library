@@ -102,6 +102,7 @@ public class XUITabActivity extends ActivityGroup
 	@Override
 	public void onBackPressed()
 	{
+		Debug.out("BACK PRESS");
 		if (!this.mOnBackPressedListener.onBackPressed())
 		{
 			super.onBackPressed();

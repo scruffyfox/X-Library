@@ -21,7 +21,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 /**
- * Custom web view that adds extra method to call javascript methods and set javascript variables. Also has interfaces for click listeners and JS alert listeners
+ * @brief Custom web view that adds extra method to call javascript methods and set javascript variables. Also has interfaces for click listeners and JS alert listeners
  */
 public class XUIWebView extends WebView
 {

@@ -1,5 +1,5 @@
 /**
- * x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * @brief x type is the type library which includes the commonly used data types in the X Library lib
  * 
  * @author Callum Taylor
 **/

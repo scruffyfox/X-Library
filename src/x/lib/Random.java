@@ -1,7 +1,12 @@
+/**
+ * @brief x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.lib;
 
 /**
- * An extention to java Random
+ * @breif An extention to java Random
  */
 public class Random extends java.util.Random
 {

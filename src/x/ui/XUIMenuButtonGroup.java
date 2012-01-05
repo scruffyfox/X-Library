@@ -157,6 +157,28 @@ public class XUIMenuButtonGroup extends LinearLayout
 	}
 	
 	/**
+	 * Get the index of the menu button
+	 * @param button The button to search for
+	 * @return The index of the button, else -1
+	 */
+	public int getButtonIndex(XUIMenuButton button)
+	{
+		XUIMenuButton[] buttons = getButtons();
+		int index = 0;
+		for (XUIMenuButton b : buttons)
+		{
+			if (button == b)
+			{
+				return index;
+			}
+			
+			index++;
+		}
+		
+		return -1;
+	}
+	
+	/**
 	 * Adds a new button to the group
 	 * @param child The new button to add
 	 */

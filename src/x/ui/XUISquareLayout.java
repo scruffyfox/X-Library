@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 /**
- * Square layout class to create layouts that adjust its width/height to achieve the 1:1 scale ratio.
+ * @brief Square layout class to create layouts that adjust its width/height to achieve the 1:1 scale ratio.
  * 
  * @code
  * <x.ui.XUISquareLayout

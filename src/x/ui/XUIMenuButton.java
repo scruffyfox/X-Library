@@ -127,6 +127,8 @@ public class XUIMenuButton extends LinearLayout
 				public void onClick(View v)
 				{
 					View input = ((LinearLayout)mLayout.findViewById(R.id.input_container)).getChildAt(0);
+					input.requestFocus();
+					input.requestFocusFromTouch(); 
 					
 					if (input instanceof EditText)
 					{

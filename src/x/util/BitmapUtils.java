@@ -1,5 +1,5 @@
 /**
- * x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
+ * @brief x util is the utility library which includes the method extentions for common data types
  * 
  * @author Callum Taylor
 **/
@@ -38,7 +38,7 @@ public class BitmapUtils
 	{
 		Bitmap newBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		Canvas canvas = new Canvas(newBitmap);
-		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint());
+		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint(Paint.DITHER_FLAG));
 		
 		bm.recycle();
 		
