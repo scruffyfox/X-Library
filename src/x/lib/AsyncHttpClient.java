@@ -96,7 +96,7 @@ public class AsyncHttpClient
 		mHttpLoader.cancel(true); 
 	}
 	
-	/**
+	/** 
 	 * Sets the bytes written listener
 	 * @param mOnBytesWrittenListener Thew new listener
 	 */
