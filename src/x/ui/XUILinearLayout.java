@@ -9,12 +9,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 /**
- * Extention to the standard LinearLayout but adds a few useful methods such as child spacing
+ * @brief Extention to the standard LinearLayout but adds a few useful methods such as child spacing
  */
 public class XUILinearLayout extends LinearLayout
 {
 	private Context mContext;
 	private int mSpacing = 0;
+	private boolean mWrapChildren = false;
 	
 	/**
 	 * Default constructor
@@ -38,6 +39,7 @@ public class XUILinearLayout extends LinearLayout
 		
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUILinearLayout);	
 		mSpacing = attributes.getDimensionPixelSize(R.styleable.XUILinearLayout_childSpacing, 0);
+		mWrapChildren = attributes.getBoolean(R.styleable.XUILinearLayout_wrapChildren, false);
 		
 		attributes.recycle();
 	}		
@@ -71,16 +73,17 @@ public class XUILinearLayout extends LinearLayout
 		{
 			int childCount = getChildCount();
 			int orientation = getOrientation();
+			
 			for (int index = 1; index < childCount; index++)
 			{
-				View child = getChildAt(index);
+				View child = getChildAt(index);				
 				
 				switch (orientation)
 				{
 					//	Margin goes left
 					case LinearLayout.HORIZONTAL:
 					{
-						((LinearLayout.LayoutParams)child.getLayoutParams()).leftMargin += mSpacing;					
+						((LinearLayout.LayoutParams)child.getLayoutParams()).leftMargin += mSpacing;							
 					}
 					
 					//	Margin goes top
