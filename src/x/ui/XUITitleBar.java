@@ -110,6 +110,15 @@ public class XUITitleBar extends RelativeLayout
 	} 
 	
 	/**
+	 * Sets the title bar text label
+	 * @param textId The id of the text resource to use
+	 */
+	public void setTitleText(int textId)
+	{
+		setTitleText(mContext.getResources().getString(textId));				
+	}
+	
+	/**
 	 * Sets the title bar text size
 	 * @param size The new text size
 	 */
