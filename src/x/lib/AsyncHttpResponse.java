@@ -11,23 +11,42 @@ public abstract class AsyncHttpResponse
 	private Bundle mExtras = null;
 	private ConnectionInfo mConnectionInfo = null;
 	
+	/**
+	 * Default constructor
+	 */
 	public AsyncHttpResponse(){}
 	
+	/**
+	 * Default constructor
+	 * @param extras
+	 */
 	public AsyncHttpResponse(Bundle extras)
 	{
 		mExtras = extras;
 	}
 	
+	/**
+	 * Sets the connection info to a new connection info
+	 * @param connectionInfo
+	 */
 	public void setConnectionInfo(ConnectionInfo connectionInfo)
 	{
 		mConnectionInfo = connectionInfo;
 	}
 	
+	/**
+	 * Gets the connection info
+	 * @return The connection info
+	 */
 	protected ConnectionInfo getConnectionInfo()
 	{
 		return this.mConnectionInfo;
 	}
 	
+	/**
+	 * Gets the extras from the class
+	 * @return The extras
+	 */
 	protected Bundle getExtras()
 	{
 		return mExtras;
