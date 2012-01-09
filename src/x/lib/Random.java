@@ -20,6 +20,12 @@ public class Random extends java.util.Random
 		return randomInt + (0xff << 24);
 	}
 	
+	/**
+	 * Gets a random number between 2 numbers
+	 * @param from The minimum number to start from
+	 * @param to The maximum number to return
+	 * @return A random int between from and to
+	 */
 	public int nextInt(int from, int to)
 	{
 		Random r = new Random();

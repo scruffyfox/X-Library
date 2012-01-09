@@ -27,9 +27,9 @@ import android.widget.TextView;
  *  @code
  *  <x.ui.XUIMenuButtonGroup
  *		android:layout_width="fill_parent"
- *		android:layout_height="wrap_content"
- *		tab:groupName="Location"
+ *		android:layout_height="wrap_content"		
  *		android:layout_marginTop="10dp"
+ *		x:groupName="Location"
  *	>			
  *		<x.ui.XUIMenuButton
  *			android:layout_width="fill_parent"

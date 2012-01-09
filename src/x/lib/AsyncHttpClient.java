@@ -54,6 +54,26 @@ import android.util.Log;
 
 /**
  * @brief The client class used for initiating HTTP requests
+ * 
+ * Example:
+ * @code
+ * AsyncHttpClient APIDownloader = new AsyncHttpClient();
+ * APIDownloader.get
+ * (
+ * 	"http://url.com/api.json",
+ * 	new HttpParams
+ * 	(
+ * 		new String[]{"id", 15}
+ * 	),
+ * 	new AsyncHttpResponse()
+ * 	{
+ * 		public void onSuccess(Object response)
+ * 		{
+ * 			//	do stuff
+ * 		}
+ * 	}
+ * );
+ * @endcode
  */
 public class AsyncHttpClient
 {	

@@ -22,6 +22,19 @@ import android.widget.LinearLayout;
 
 /**
  * @brief The title button to be used with XUITitleButtonHost
+ * 
+ * @code
+ * 	<x.ui.XUITitleButtonHost
+ * 		android:layout_width="wrap_content"
+ * 		android:layout_height="match_parent"
+ * 	>
+ * 		<x.ui.XUITitleButton
+ * 			android:layout_height="wrap_content"
+ * 			android:layout_width="wrap_content"
+ * 			android:background="@drawable/button1"
+ * 		/>
+ * 	</x.ui.XUITitleButtonHost>
+ * @endcode
  */
 public class XUITitleButton extends ImageButton implements Serializable
 {

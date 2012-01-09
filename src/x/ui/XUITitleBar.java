@@ -29,9 +29,9 @@ import android.widget.TextView;
  * 	<x.ui.XUITitleBar
  * 		android:layout_width="fill_parent"
  * 		android:layout_height="wrap_content"
- * 		xui:labelIcon="@drawable/logo"
- * 		xui:label="Home Screen"
- * 		xui:gravity="left"
+ * 		x:labelIcon="@drawable/logo"
+ * 		x:label="Home Screen"
+ * 		x:gravity="left"
  * 		android:background="#ffffffff"
  *	/>
  * @endcode

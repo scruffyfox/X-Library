@@ -10,6 +10,16 @@ import android.widget.LinearLayout;
 
 /**
  * @brief Extention to the standard LinearLayout but adds a few useful methods such as child spacing
+ * 
+ * @code
+ * 	<x.ui.XUILinearLayout
+ * 		android:layout_width="match_parent"
+ * 		android:layout_height="match_parent"
+ * 		x:childSpacing="10dp"
+ * 	>
+ * 		<!-- children -->
+ * 	</x.ui.XUILinearLayout>
+ * @endcode
  */
 public class XUILinearLayout extends LinearLayout
 {
