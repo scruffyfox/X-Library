@@ -1,13 +1,27 @@
 Read Me
 =======
-X Library is an open source Android control, library and utility library written by Callum Taylor.
-The library has been used on many Android apps including Jackson Stops &amp; Staff ([Link][jss]), First Aid by British Red Cross ([Link][rca]), Chef+ by The Staff Canteen (TBA) and Eye Check by Boots Opticians (TBA).
+X Library is an open source Android control, library and utility library written by [Callum Taylor][website].
+The library has been used on many Android apps including Jackson Stops &amp; Staff ([Link][jss]), First Aid by British Red Cross ([Link][rca]), Chef+ by The Staff Canteen (TBA), Eye Check by Boots Opticians (TBA), Vision Test 2.0 (TBA), Micro Management (In Development - [Sources here][mpm]).
+
+** [Follow me on twitter][twitter] **
+** Don't forget to watch the project as it's always changing! **
 
 Installation
 ------------
-To install the library, clone the source into a folder of your choice and import into Eclipse. Inside Eclipse, right click on the project you wish to use the library on, click on properties, go to Android, click add and select X Library and press OK.
+NOTE: The library requires your project to be 2.2 + Google APIs or higher. If you do not want to use the Google APIs, delete XUIMapOverlay.java.
+To install the library, clone the source into a folder of your choice.
+* Import into Eclipse.
+* Right click on the project you wish to use the library on
+* Click on properties
+* Go to the Android tab
+* Click the add button in the library section and select X Library.
+* Press OK.
 NOTE: The library requires your project to be at least version 2.2 and using the Google Libraries SDK (Because of the MapOverlay class) but you can remove this class if you wish. The minimum SDK version is still 2.2.
 To use the library UI elements within XML, you must add the namespace to the top of your source (as with the standard Android namespace). Instead of "android" at the end of the URL, use the package name of your project, for example `xmlns:x="http://schemas.android.com/apk/res/com.cube.bec"` where com.cube.bec is your package name.
+
+Suggestions
+-----------
+Feel free to email or message me any suggestions or bugs you find in the code/documentation and I will fix it/help you out.
 
 Contributing
 ------------
@@ -23,5 +37,8 @@ There is a library demo for the UI elements and can be found [Here][demo]
 
 [jss]: http://market.android.com/details?id=uk.co.jacksonstops.property
 [rca]: http://market.android.com/details?id=com.cube.rca
+[mpm]: https://github.com/scruffyfox/Micro-Management
 [doc]: http://scruffyfox.github.com/X-Library
 [demo]: http://github.com/scruffyfox/X-Library-Demo
+[website]: https://callumtaylor.net
+[twitter]: http://twitter.com/scruffyfox
