@@ -468,7 +468,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
-	{				
+	{					
 		super.onLayout(changed, l, t, r, b);
 		
 		childCount = ((ViewGroup)getChildAt(0)).getChildCount();	
@@ -508,7 +508,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			{            	
 				mOnViewChangedLister.onViewChange(currentChildIndex);                		            	                    
 			}                        
-		}					
+		}	
+		
+		super.onLayout(changed, l, t, r, b);
 	}
 	
 	@Override
