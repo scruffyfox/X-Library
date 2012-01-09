@@ -27,6 +27,15 @@ public class BitmapUtils
 	public static int FLIP_HORIZONTAL = 0x01;
 	public static int FLIP_VERTICAL = 0x10;
 	
+	//	Orientation vars
+	public static final int ORIENTATION_HORIZONTAL = 2;
+	public static final int ORIENTATION_180_ROTATE_LEFT = 3;
+	public static final int ORIENTATION_VERTICAL_FLIP = 4;
+	public static final int ORIENTATION_VERTICAL_FLIP_90_ROTATE_RIGHT = 5;
+	public static final int ORIENTATION_90_ROTATE_RIGHT = 6;
+	public static final int ORIENTATION_HORIZONTAL_FLIP_90_ROTATE_RIGHT = 7;
+	public static final int ORIENTATION_90_ROTATE_LEFT = 8;
+	
 	/**
 	 * Resizes a bitmap. Original bitmap is recycled after this method is called.
 	 * @param bm The bitmap to resize
@@ -38,7 +47,7 @@ public class BitmapUtils
 	{
 		Bitmap newBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		Canvas canvas = new Canvas(newBitmap);
-		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint(Paint.DITHER_FLAG));
+		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint(Paint.DITHER_FLAG | Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		
 		bm.recycle();
 		
@@ -190,43 +199,43 @@ public class BitmapUtils
 		switch (currentOrientation)
 		{
 			//	Horizontal
-			case 2:
+			case ORIENTATION_HORIZONTAL:
 			{
 				return flip(bm, FLIP_HORIZONTAL);
 			}
 			
 			//	180 rotate left
-			case 3:	
+			case ORIENTATION_180_ROTATE_LEFT:	
 			{
 				return rotate(bm, -180);
 			}
 			
 			//	Vertical flip
-			case 4:	
+			case ORIENTATION_VERTICAL_FLIP:	
 			{
 				return flip(bm, FLIP_VERTICAL);
 			}
 			
 			//	Vertical flip + 90 rotate right
-			case 5:
+			case ORIENTATION_VERTICAL_FLIP_90_ROTATE_RIGHT:
 			{
 				return rotate(flip(bm, FLIP_VERTICAL), 90);				
 			}
 		
 			//	90 rotate right
-			case 6:	
+			case ORIENTATION_90_ROTATE_RIGHT:	
 			{
 				return rotate(bm, 90);
 			}
 		
 			//	horizontal flip + 90 rotate right
-			case 7:	
+			case ORIENTATION_HORIZONTAL_FLIP_90_ROTATE_RIGHT:	
 			{
 				return rotate(flip(bm, FLIP_HORIZONTAL), 90);				
 			}
 		
 			//	90 rotate left
-			case 8:	
+			case ORIENTATION_90_ROTATE_LEFT:	
 			{
 				return rotate(bm, -90);				
 			}
