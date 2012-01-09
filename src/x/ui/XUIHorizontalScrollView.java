@@ -246,7 +246,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
 		
-        currentChildIndex = index;        
+		currentChildIndex = index;        
 	}
 	
 	/**
@@ -261,17 +261,17 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		}
 		
 		int featureWidth = getMeasuredWidth();
-        scrollTo(getChildViewAt(index).getLeft(), 0);
+		scrollTo(getChildViewAt(index).getLeft(), 0);
         
-        if (currentChildIndex != index)
-    	{
-    		currentChildIndex = index;
-    	}
-        
-        if (mOnViewChangedLister != null)
+		if (currentChildIndex != index)
         {
-        	mOnViewChangedLister.onViewChange(index);                		                   	
-        }        
+        	currentChildIndex = index;
+        }
+        
+		if (mOnViewChangedLister != null)
+		{
+			mOnViewChangedLister.onViewChange(index);                		                   	
+		}        
 	}
 	
 	/**
@@ -286,17 +286,17 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		}
 		
 		int featureWidth = getMeasuredWidth();
-        smoothScrollTo(getChildViewAt(index).getLeft(), 0);
+		smoothScrollTo(getChildViewAt(index).getLeft(), 0);
        
-        if (currentChildIndex != index)
-    	{
-    		currentChildIndex = index;
-    	}
+		if (currentChildIndex != index)
+		{
+			currentChildIndex = index;
+		}
         
-        if (mOnViewChangedLister != null)
-        {        
-       		mOnViewChangedLister.onViewChange(index);                		        	                    
-        }
+		if (mOnViewChangedLister != null)
+		{        
+			mOnViewChangedLister.onViewChange(index);                		        	                    
+		}
 	}
 	
 	/**
@@ -312,85 +312,85 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	int prevX = 0;
 	private void init()
 	{		
-        Dimension dm = new Dimension(getContext());
-        screenWidth = dm.getScreenWidth();
+		Dimension dm = new Dimension(getContext());
+		screenWidth = dm.getScreenWidth();
         				         
-        if (mScrollMode == STEP || mScrollMode == SMOOTH)
-        {
+		if (mScrollMode == STEP || mScrollMode == SMOOTH)
+		{
 			gestureDetector = new GestureDetector(new SwipeGestureDetector());
 			setOnTouchListener(new View.OnTouchListener() 
 			{            
-	            public boolean onTouch(View v, MotionEvent event) 
-	            {	            	            	
-	            	if (!canScroll) return true;
-	            			     
-	                //	If the user swipes
-	                if (gestureDetector.onTouchEvent(event)) 
-	                {
-	                	return true;
-	                }                
-	                else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
-	                {
-	                	if (mScrollMode == SMOOTH) return true;
+				public boolean onTouch(View v, MotionEvent event) 
+				{	            	            	
+					if (!canScroll) return true;
+					
+					//	If the user swipes
+					if (gestureDetector.onTouchEvent(event)) 
+					{
+						return true;
+					}                
+					else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+					{
+						if (mScrollMode == SMOOTH) return true;
 	                	
-	                	mScrollingHorizontally = false;
-            			mScrollingVertically = false;
+						mScrollingHorizontally = false;
+						mScrollingVertically = false;
 	                	
-	                    int scrollX = getScrollX();
-	                    int featureWidth = v.getMeasuredWidth();                                                            
-	                    int mActiveFeature = currentChildIndex;            	                    
+						int scrollX = getScrollX();
+						int featureWidth = v.getMeasuredWidth();                                                            
+						int mActiveFeature = currentChildIndex;            	                    
 	                    	                    
-	                    View nextChild = getChildViewAt(getCurrentIndex() + 1);
-	                    View currentChild = getCurrentChildView();
+						View nextChild = getChildViewAt(getCurrentIndex() + 1);
+						View currentChild = getCurrentChildView();
 	                    	                    
-	                    int currentChildLeft = 0;
-	                    int nextChildLeft = 0;
+						int currentChildLeft = 0;
+						int nextChildLeft = 0;
 	                    
-	                    if (currentChild != null)
-	                    {
-	                    	currentChildLeft = currentChild.getLeft();
-	                    }
+						if (currentChild != null)
+						{
+							currentChildLeft = currentChild.getLeft();
+						}
 	                    
-	                    if (nextChild != null)
-	                    {
-	                    	nextChildLeft = nextChild.getLeft();
-	                    }
+						if (nextChild != null)
+						{
+							nextChildLeft = nextChild.getLeft();
+						}
 	                    
-	                    if (scrollX < (currentChildLeft - (featureWidth / 2)))
-	                    {                    	                    	
-	                    	mActiveFeature -= currentChildIndex - 1 < 0 ? 0 : 1;
-	                    }
-	                    else if (scrollX > (nextChildLeft - (featureWidth / 2)))
-	                    {
-	                    	mActiveFeature += currentChildIndex + 1 >= childCount ? 0 : 1;
-	                    }
+						if (scrollX < (currentChildLeft - (featureWidth / 2)))
+						{                    	                    	
+							mActiveFeature -= currentChildIndex - 1 < 0 ? 0 : 1;
+						}
+						else if (scrollX > (nextChildLeft - (featureWidth / 2)))
+						{
+							mActiveFeature += currentChildIndex + 1 >= childCount ? 0 : 1;
+						}
 	                    
-	                    smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
+						smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
 	                    
-	                    if (currentChildIndex != mActiveFeature)
-	                	{
-	                		currentChildIndex = mActiveFeature;
-	                	}
+						if (currentChildIndex != mActiveFeature)
+						{
+							currentChildIndex = mActiveFeature;
+						}
 	                    	                    
-	                    if (mOnViewChangedLister != null)
-	                    {                    	
-	                    	mOnViewChangedLister.onViewChange(currentChildIndex);                    		                    	               	
-	                    }                    
+						if (mOnViewChangedLister != null)
+						{                    	
+							mOnViewChangedLister.onViewChange(currentChildIndex);                    		                    	               	
+						}                    
 	                    
-	                    return true;
-	                }
-	                else
-	                {
-	                    return false;
-	                }
-	            }
-	        });			
-        }
-        else
-        {
-        	gestureDetector = null;
-        	setOnTouchListener(null);
-        } 
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+			});			
+		}
+		else
+		{
+			gestureDetector = null;
+			setOnTouchListener(null);
+		} 
 	}		
 	
 	/**
@@ -469,16 +469,17 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{				
+		super.onLayout(changed, l, t, r, b);
+		
 		childCount = ((ViewGroup)getChildAt(0)).getChildCount();	
 		
 		if (changed)
 		{				
 			int featureWidth = getMeasuredWidth();  
 			int totalWidth = featureWidth * childCount;
-            smoothScrollTo(currentChildIndex * featureWidth, 0); 
-                        
-            childCount = getChildViewCount();
-    		for (int index = 0; index < childCount; index++)
+			    
+			childCount = getChildViewCount();
+			for (int index = 0; index < childCount; index++)
     		{		
     			View child = getChildViewAt(index);
     			    			
@@ -497,16 +498,17 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
     			}    			    			
     		}
     		
-    		getChildAt(0).measure(MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.AT_MOST));
-    		requestLayout();
+			getChildAt(0).measure(MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.AT_MOST));
+			requestLayout();
+    		
+    		//smoothScrollTo(totalWidth - featureWidth, 0);
+			scrollToChildAt(currentChildIndex);
             
-            if (mOnViewChangedLister != null)
-            {            	
-            	mOnViewChangedLister.onViewChange(currentChildIndex);                		            	                    
-            }                        
-		}
-		
-		super.onLayout(changed, l, t, r, b);		
+			if (mOnViewChangedLister != null)
+			{            	
+				mOnViewChangedLister.onViewChange(currentChildIndex);                		            	                    
+			}                        
+		}					
 	}
 	
 	@Override
@@ -567,42 +569,42 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			if (mScrollingVertically) return false;
 			
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
-            {            	
+			{            	
 				int featureWidth = getMeasuredWidth();
-	            int mActiveFeature = (currentChildIndex < (childCount - 1)) ? currentChildIndex + 1 : childCount - 1;
-	            smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
+				int mActiveFeature = (currentChildIndex < (childCount - 1)) ? currentChildIndex + 1 : childCount - 1;
+				smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
 	            
-	            if (currentChildIndex != mActiveFeature)
-            	{
-            		currentChildIndex = mActiveFeature;
-            	}
+				if (currentChildIndex != mActiveFeature)
+				{
+					currentChildIndex = mActiveFeature;
+				}
 	            
-	            if (mOnViewChangedLister != null)
-	            {	            	
-                	mOnViewChangedLister.onViewChange(mActiveFeature);                		                                    
-	            }
+				if (mOnViewChangedLister != null)
+				{	            	
+					mOnViewChangedLister.onViewChange(mActiveFeature);                		                                    
+				}
 	            
-	            return true;				            	
-            }
+				return true;				            	
+			}
             // left to right swipe
-            else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
-            {    
-            	int featureWidth = getMeasuredWidth();
-                int mActiveFeature = (currentChildIndex > 0) ? currentChildIndex - 1 : 0;
-                smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
+			else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
+			{    
+				int featureWidth = getMeasuredWidth();
+				int mActiveFeature = (currentChildIndex > 0) ? currentChildIndex - 1 : 0;
+				smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
                 
-                if (currentChildIndex != mActiveFeature)
-            	{
-            		currentChildIndex = mActiveFeature;
-            	}
+				if (currentChildIndex != mActiveFeature)
+				{
+					currentChildIndex = mActiveFeature;
+				}
                 
-                if (mOnViewChangedLister != null)
-                {                	
-                	mOnViewChangedLister.onViewChange(mActiveFeature);                		                	                    
-                }
+				if (mOnViewChangedLister != null)
+				{                	
+					mOnViewChangedLister.onViewChange(mActiveFeature);                		                	                    
+				}
                 
-            	return true;
-            }
+				return true;
+			}
 			
 			return false;
 		}
