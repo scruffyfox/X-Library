@@ -4,18 +4,21 @@ X Library is an open source Android control, library and utility library written
 The library has been used on many Android apps including Jackson Stops &amp; Staff ([Link][jss]), First Aid by British Red Cross ([Link][rca]), Chef+ by The Staff Canteen (TBA), Eye Check by Boots Opticians (TBA), Vision Test 2.0 (TBA), Micro Management (In Development - [Sources here][mpm]).
 
 ** [Follow me on twitter][twitter] **
+
 ** Don't forget to watch the project as it's always changing! **
 
 Installation
 ------------
 NOTE: The library requires your project to be 2.2 + Google APIs or higher. If you do not want to use the Google APIs, delete XUIMapOverlay.java.
 To install the library, clone the source into a folder of your choice.
-* Import into Eclipse.
-* Right click on the project you wish to use the library on
-* Click on properties
-* Go to the Android tab
-* Click the add button in the library section and select X Library.
-* Press OK.
+
+*Import into Eclipse.
+*Right click on the project you wish to use the library on
+*Click on properties
+*Go to the Android tab
+*Click the add button in the library section and select X Library.
+*Press OK.
+
 NOTE: The library requires your project to be at least version 2.2 and using the Google Libraries SDK (Because of the MapOverlay class) but you can remove this class if you wish. The minimum SDK version is still 2.2.
 To use the library UI elements within XML, you must add the namespace to the top of your source (as with the standard Android namespace). Instead of "android" at the end of the URL, use the package name of your project, for example `xmlns:x="http://schemas.android.com/apk/res/com.cube.bec"` where com.cube.bec is your package name.
 
