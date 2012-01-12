@@ -306,11 +306,13 @@ public class XUITabHost extends RelativeLayout
 				
 				if ((Gravity.CENTER_HORIZONTAL & child.getParams().gravity) == Gravity.CENTER_HORIZONTAL)
 				{
+					marginTop = 3;
 					marginLeft = (tabWidth - mWidth) / 2;
 				}
 				
 				if ((Gravity.CENTER_VERTICAL & child.getParams().gravity) == Gravity.CENTER_VERTICAL)
 				{
+					marginLeft = 0;
 					marginTop = (tabHeight - mHeight) / 2;
 				}				
 			}	
