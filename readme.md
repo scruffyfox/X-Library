@@ -12,6 +12,8 @@ Installation
 NOTE: The library requires your project to be 2.2 + Google APIs or higher. If you do not want to use the Google APIs, delete XUIMapOverlay.java.
 To install the library, clone the source into a folder of your choice.
 
+[Installation Tutorial on my blog][tut]
+
 1. Import into Eclipse.
 2. Right click on the project you wish to use the library on
 3. Click on properties
@@ -45,3 +47,4 @@ There is a library demo for the UI elements and can be found [Here][demo]
 [demo]: http://github.com/scruffyfox/X-Library-Demo
 [website]: https://callumtaylor.net
 [twitter]: http://twitter.com/scruffyfox
+[tut]: http://blog.callumtaylor.net/archives/106
