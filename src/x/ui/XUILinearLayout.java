@@ -49,7 +49,7 @@ public class XUILinearLayout extends LinearLayout
 		
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUILinearLayout);	
 		mSpacing = attributes.getDimensionPixelSize(R.styleable.XUILinearLayout_childSpacing, 0);
-		mWrapChildren = attributes.getBoolean(R.styleable.XUILinearLayout_wrapChildren, false);
+		//mWrapChildren = attributes.getBoolean(R.styleable.XUILinearLayout_wrapChildren, false);
 		
 		attributes.recycle();
 	}		
