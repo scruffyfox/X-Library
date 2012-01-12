@@ -9,11 +9,14 @@ import java.io.File;
 import java.io.InputStream;
 
 import x.lib.Debug;
+import x.type.TextStyle;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.text.Html;
+import android.text.format.Formatter;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -33,6 +36,7 @@ public class XUITextView extends TextView
 {
 	private String mFontResource;
 	private Context mContext;
+	
 	
 	/**
 	 * Default Constructor
@@ -73,6 +77,36 @@ public class XUITextView extends TextView
 		{
 			setFont(mFontResource);
 		}
+	}
+
+	/**
+	 * Sets the text style. Using {@link TextStyle} for the attributes.
+	 * @param style The new text style 
+	 */
+	public void setTextStyle(int style)
+	{ 
+		String preTag = "";
+		String endTag = "";
+		
+		if ((style & TextStyle.BOLD) == style)
+		{
+			preTag += "<b>";
+			endTag += "</b>";
+		}
+
+		if ((style & TextStyle.UNDERLINE) == style)
+		{			
+			preTag += "<u>";
+			endTag += "</u>";
+		}
+		
+		if ((style & TextStyle.ITALIC) == style)
+		{
+			preTag += "<i>";
+			endTag += "</i>";
+		}
+				
+		setText(Html.fromHtml(preTag + getText() + endTag));
 	}
 	
 	/**
