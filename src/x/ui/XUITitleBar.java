@@ -24,6 +24,7 @@ import android.widget.TextView;
 /**
  * @brief Title bar class used to template a title bar with/without buttons in Android.
  * You can override the text style in the title bar by overriding @style/titlebar_label in the style XML
+ * The forced height of the titlebar is 68px relative to the screen size (46dp) for HDPI
  * 
  * @code
  * 	<x.ui.XUITitleBar
