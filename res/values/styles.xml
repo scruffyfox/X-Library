@@ -21,4 +21,9 @@
 	<style name="no_window" parent="@android:style/Theme.Dialog" >
     	<item name="android:windowBackground">@null</item>
     </style>	
+    <style name="no_window_title" parent="@android:style/Theme.Dialog">
+    	<item name="android:windowBackground">@null</item>
+    	<item name="android:windowNoTitle">true</item>
+    	<item name="android:windowFrame">@null</item>
+    </style>		
 </resources>
