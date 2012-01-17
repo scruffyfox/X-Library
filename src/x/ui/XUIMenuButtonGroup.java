@@ -377,8 +377,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 				
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{
-			//LinearLayout container = (LinearLayout)views[viewIndex].findViewById(R.id.container).getParent();
-			
+			//LinearLayout container = (LinearLayout)views[viewIndex].findViewById(R.id.container).getParent();			
 			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
 			{			
 				if (childCount == 1)
