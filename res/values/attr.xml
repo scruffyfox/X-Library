@@ -37,4 +37,32 @@
 	<declare-styleable name="XUILinearLayout">
 	    <attr name="childSpacing" format="dimension" />
 	</declare-styleable>
-</resources>
+	<declare-styleable name="XUIAbsoluteLayout_Layout">
+        <attr name="layout_x" format="dimension" />
+        <attr name="layout_y" format="dimension" />
+        <attr name="layout_marginTop" format="dimension" />
+        <attr name="layout_marginBottom" format="dimension" />
+        <attr name="layout_marginLeft" format="dimension" />
+        <attr name="layout_marginRight" format="dimension" />  
+        <attr name="layout_gravity" format="enum"> 
+			<enum name="none" value="0x00000000" /> 
+			<enum name="left" value="0x00000003" /> 
+		    <enum name="center" value="0x00000011" />
+		    <enum name="center_vertical" value="0x00000010" />
+		    <enum name="center_horizontal" value="0x00000001" />
+		    <enum name="right" value="0x00000005" /> 
+		    <enum name="bottom" value="0x00000050" />
+		    <enum name="top" value="0x00000030" /> 
+		</attr>      
+    </declare-styleable>
+    <declare-styleable name="XUIParallexView">
+        <attr name="backgroundScrollSpeed" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="XUIParallexView_Layout">        	
+        <attr name="scroll_speed" format="dimension" />
+        <attr name="scroll_direction" format="enum">
+        	<enum name="forward" value="0x01" />
+        	<enum name="backward" value="0x02" />
+        </attr>        
+    </declare-styleable>		
+</resources> 
