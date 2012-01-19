@@ -18,7 +18,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.*;
 
 /**
- * This view is an extention of {@link ScrollView} which allows parallex scrolling of views.
+ * @brief This view is an extention of {@link ScrollView} which allows parallex scrolling of views.
  * A parallex scroller view is a view with many subviews that move at different speeds and
  * directions to the direction/speed being scrolled.
  * 
@@ -139,6 +139,9 @@ public class XUIParallexScrollView extends ScrollView
 		setHorizontalFadingEdgeEnabled(false);
 	}
 	
+	/**
+	 * Called when the view has finished loading in the children
+	 */
 	@Override protected void onFinishInflate()
 	{		
 		super.onFinishInflate();
@@ -174,6 +177,14 @@ public class XUIParallexScrollView extends ScrollView
 		init();
 	}
 	
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
 	@Override protected void onLayout(boolean changed, int left, int top, int right, int bottom)
 	{
 		super.onLayout(changed, left, top, right, bottom);
@@ -223,7 +234,14 @@ public class XUIParallexScrollView extends ScrollView
 			}
 		}
 	}
-	
+		
+	/**
+	 * Called when the scroll has changed
+	 * @param left The left position of the view
+	 * @param top The top position of the view
+	 * @param oldl The old left position
+	 * @param oldt The old top position
+	 */
 	@Override protected void onScrollChanged(int left, int top, int oldl, int oldt)
 	{
 		int distanceY = top - oldt;

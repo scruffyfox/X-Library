@@ -57,6 +57,7 @@ public class XUITab extends RelativeLayout
 	private OnPostLayoutListener mOnPostLayout;
 	private OnTabSelectedListener mOnTabSelectedListener;
 	private Animation mAnimation;
+	private View mLaunchedView;	
 	
 	/**
 	 * Default Constructor
@@ -99,18 +100,14 @@ public class XUITab extends RelativeLayout
 		this.context = context;		
 	}		
 	
-	@Override
-	protected void onFinishInflate()
+	/**
+	 * Called when the view has finished loading in the children
+	 */
+	@Override protected void onFinishInflate()
 	{
 		super.onFinishInflate();	
 						
 		init();
-	}
-	
-	@Override
-	public void setAnimation(Animation animation)
-	{
-		mAnimation = animation;
 	}
 	
 	/**
@@ -137,7 +134,6 @@ public class XUITab extends RelativeLayout
 	 * @param activityManager The tabhost's activity manager
 	 * @param targetView The target container
 	 */
-	private View mLaunchedView;
 	public void select(LocalActivityManager activityManager, int targetView)
 	{
 		if (isSelected) return;
@@ -307,8 +303,15 @@ public class XUITab extends RelativeLayout
 		this.mOnTabSelectedListener = mOnTabSelectedListener;
 	}
 	
-	@Override
-	public void onLayout(boolean changed, int l, int t, int r, int b)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override public void onLayout(boolean changed, int l, int t, int r, int b)
 	{
 		super.onLayout(changed, l, t, r, b);					
 		
@@ -320,6 +323,7 @@ public class XUITab extends RelativeLayout
 	
 	/**
 	 * Get if the tab is selected or not
+	 * @return If the tab is currently selected
 	 */
 	public boolean isSelected()
 	{

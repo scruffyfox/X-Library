@@ -16,8 +16,8 @@ import android.location.Location;
 import android.util.Log;
 
 /**
-	@brief This static class is for debugging 
-	@todo Add debug outputs for more data types	
+*	@brief This static class is for debugging 
+*	@todo Add debug outputs for more data types	
 */
 public class Debug
 {

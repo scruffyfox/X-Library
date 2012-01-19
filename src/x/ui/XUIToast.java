@@ -17,6 +17,10 @@ public class XUIToast extends Toast
 	private OnToastFinishedListener mToastFinishedListener;
 	private Context mContext;
 	
+	/**
+	 * Default Constructor
+	 * @param context
+	 */
 	public XUIToast(Context context)
 	{
 		super(context);
@@ -32,8 +36,11 @@ public class XUIToast extends Toast
 		this.mToastFinishedListener = listener;
 	}
 	
-	@Override
-	public void show()
+	/**
+	 * Shows the toast view then calls the OnToastFinishedListener
+	 * if set
+	 */
+	@Override public void show()
 	{	
 		super.show();
 		

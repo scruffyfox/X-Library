@@ -15,20 +15,20 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnTouchListener;
 
 /**
- * @brief The konami touch extension to allow cheat codes to be added to views
+ * @brief The konami touch extension to allow cheat codes to be added to views as an onTouchListener.
  * 
- * Usage
+ * Example code
  * @code
- * Konami cheatCode = new Konami(new int[]{Konami.UP, Konami.UP, Konami.DOWN, Konami.DOWN, Konami.LEFT, Konami.RIGHT, Konami.LEFT, Konami.RIGHT});
- * cheatCode.setOnKonamiCodeListener(new OnKonamiCodeListener()
- * {
- * 	public void OnSuccessfullCode()
+ * 	Konami cheatCode = new Konami(new int[]{Konami.UP, Konami.UP, Konami.DOWN, Konami.DOWN, Konami.LEFT, Konami.RIGHT, Konami.LEFT, Konami.RIGHT});
+ * 	cheatCode.setOnKonamiCodeListener(new OnKonamiCodeListener()
  * 	{
- * 		Log.v("", "Successful code entered");
- *	}
- * });
+ * 		public void OnSuccessfullCode()
+ * 		{
+ * 			Log.v("", "Successful code entered");
+ *		}
+ * 	});
  * 
- * view.setOnTouchListener(cheatCode);
+ * 	view.setOnTouchListener(cheatCode);
  * @endcode
  */
 public class Konami implements OnTouchListener 
@@ -98,7 +98,12 @@ public class Konami implements OnTouchListener
 		mGestureScanner = new GestureDetector(new gestureDetector());
 	}    
 	
-	public boolean onTouch(View v, MotionEvent event) 
+    /**
+     * On touch method for the class. Internal method, does not need to be used by the user.
+     * @param v The view being touched
+     * @param event The touch event
+     */
+	public final boolean onTouch(View v, MotionEvent event) 
 	{		
 		mGestureScanner.onTouchEvent(event);
 		
@@ -129,10 +134,16 @@ public class Konami implements OnTouchListener
 		mCode = konamiCode;
 	}
 	
+	/**
+	 * @brief Gesture detector for logging the swipe values
+	 */
 	private class gestureDetector extends SimpleOnGestureListener
 	{			
-		@Override
-		public boolean onSingleTapUp(MotionEvent e)
+		/**
+		 * Called when a single tap is made
+		 * @param e The motion event passed
+		 */
+		@Override public boolean onSingleTapUp(MotionEvent e)
 		{			
         	mGestureList.add(TAP);
         	checkCode();
@@ -140,8 +151,14 @@ public class Konami implements OnTouchListener
 			return true;
 		}
 		
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) 
+		/**
+		 * Called when a fling is made, this is where we detect the swipes for the cheat
+		 * @param e1 The motion event at the start of the fling
+		 * @param e2 The motion event at the end of the fling
+		 * @param velocityX The velocity of the fling in t he X direction
+		 * @param velocityY The velocity of the fling in t he Y direction
+		 */
+		@Override public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) 
 		{			
 			try 
 			{	            	           
@@ -181,6 +198,9 @@ public class Konami implements OnTouchListener
 			return true;
 		}
 		
+		/**
+		 * Checks the array if the correct code has been made
+		 */
 		private void checkCode()
 		{			
 			//	Check the array for code

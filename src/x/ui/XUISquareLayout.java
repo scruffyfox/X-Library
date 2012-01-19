@@ -43,8 +43,12 @@ public class XUISquareLayout extends LinearLayout
 		super(context, attrs);
 	}
 	
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+	/**
+	 * Measures the view and forces it to be square
+	 * @param widthMeasureSpec The width spec to use when measuring
+	 * @param heightMeasureSpec The height spec to use when measuring
+	 */
+	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{	
 		int width = MeasureSpec.getSize(widthMeasureSpec);
 		int height = MeasureSpec.getSize(heightMeasureSpec);

@@ -125,14 +125,18 @@ public class XUIWebView extends WebView
 	}
 	
 	/**
-	 * Class to handle page loading and url clicking
+	 * @brief Class to handle page loading and url clicking
 	 */
 	private class ViewClient extends WebViewClient
 	{
 		int loadCount = 0;
 		
-		@Override
-		public void onPageFinished(WebView view, String url)
+		/**
+		 * Called when the page has finished loading
+		 * @param view The webview where the page has finished loading
+		 * @param url The url of the page that has been loaded
+		 */
+		@Override public void onPageFinished(WebView view, String url)
 		{
 			if (loadCount < 1)
 			{
@@ -145,8 +149,12 @@ public class XUIWebView extends WebView
 			}
 		}
 		
-		@Override
-		public boolean shouldOverrideUrlLoading(WebView view, String url)
+		/**
+		 * Called when a link is clicked in the web view
+		 * @param view The webview where the link was clicked
+		 * @param url The url of the link that was clicked
+		 */
+		@Override public boolean shouldOverrideUrlLoading(WebView view, String url)
 		{					
 			if (mOnLinkClickedListener != null)
 			{
@@ -162,12 +170,19 @@ public class XUIWebView extends WebView
 	};
 	
 	/**
-	 * Class for custom console message handling and alert dialogs
+	 * @brief Class for custom console message handling and alert dialogs
 	 */
 	private class ViewChromeClient extends WebChromeClient
 	{ 		
-		@Override
-		public boolean onJsAlert(WebView view, String url, String message, JsResult result)
+		/**
+		 * Called when a javascript alert has been called
+		 * @param view The webview where the alert was called
+		 * @param url The url of the page where the alert was called
+		 * @param message The message content of the alert
+		 * @param result The result of the alert view
+		 * @return If the alert was handled or not	
+		 */
+		@Override public boolean onJsAlert(WebView view, String url, String message, JsResult result)
 		{
 			if (mOnAlertListener != null)
 			{

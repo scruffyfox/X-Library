@@ -120,6 +120,9 @@ public class XUIActionView extends ViewFlipper
 		init();
 	}
 	
+	/**
+	 * Initializes the view
+	 */
 	private void init()
 	{
 		mGestureDetector = new GestureDetector(new QuickActions());	  
@@ -152,20 +155,17 @@ public class XUIActionView extends ViewFlipper
 	
 	/**
 	 * Sets the click listener
+	 * @param l The new OnClickListener to set
 	 */
 	public void setOnClickListener(OnClickListener l)
 	{
 		this.mOnClickListener = l;
 	}
 	
-	@Override
-	public void setOnTouchListener(XUIActionView.OnTouchListener l)
-	{	
-		super.setOnTouchListener(l);				
-	}
-	
-	@Override
-	protected void onDetachedFromWindow() 
+	/**
+	 * Called when the view was detached from the activity
+	 */
+	@Override protected void onDetachedFromWindow() 
 	{
 	    try 
 	    {
@@ -200,8 +200,10 @@ public class XUIActionView extends ViewFlipper
 		this.mViewChangeListener = viewChangeListener;
 	}
 	
-	@Override
-	protected void onFinishInflate()
+	/**
+	 * Called when the view has finished loading the child views
+	 */
+	@Override protected void onFinishInflate()
 	{		
 		super.onFinishInflate();
 		
@@ -218,8 +220,15 @@ public class XUIActionView extends ViewFlipper
 		}
 	}
 	
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int left, int top, int right, int bottom)
 	{	
 		super.onLayout(changed, left, top, right, bottom);
 	}	
@@ -242,6 +251,12 @@ public class XUIActionView extends ViewFlipper
 		triggerGesture(gesture, useSound, true);
 	}
 	
+	/**
+	 * Triggers the gesture
+	 * @param gesture The gesture that was triggered
+	 * @param useSound Whether to use sound or not
+	 * @param sendCallback Whether to send the callback or not
+	 */
 	private void triggerGesture(Gesture gesture, boolean useSound, boolean sendCallback)
     {	    	
         Animation slideLeftIn = AnimationUtils.loadAnimation(context, R.anim.slide_left_in);
@@ -311,14 +326,21 @@ public class XUIActionView extends ViewFlipper
         }
     }
         
+	/**
+	 * @brief This class is used to detect the gesture on the 
+	 * view and call the correct method when that happens
+	 */
 	private class QuickActions extends SimpleOnGestureListener
 	{
 		private static final int SWIPE_MIN_DISTANCE = 10;		
 		private static final int SWIPE_THRESHOLD_VELOCITY = 0;				
 		private boolean longPress = true;
 				
-		@Override
-		public void onLongPress(MotionEvent e)
+		/**
+		 * Called when the user long presses on the view
+		 * @param e The event of the press
+		 */
+		@Override public void onLongPress(MotionEvent e)
 		{		
 			//if (false)
 			{
@@ -333,8 +355,14 @@ public class XUIActionView extends ViewFlipper
 			}
 		}
 		
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+		/**
+		 * Called when the user swipes on the view
+		 * @param e1 The motion event of the start of the swipe
+		 * @param e2 The motion event of the end of the swipe
+		 * @param velocityX The velocity of the swipe in the x location
+		 * @param velocityY The velocity of t he swipe in the y location
+		 */
+		@Override public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
 		{		
 			try
 			{ 
@@ -376,6 +404,11 @@ public class XUIActionView extends ViewFlipper
 			this.gestureDetector = gd;
 		}
 		
+		/**
+		 * Called when the view has been touched
+		 * @param arg0 The view that was touched
+		 * @param event The event that was called when the view was touched
+		 */
 		public boolean onTouch(View arg0, MotionEvent event)
 		{		
 			if (this.gestureDetector.onTouchEvent(event))
@@ -414,32 +447,4 @@ public class XUIActionView extends ViewFlipper
 		 */
 		public void ViewDidChange(View newView, int viewIndex);
 	};
-}
-
-/**
- * @brief Can't remember why I overrode this class...
- */
-abstract class OnClickListener implements XUIActionView.OnClickListener 
-{
-	private int pos = -1;
-	
-	public OnClickListener()
-	{
-		
-	}
-	
-	public OnClickListener(int position)
-	{
-		pos = position;
-	}
-	
-	public void onClick(View v)
-	{
-		if (pos > -1)
-		{
-			onClick(v, pos);
-		}
-	}
-	
-	public abstract void onClick(View v, int position);	
 }

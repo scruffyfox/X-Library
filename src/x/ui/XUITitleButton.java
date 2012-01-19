@@ -15,6 +15,7 @@ import x.util.StringUtils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageButton;
@@ -38,6 +39,7 @@ import android.widget.LinearLayout;
  */
 public class XUITitleButton extends ImageButton implements Serializable
 {
+	private String onClickStr;
 	private int mImageId;
 	
 	/**
@@ -80,7 +82,6 @@ public class XUITitleButton extends ImageButton implements Serializable
 	 * @param context The application's context 
 	 * @param attrs The attribute set passed via the SAX parser
 	 */
-	public String onClickStr;
 	public XUITitleButton(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
@@ -113,8 +114,29 @@ public class XUITitleButton extends ImageButton implements Serializable
 		}
 	}
 	
-	@Override
-	public void setImageResource(int resId)
+	/**
+	 * Sets the buttons drawable image
+	 * @param d The drawable of the button
+	 */
+	@Override public void setBackgroundDrawable(Drawable d)
+	{
+		setImageDrawable(d);
+	}
+	
+	/**
+	 * Sets the background image from a resource id
+	 * @param resid The resource id of the image
+	 */
+	@Override public void setBackgroundResource(int resid)
+	{
+		setImageResource(resid);
+	}
+	
+	/**
+	 * Sets the image resource of the button
+	 * @param resId The resource id of the button
+	 */
+	@Override public void setImageResource(int resId)
 	{
 		setImage(resId);
 	}

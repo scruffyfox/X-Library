@@ -32,7 +32,7 @@ import android.widget.LinearLayout;
  */
 public class XUITitleButtonHost extends LinearLayout
 {
-	public int totalChildren = 0;
+	private int totalChildren = 0;
 	
 	/**
 	 * Default Constructor
@@ -118,6 +118,14 @@ public class XUITitleButtonHost extends LinearLayout
 	}
 	
 	/**
+	 * Removes all the buttons from the view
+	 */
+	public void removeAllButtons()
+	{
+		this.removeAllViews();
+	}
+	
+	/**
 	 * Default Constructor
 	 * @param context The application's context
 	 * @param attrs The attribute set passed via the SAX parser
@@ -127,8 +135,15 @@ public class XUITitleButtonHost extends LinearLayout
 		super(context, attrs);
 	}	
 	
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{	
 		super.onLayout(changed, l, t, r, b);
 	}

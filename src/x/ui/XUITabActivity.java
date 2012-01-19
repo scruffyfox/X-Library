@@ -16,13 +16,36 @@ import android.view.ViewGroup;
 
 /**
  * @brief The tab activity to be used when using XUITabHost and XUITab
+ * 
+ * When overriding onBackPress to detect when the user is exiting the app for example,
+ * you must override the back press method in each of your sub views and call the parent
+ * back press. For example
+ * @code
+ * @Override public void onBackPressed()
+ *	{
+ *		try
+ *		{
+ *			getParent().onBackPressed();
+ *		}
+ *		catch (Exception e) 
+ *		{
+ *			super.onBackPressed();
+ *		}
+ *	}
+ * @endcode
+ * 
+ * Then you handle the back button press inside your XUITabActivity class either by overriding the onBackPressed() method
+ * or the OnBackPressedListener interface.
  */
 public class XUITabActivity extends ActivityGroup
 {
 	private OnBackPressedListener mOnBackPressedListener;
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	/**
+	 * Default constructor
+	 * @param savedInstanceStated Passed bundle on screen rotation and when the Activity is created
+	 */
+	@Override protected void onCreate(Bundle savedInstanceState)
 	{	
 		mOnBackPressedListener = new OnBackPressedListener()
 		{			
@@ -98,11 +121,12 @@ public class XUITabActivity extends ActivityGroup
 	{		
 		this.mOnBackPressedListener = listener;			
 	}
-	
-	@Override
-	public void onBackPressed()
+
+	/**
+	 * Called when the back button is pressed 
+	 */
+	@Override public void onBackPressed()
 	{
-		Debug.out("BACK PRESS");
 		if (!this.mOnBackPressedListener.onBackPressed())
 		{
 			super.onBackPressed();
@@ -110,7 +134,9 @@ public class XUITabActivity extends ActivityGroup
 	}	
 	
 	/**
-	 * @brief The back button press listener
+	 * @brief The back button press listener. This is used due to the nature of the back button
+	 * when using tab hosts, it does not register the back button so we can use this listener
+	 * to intercept the back button instead.
 	 */
 	public interface OnBackPressedListener 
 	{

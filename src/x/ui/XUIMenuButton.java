@@ -34,10 +34,17 @@ import android.widget.TextView;
 
 /**
  * @brief The menu buttons to be used with XUIMenuButtonGroup. 
- * @breif The menu button can only have a maximum of 2 views (Any more and the parser will ignore them), the first view
- * @breif must be a TextView (the "label") the second  view can be anything.
+ * The menu button can only have a maximum of 3 views (Any more and the parser will ignore them), the first view
+ * must be a TextView (the "label") the second view can be anything.
+ * The current combination of children are as followed:
+ * [layout]
+ * [text view]
+ * [image view, text view]
+ * [text view, view]
+ * [image view, text view, view]	
  *  
- * Example XML Code (Note to make a button clickable, you must declare it clickable by using android:clickable="true")
+ * Example XML Code (Note to make a button clickable, you must declare it clickable by using android:clickable="true") 
+ * This example uses the 4th combination of [text view, view]
  * @code
  * <x.ui.XUIMenuButton
  *		android:layout_width="fill_parent" 
@@ -58,6 +65,19 @@ import android.widget.TextView;
  *			android:textSize="16dp"
  *		/>
  * </x.ui.XUIMenuButton>
+ * @endcode
+ * 
+ * When using clickable, its important to use colour lists for when the button is pressed for accessibility. Changing the colour to a brighter colour (if the press state is dark) or
+ * darker if the press state is light.
+ * 
+ * An example of this is. Note this is stored as a drawable and used in textviews attribute android:textColor="@drawable/list" for example.
+ * @code
+ * <?xml version="1.0" encoding="utf-8"?>
+ *	<selector xmlns:android="http://schemas.android.com/apk/res/android">
+ *		<item android:state_pressed="true" android:color="#FFF" />
+ * 		<item android:state_focused="true" android:color="#FFF" />
+ * 		<item android:color="#ff352B21" /> <!-- not selected -->
+ *	</selector>
  * @endcode
  */
 public class XUIMenuButton extends LinearLayout
@@ -153,15 +173,13 @@ public class XUIMenuButton extends LinearLayout
 		}
 	}
 	
-	@Override
-	public void setClickable(boolean clickable)
+	@Override public void setClickable(boolean clickable)
 	{		
 		super.setClickable(clickable);
 		init();
 	};
 	
-	@Override
-	public void setOnClickListener(OnClickListener l)
+	@Override public void setOnClickListener(OnClickListener l)
 	{	
 		mSetOnClickListener = true;
 		
@@ -293,21 +311,31 @@ public class XUIMenuButton extends LinearLayout
 		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
 	
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b) 
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int l, int t, int r, int b) 
 	{	
 		super.onLayout(changed, l, t, r, b);
 		
 		mChildCount = getChildCount();	
 	}
 
-	@Override
-	protected void onFinishInflate()  
+	/**
+	 * Called when the view has finished loading in the children
+	 */
+	@Override protected void onFinishInflate()  
 	{	
 		super.onFinishInflate();
 	
 		/**
 		 * Possible combinations:
+		 * [layout]
 		 * [text]
 		 * [image, text]
 		 * [text, content]
@@ -315,7 +343,14 @@ public class XUIMenuButton extends LinearLayout
 		 */
 		if (getChildCount() == 1)
 		{
-			mLabel = (TextView)getChildAt(0);
+			if (getChildAt(0) instanceof ViewGroup)
+			{
+				mContentView = (View)getChildAt(0);
+			}
+			else
+			{
+				mLabel = (TextView)getChildAt(0);
+			}
 		}
 		else if (getChildCount() == 2)
 		{			
@@ -341,12 +376,15 @@ public class XUIMenuButton extends LinearLayout
 		
 		this.detachAllViewsFromParent(); 
 		
-		ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
-
-		mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-		mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));		
-		mLabel.setTextColor(list);
-		mLabel.setDuplicateParentStateEnabled(true);
+		if (mLabel != null)
+		{
+			ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
+	
+			mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+			mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));		
+			mLabel.setTextColor(list);
+			mLabel.setDuplicateParentStateEnabled(true);		
+		}
 		
 		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
@@ -361,6 +399,14 @@ public class XUIMenuButton extends LinearLayout
 		if (mContentView != null)
 		{			
 			((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);
+			
+			int gravity = ((LinearLayout.LayoutParams)mContentView.getLayoutParams()).gravity;
+			if (gravity != Gravity.LEFT || gravity != Gravity.RIGHT)
+			{
+				gravity = Gravity.RIGHT;
+			}
+			
+			((LinearLayout)mLayout.findViewById(R.id.input_container)).setGravity(gravity);			
 		}
 		
 		if (mImageView != null)

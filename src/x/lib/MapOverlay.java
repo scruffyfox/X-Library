@@ -140,8 +140,13 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		populate(); 
 	}
 	
-	@Override
-	public void draw(Canvas canvas, MapView mapView, boolean shadow)
+	/**
+	 * Draws the point onto the mapview
+	 * @param canvas The canvas to use to draw
+	 * @param mapView The map view to draw onto
+	 * @param shadow If there should be a shadow on the pin
+	 */
+	@Override public void draw(Canvas canvas, MapView mapView, boolean shadow)
 	{
 		super.draw(canvas, mapView, false);
 	}
@@ -164,14 +169,20 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		return mViewOffset;  
 	}
 	
-	@Override
-	public Item getFocus() 
+	/**
+	 * Gets the current focused item
+	 * @return The current focused item
+	 */
+	@Override public Item getFocus() 
 	{
 		return mCurrentFocussedItem;
 	}
 
-	@Override
-	public void setFocus(Item item) 
+	/**
+	 * Sets the focus onto an item
+	 * @param item The item to set focus to
+	 */
+	@Override public void setFocus(Item item) 
 	{
 		mCurrentFocussedItem = item;
 
@@ -185,8 +196,11 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		}	
 	}
 	
-	@Override
-	protected final boolean onTap(int index)
+	/**
+	 * Called when an item is tapped
+	 * @param index The index of the item that was tapped
+	 */
+	@Override protected final boolean onTap(int index)
 	{		
 		mCurrentFocussedIndex = index;
 		mCurrentFocussedItem = createItem(index);		
@@ -317,12 +331,19 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		};
 	}
 	
-	@Override
-	protected Item createItem(int i)
+	/**
+	 * Creats an item from an int index in the overlay list
+	 * @return The created Item
+	 */
+	@Override protected Item createItem(int i)
 	{
 		return (Item)mOverlayItems.get(i);
 	}
 	
+	/**
+	 * Gets the size of the map overlay
+	 * @return The size of the overlay item list
+	 */
 	public int size()
 	{		
 		return mOverlayItems.size();
@@ -379,6 +400,11 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		private TextView snippet;
 		private ImageView imageIcon;
 		
+		/**
+		 * The default constructor
+		 * @param context The context for the application
+ 		 * @param balloonBottomOffset The bottom offset from the center of the point
+		 */
 		public BalloonOverlayView(Context context, int balloonBottomOffset)
 		{
 			super(context);
@@ -399,6 +425,10 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 			addView(layout, params);
 		}
 
+		/**
+		 * Sets the data from an item
+		 * @param i The item to use for the data
+		 */
 		public void setData(Item i)
 		{
 			layout.setVisibility(VISIBLE);

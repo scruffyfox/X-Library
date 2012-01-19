@@ -1,8 +1,6 @@
 /**
  * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
- * 
- * @author Callum Taylor
-**/
+ */
 package x.ui;
 
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +29,7 @@ import android.widget.AbsListView.OnScrollListener;
 
 /**
  * @brief The drag to refresh list view
+ * Still in development
  */
 public class XUIDragRefreshListView extends ListView implements OnScrollListener
 {

@@ -8,6 +8,9 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
+/**
+ * @brief Still under development
+ */
 public class XUIProgressBar extends ImageView
 {
 	public enum ProgressMode

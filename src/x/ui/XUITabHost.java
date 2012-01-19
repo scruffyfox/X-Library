@@ -79,6 +79,7 @@ public class XUITabHost extends RelativeLayout
 		this.mContext = context;
 		
 		mOnTabSelected = null;
+		setBackgroundResource(R.drawable.xui_tabbar_bg_drawable);
 	} 
 	
 	/**
@@ -95,13 +96,8 @@ public class XUITabHost extends RelativeLayout
 		mTargetView = attrs.getResourceId(R.styleable.XUITabHost_targetContainer, -1);
 		
 		mOnTabSelected = null;
+		setBackgroundResource(R.drawable.xui_tabbar_bg_drawable);
 	}	
-	
-	@Override
-	public void setAnimation(Animation animation)
-	{	
-		mContentAnimation = animation;
-	}
 	
 	/**
 	 * Sets the tab select listener
@@ -225,13 +221,17 @@ public class XUITabHost extends RelativeLayout
 		
 		/**
 		 * Default constructor
-		 * @param index
+		 * @param index The index of the tab that was clicked
 		 */
 		public CustomTabClickListener(int index)
 		{
 			this.index = index;
 		}
 				
+		/**
+		 * Called when the view has been clicked
+		 * @param view The view that was clicked
+		 */
 		public void onClick(View view)
 		{				
 			if (((XUITab)view).isSelected()) return;
@@ -251,8 +251,15 @@ public class XUITabHost extends RelativeLayout
 		}	
 	};
 	
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{
 		super.onLayout(changed, l, t, r, b);
 		

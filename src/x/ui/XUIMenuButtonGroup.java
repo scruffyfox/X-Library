@@ -140,7 +140,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		for (int index = 0; index < childCount; index++)
 		{
 			buttons[index] = (XUIMenuButton)itemContainer.getChildAt(index);
-		}
+		} 
 		
 		return buttons;
 	}
@@ -312,6 +312,9 @@ public class XUIMenuButtonGroup extends LinearLayout
 		}
 	}
 	
+	/**
+	 * Called to update the layout
+	 */
 	private void updateLayout()
 	{
 		childCount = ((LinearLayout)layoutView.findViewById(R.id.items)).getChildCount();
@@ -354,14 +357,23 @@ public class XUIMenuButtonGroup extends LinearLayout
 		}
 	}
 
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{	
 		super.onLayout(changed, l, t, r, b);
 	}
 	
-	@Override
-	protected void onFinishInflate()
+	/**
+	 * Called when the view has finished loading in the children
+	 */
+	@Override protected void onFinishInflate()
 	{	
 		super.onFinishInflate();
 						 

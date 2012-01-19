@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews.RemoteView;
 
 /**
- * A layout that lets you specify exact locations (x/y coordinates) of its
+ * @brief A layout that lets you specify exact locations (x/y coordinates) of its
  * children. Absolute layouts are less flexible and harder to maintain than
  * other types of layouts without absolute positioning.
  * 
@@ -40,21 +40,41 @@ public class XUIAbsoluteLayout extends ViewGroup
 {
 	private int mPaddingLeft, mPaddingRight, mPaddingTop, mPaddingBottom;
 	
+	/**
+	 * Default constructor
+	 * @param context
+	 */
 	public XUIAbsoluteLayout(Context context)
 	{
 		super(context);
 	}
 
+	/**
+	 * Default constructor
+	 * @param context
+	 * @param attrs
+	 */
 	public XUIAbsoluteLayout(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 	}
 
+	/**
+	 * Default constructor
+	 * @param context
+	 * @param attrs
+	 * @param defStyle
+	 */
 	public XUIAbsoluteLayout(Context context, AttributeSet attrs, int defStyle)
 	{
 		super(context, attrs, defStyle);		
 	}
 
+	/**
+	 * Measures the view and its children
+	 * @param widthMeasureSpec the width spec for the view to calculate its width
+	 * @param heightMeasureSpec the height spec for the view to calculate its height
+	 */
 	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{
 		int count = getChildCount();
@@ -98,14 +118,21 @@ public class XUIAbsoluteLayout extends ViewGroup
 	/**
 	 * Returns a set of layout parameters with a width of
 	 * {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT}, a height of
-	 * {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT} and with the
-	 * coordinates (0, 0).
+	 * {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT} and with the coordinates (0, 0).
 	 */
 	@Override protected ViewGroup.LayoutParams generateDefaultLayoutParams()
 	{		
 		return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0);
 	}
 
+	/**
+	 * Lays out the view and its children
+	 * @param changed If the view has changed or not
+	 * @param l The left location of the view
+	 * @param t The top location of the view
+	 * @param r The right location of the view
+	 * @param b The bottom location of the view
+	 */
 	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{
 		int count = getChildCount();
@@ -171,17 +198,31 @@ public class XUIAbsoluteLayout extends ViewGroup
 		}
 	}
 
+	/**
+	 * Generates the layout params for the view
+	 * @params attrs The attributes to use when generating the layout params
+	 * @return The new layout params
+	 */
 	@Override public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs)
 	{
 		return new XUIAbsoluteLayout.LayoutParams(getContext(), attrs);
 	}
 
-	// Override to allow type-checking of LayoutParams.
+	/**
+	 * Checks if the instance of the layout params is the same as {@link XUIAbsoluteLayout.LayoutParams}
+	 * @param p The params to check
+	 * @returns If the params = {@link XUIAbsoluteLayout.LayoutParams}
+	 */
 	@Override protected boolean checkLayoutParams(ViewGroup.LayoutParams p)
 	{
 		return p instanceof XUIAbsoluteLayout.LayoutParams;
 	}
 
+	/**
+	 * Generates layout params from existing params
+	 * @param p The layout params to use to create the new params
+	 * @return The new params
+	 */
 	@Override protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p)
 	{
 		return new LayoutParams(p);

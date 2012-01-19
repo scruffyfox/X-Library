@@ -20,7 +20,7 @@ import android.graphics.Rect;
 import android.media.ExifInterface;
 
 /**
- * @Brief Utilities for bitmap processing
+ * @brief Utilities for bitmap processing and manipulation
  */
 public class BitmapUtils
 {

@@ -445,8 +445,10 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		return ((ViewGroup)this.getChildAt(0)).getChildCount();
 	}	
 	 
-	@Override
-	protected void onFinishInflate()
+	/**
+	 * Called when the view has finished loading in the children
+	 */
+	@Override protected void onFinishInflate()
 	{	
 		super.onFinishInflate();
 				
@@ -466,8 +468,15 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		init();
 	}
 
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{					
 		super.onLayout(changed, l, t, r, b);
 		
@@ -513,8 +522,10 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		super.onLayout(changed, l, t, r, b);
 	}
 	
-	@Override
-	protected void onAttachedToWindow()
+	/**
+	 * Called when the view is attached to the window
+	 */
+	@Override protected void onAttachedToWindow()
 	{	
 		super.onAttachedToWindow();
 		
@@ -537,8 +548,14 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	private class SwipeGestureDetector extends SimpleOnGestureListener
 	{	
-		@Override
-		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) 
+		/**
+		 * Called when the view is scrolled
+		 * @param e1 The motion event for the start of the scroll
+		 * @param e2 The motion event for the end of the scroll
+		 * @param distanceX The distance scrolled in the x direction
+		 * @param distanceY The distance scrolled in the y direction
+		 */
+		@Override public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) 
 		{
 			mScrollingHorizontally = Math.abs(distanceX) > Math.abs(distanceY);
 			
@@ -551,19 +568,31 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			return false;
 		}
 
-		@Override
-		public void onShowPress(MotionEvent arg0) 
+		/**
+		 * Called when the view has been pressed
+		 * @param arg0 The motion event 
+		 */
+		@Override public void onShowPress(MotionEvent arg0) 
 		{
 		}
 
-		@Override
-		public boolean onSingleTapUp(MotionEvent arg0) 
+		/**
+		 * Called when the view has been tapped once
+		 * @param arg0 The motion event for the tap
+		 */
+		@Override public boolean onSingleTapUp(MotionEvent arg0) 
 		{
 			return false;
 		}	
-		
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+
+		/**
+		 * Called when the user swipes on the view
+		 * @param e1 The motion event of the start of the swipe
+		 * @param e2 The motion event of the end of the swipe
+		 * @param velocityX The velocity of the swipe in the x location
+		 * @param velocityY The velocity of t he swipe in the y location
+		 */
+		@Override public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
 		{				
 			canScroll = true;
 			if (e1 == null || e2 == null) return false;

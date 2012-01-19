@@ -21,6 +21,7 @@ import android.widget.ListView;
 
 /**
  * @brief The Drag and drop sort class for reordering cells in a list view by the user 
+ * Still in development
  */
 public class XUIDragDropListView extends ListView
 {

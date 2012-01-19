@@ -141,8 +141,7 @@ public class HttpParams implements Serializable
 	 * To String
 	 * @return returns the http headers in the format ?<b>key</b>=value&<b>key</b>=value
 	 */
-	@Override
-	public String toString()
+	@Override public String toString()
 	{
 		String qString = "?";
 		

@@ -17,15 +17,54 @@ import android.widget.RelativeLayout;
  */
 public class XUITabParams
 {
+	/**
+	 * The text for the tab
+	 */
 	public Option<String> tabText = new Option("", "");
+	
+	/**
+	 * The text size in the tab in pixels
+	 */
 	public int tabTextSize = 14;
+	
+	/**
+	 * The text color of the tab
+	 */
 	public Option<Integer> tabTextColor = new Option(0xff000000, 0xff000000);
+	
+	/**
+	 * The icon of the tab. This is a reference to a drawable res
+	 */
 	public Option<Integer> tabIcon = new Option(-1, -1);
+	
+	/**
+	 * The background drawable for the tab
+	 */
 	public Option<Drawable> tabBackground = new Option(null, null);
+	
+	/**
+	 * The intent to load when the tab is selected
+	 */
 	public Intent intent = null;	
+	
+	/**
+	 * The gravity of the text
+	 */
 	public int gravity = 0;
+	
+	/**
+	 * The orientation of the text to icon
+	 */
 	public int layoutOrientation = LinearLayout.HORIZONTAL;
+	
+	/**
+	 * The layout params for the tab
+	 */
 	public RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+	
+	/**
+	 * The layout params for the icon
+	 */
 	public LinearLayout.LayoutParams iconLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT); 	
 	
 	/**
@@ -58,14 +97,30 @@ public class XUITabParams
 	 */ 
 	public static class Option<E>
 	{
+		/**
+		 * The selected state
+		 */
 		public E selected;
+		
+		/**
+		 * The deselected state
+		 */
 		public E deselected;		
 		
+		/**
+		 * Default constructor
+		 * @param data The value to set to both selected and deselected
+		 */
 		public Option(E data)
 		{
 			this.selected = data;
 		}
 		
+		/**
+		 * Default constructor
+		 * @param selected The value to set to the selected state
+		 * @param deselected The value to set to the deselected state
+		 */
 		public Option(E selected, E deselected)
 		{
 			this.selected = selected;

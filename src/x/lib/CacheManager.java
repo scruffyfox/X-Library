@@ -43,6 +43,12 @@ public class CacheManager implements Serializable
 		this(context, packageName, false);
 	}
 
+	/**
+	 * The default constructor
+	 * @param context The context for the applicatiom
+	 * @param packageName The application's unique package name identifier
+	 * @param useExternalCache Whether to use the external cache directory or not
+	 */
 	public CacheManager(Context context, String packageName, boolean useExternalCache)
 	{
 		this.context = context;
@@ -59,6 +65,11 @@ public class CacheManager implements Serializable
 		}
 	}
 	
+	/**
+	 * The default constructor
+	 * @param path The path to the cache directory
+	 * @param packageName The application's unique package name identifer
+	 */
 	public CacheManager(String path, String packageName)
 	{
 		mCachePath = path;
@@ -753,11 +764,14 @@ public class CacheManager implements Serializable
 		protected Bitmap.CompressFormat mFormat;		
 		protected OnFileWrittenListener mListener;
 		
-		public AddImageRunnable()
-		{
-			
-		}
-		
+		/**
+		 * Default constructor for the class
+		 * @param folderName The folder name for the image to be stored
+		 * @param fileName The file name for the image
+		 * @param image The image to store
+		 * @param format The compression format
+		 * @param l The callback listener for when the file is written
+		 */
 		public AddImageRunnable(String folderName, String fileName, Bitmap image, Bitmap.CompressFormat format, OnFileWrittenListener l)
 		{
 			mFolderName = folderName;
@@ -778,11 +792,13 @@ public class CacheManager implements Serializable
 		protected Serializable mContents;
 		protected OnFileWrittenListener mListener;
 		
-		public AddFileRunnable()
-		{
-			
-		}
-		
+		/**
+		 * Default constructor for the class
+		 * @param folderName The folder name for the image to be stored
+		 * @param fileName The file name for the file
+		 * @param contents The contents of the file to be written 
+		 * @param l The callback listener for when the file is written
+		 */
 		public AddFileRunnable(String folderName, String fileName, Serializable contents, OnFileWrittenListener l)
 		{
 			mFolderName = folderName;
@@ -809,6 +825,11 @@ public class CacheManager implements Serializable
 	 */
 	public static class Serializer implements Serializable
 	{
+		/**
+		 * Serializes a bitmap into a byte array to be stored as a file
+		 * @param data The bitmap to serialize
+		 * @return The serialized image
+		 */
 		public static byte[] serializeBitmap(Bitmap data)
 		{
 			try

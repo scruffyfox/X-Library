@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- *  Parallex view for {@link XUIParallexScrollView}
+ *  @brief Parallex view for {@link XUIParallexScrollView}
  * 
  * 	Child view params
  * 	@param x:layout_x The x coordinate of the view relative to the screen width 480px
@@ -60,16 +60,33 @@ public class XUIParallexView extends XUIAbsoluteLayout
 		super(context, attrs);				
 	}
 	
+	/**
+	 * This method generates default layout params for child views
+	 * @return The new layout params
+	 */
 	@Override protected android.view.ViewGroup.LayoutParams generateDefaultLayoutParams()
 	{	
 		return (XUIParallexView.LayoutParams)super.generateDefaultLayoutParams();
 	}	
-	
+
+	/**
+	 * This method generates default layout params for child views
+	 * @param attrs The attribute set to use when generating the params
+	 * @return The new layout params
+	 */
 	@Override public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs)
 	{
 		return new XUIParallexView.LayoutParams(getContext(), attrs);
 	}
 	
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
 	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{			
 		super.onLayout(changed, l, t, r, b);				

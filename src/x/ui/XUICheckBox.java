@@ -77,6 +77,7 @@ public class XUICheckBox extends ImageView implements Checkable
 	
 	/**
 	 * Sets if the checkbox is checked or not
+	 * @param isChecked whether the checkbox is checked or not
 	 */
 	public void setChecked(boolean isChecked)
 	{
@@ -93,8 +94,11 @@ public class XUICheckBox extends ImageView implements Checkable
 		}
 	}
 	
-	@Override
-	public void setOnClickListener(OnClickListener l)
+	/**
+	 * Sets the OnClickListener
+	 * @param l The new OnClickListener to set
+	 */
+	@Override public void setOnClickListener(OnClickListener l)
 	{
 		mSetOnClickListener = true;
 		super.setOnClickListener(l);
@@ -109,8 +113,12 @@ public class XUICheckBox extends ImageView implements Checkable
 		mOnCheckedChangeListener = l;
 	}
 
-	@Override
-	public int[] onCreateDrawableState(int extraSpace)
+	/**
+	 * Creates the drawable state for the  view
+	 * @param extraSpace The space needed for the view
+	 * @return The new drawable state for the view
+	 */
+	@Override public int[] onCreateDrawableState(int extraSpace)
 	{
 		final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
 	   
@@ -130,14 +138,23 @@ public class XUICheckBox extends ImageView implements Checkable
 		return mIsChecked;
 	}
 	
-	@Override
-	protected void onLayout(boolean changed, int left, int top, int right, int bottom)
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int left, int top, int right, int bottom)
 	{	
 		super.onLayout(changed, left, top, right, bottom);
 	}
 
-	@Override
-	protected void onFinishInflate()
+	/**
+	 * Called when the view has finished inflating its children
+	 */
+	@Override protected void onFinishInflate()
 	{	
 		super.onFinishInflate();
 		

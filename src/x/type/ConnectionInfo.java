@@ -18,6 +18,9 @@ public class ConnectionInfo
 	public int connectionResponseCode = 0;
 	public String connectionResponseMessage = "";
 	
+	/**
+	 * Generates the class as a string
+	 */
 	@Override public String toString()
 	{
 		return "ConnectionInfo \n[\n\tconnectionUrl=" + connectionUrl + ", \n\tconnectionHeaders=" + connectionHeaders + ", \n\tconnectionSentData=" + connectionSentData + ", \n\tconnectionInitiationTime=" + connectionInitiationTime + ", \n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + "\n]";

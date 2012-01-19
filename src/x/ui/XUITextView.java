@@ -37,7 +37,6 @@ public class XUITextView extends TextView
 	private String mFontResource;
 	private Context mContext;
 	
-	
 	/**
 	 * Default Constructor
 	 * @param context

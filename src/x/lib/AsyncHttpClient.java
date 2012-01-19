@@ -1019,29 +1019,29 @@ public class AsyncHttpClient
 		 */
 		public void onBytesWritten(int index, int count, int total);
 	}
-}
-
-class PatchInputStream extends FilterInputStream
-{
-	public PatchInputStream(InputStream in)
+	
+	private class PatchInputStream extends FilterInputStream
 	{
-		super(in);
-	}
-
-	public long skip(long amount) throws IOException
-	{
-		long skipCount = 0L;
-		while (skipCount < amount)
+		public PatchInputStream(InputStream in)
 		{
-			long totalSkipped = in.skip(amount - skipCount);
-			if (totalSkipped == 0L)
-			{
-				break;
-			}
-			
-			skipCount += totalSkipped;
+			super(in);
 		}
 
-		return skipCount;
+		public long skip(long amount) throws IOException
+		{
+			long skipCount = 0L;
+			while (skipCount < amount)
+			{
+				long totalSkipped = in.skip(amount - skipCount);
+				if (totalSkipped == 0L)
+				{
+					break;
+				}
+				
+				skipCount += totalSkipped;
+			}
+
+			return skipCount;
+		}
 	}
 }

@@ -18,7 +18,7 @@ public abstract class AsyncHttpResponse
 	
 	/**
 	 * Default constructor
-	 * @param extras
+	 * @param extras The extra bundle that gets passed to the response
 	 */
 	public AsyncHttpResponse(Bundle extras)
 	{
@@ -71,12 +71,12 @@ public abstract class AsyncHttpResponse
 	public void onSuccess(byte[] response){};
 	
 	/**
-	 * The function that gets called when the server response with an array (@see getImages())
+	 * The function that gets called when the server response with an array @see AsyncHttpClient.getImages()
 	 * @param response The response message
 	 */
 	public void onSuccess(Object[] response){}
 	
-	/**
+	/*
 	 * The function that gets called when the response from the server fails
 	 */
 	public void onFailure(){}
