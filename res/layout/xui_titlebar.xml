@@ -5,21 +5,32 @@
 	android:layout_height="46dp"
 	android:layout_gravity="center_vertical"
 >   	
+	<x.ui.XUITitleButtonHost
+	   	android:layout_width="wrap_content"
+	   	android:layout_height="wrap_content"
+	   	android:gravity="left"
+	   	android:layout_alignParentLeft="true"
+	   	android:id="@+id/titlebar_buttons_left"
+    />
+	
+	<x.ui.XUITitleButtonHost
+	   	android:layout_width="wrap_content"
+	   	android:layout_height="wrap_content"
+	   	android:gravity="right"
+	   	android:layout_alignParentRight="true"	   	
+	   	android:id="@+id/titlebar_buttons_right"
+    />    
+	
 	<x.ui.XUITextView
     	android:id="@+id/titlebar_label"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"    	
     	android:gravity="center_vertical"
     	android:layout_marginLeft="10dp"
+    	android:layout_toLeftOf="@id/titlebar_buttons_right"
+    	android:layout_toRightOf="@id/titlebar_buttons_left"
     	style="@style/titlebar_label"
     />
-	
-	<x.ui.XUITitleButtonHost
-	   	android:layout_width="fill_parent"
-	   	android:layout_height="wrap_content"
-	   	android:gravity="right"
-	   	android:layout_alignParentRight="true"
-	   	android:id="@+id/titlebar_buttons"
-    />       
+		  
 </RelativeLayout>
  

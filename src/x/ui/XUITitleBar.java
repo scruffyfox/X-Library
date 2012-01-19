@@ -37,14 +37,16 @@ import android.widget.TextView;
  *	/>
  * @endcode
  * 
- * TODO: So far only accepts XUITitleButtonHost as a child.
+ * TODO: So far only accepts XUITitleButtonHost as a child, and only inflates to the right button host.
+ * TODO: Add xml inflate support for the left button host
  */
 public class XUITitleBar extends RelativeLayout
 {
 	private Context mContext;
 	private LayoutInflater mLayoutInflater;
 	private RelativeLayout mLayout;
-	private XUITitleButtonHost mButtonHost;
+	private XUITitleButtonHost mRightButtonHost;
+	private XUITitleButtonHost mLeftButtonHost;
 	private TextView mLabel;
 	private ImageView mLabelImage;
 	private String mTitleText = "";
@@ -91,11 +93,14 @@ public class XUITitleBar extends RelativeLayout
 	private void init()
 	{ 
 		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.xui_titlebar, this);
-		mLabel = (TextView)findViewById(R.id.titlebar_label); 
-		mButtonHost = ((XUITitleButtonHost)findViewById(R.id.titlebar_buttons));
-						
-		setTitleText(mTitleText);
+				
+		mRightButtonHost = ((XUITitleButtonHost)mLayout.findViewById(R.id.titlebar_buttons_right));
+		mLeftButtonHost = ((XUITitleButtonHost)mLayout.findViewById(R.id.titlebar_buttons_left));
+		mLabel = (TextView)mLayout.findViewById(R.id.titlebar_label); 
+		
+		setTitleText(mTitleText); 
 		setTitleGravity(mGravity);
+		setBackgroundResource(R.drawable.xui_titlebar_bg_drawable);
 	}
 	
 	/**
@@ -160,16 +165,45 @@ public class XUITitleBar extends RelativeLayout
 	}
 	
 	/**
-	 * Sets the titlebar button host
+	 * Sets the right titlebar button host
 	 * @param buttonHost The new button host
 	 */
 	public void setTitleButtons(XUITitleButtonHost buttonHost)
 	{
-		removeView(mButtonHost);
-		
-		buttonHost.setGravity(Gravity.RIGHT);
-		mButtonHost = buttonHost;
-		addView(mButtonHost);		
+		setTitleButtons(buttonHost, Gravity.RIGHT);
+	}
+	
+	/**
+	 * Sets the titlebar button host
+	 * @param buttonHost The new button host
+	 * @param gravity The gravity of the button host. Only accepts Gravity.LEFT or Gravity.RIGHT
+	 */
+	public void setTitleButtons(XUITitleButtonHost buttonHost, int gravity)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				removeView(mLeftButtonHost);
+				
+				buttonHost.setGravity(Gravity.LEFT);
+				mLeftButtonHost = buttonHost;
+				addView(mLeftButtonHost, 0);
+				
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				removeView(mLeftButtonHost);
+				
+				buttonHost.setGravity(Gravity.RIGHT);
+				mRightButtonHost = buttonHost;
+				addView(mRightButtonHost);
+				
+				break;
+			}
+		}			
 	}
 
 	/**
@@ -178,16 +212,62 @@ public class XUITitleBar extends RelativeLayout
 	 */
 	public void addButton(XUITitleButton button)
 	{
-		mButtonHost.addButton(button);
+		addButton(button, Gravity.RIGHT);
 	}
 
+	/**
+	 * Adds a button to the button host
+	 * @param button The button to add
+	 * @param gravity The gravity of the button host to use, Either Gravity.LEFT or Gravity.RIGHT
+	 */
+	public void addButton(XUITitleButton button, int gravity)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				mLeftButtonHost.addButton(button);
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				mRightButtonHost.addButton(button);
+				break;
+			}
+		}		
+	}
+	
 	/**
 	 * Adds buttons to the button host
 	 * @param button The buttons to add
 	 */
 	public void addButtons(XUITitleButton... button)
 	{
-		mButtonHost.addButtons(button);
+		addButtons(Gravity.RIGHT, button);
+	}
+	
+	/**
+	 * Adds a button to the button host
+	 * @param gravity The gravity of the button host to use, Either Gravity.LEFT or Gravity.RIGHT	 
+	 * @param button The button to add 
+	 */
+	public void addButtons(int gravity, XUITitleButton... button)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				mLeftButtonHost.addButtons(button);
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				mRightButtonHost.addButtons(button);
+				break;
+			}
+		}		
 	}
 
 	/**
@@ -196,7 +276,30 @@ public class XUITitleBar extends RelativeLayout
 	 */
 	public void removeButton(int index)
 	{
-		mButtonHost.removeButton(index);
+		mRightButtonHost.removeButton(index);
+	}
+	
+	/**
+	 * Removes a button from the specific index
+	 * @param index The index of the button to remove
+	 * @param gravity The gravity of the button host to use, Either Gravity.LEFT or Gravity.RIGHT
+	 */
+	public void removeButton(int index, int gravity)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				mLeftButtonHost.removeButton(index);
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				mRightButtonHost.removeButton(index);
+				break;
+			}
+		}	
 	}
 
 	/**
@@ -205,7 +308,61 @@ public class XUITitleBar extends RelativeLayout
 	 */
 	public void removeButton(XUITitleButton button)
 	{
-		mButtonHost.removeButton(button);
+		removeButton(button, Gravity.RIGHT);
+	}
+	
+	/**
+	 * Remove a button from the view
+	 * @param button The button to remove
+	 * @param gravity The gravity of the button host to use, Either Gravity.LEFT or Gravity.RIGHT
+	 */
+	public void removeButton(XUITitleButton button, int gravity)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				mLeftButtonHost.removeButton(button);
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				mRightButtonHost.removeButton(button);
+				break;
+			}
+		}	
+	}
+	
+	/**
+	 * Removes all the buttons from both of the button hosts
+	 */
+	public void removeAllButtons()
+	{
+		mRightButtonHost.removeAllButtons();
+		mLeftButtonHost.removeAllButtons();
+	}
+	
+	/**
+	 * Removes all the buttons from the view
+	 * @param gravity The gravity of the button host to use, Either Gravity.LEFT or Gravity.RIGHT
+	 */
+	public void removeAllButtons(int gravity)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				mLeftButtonHost.removeAllButtons();
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				mRightButtonHost.removeAllButtons();
+				break;
+			}
+		}	
 	}
 
 	/**
@@ -214,23 +371,60 @@ public class XUITitleBar extends RelativeLayout
 	 */
 	public void setButtons(XUITitleButton... button)
 	{
-		mButtonHost.setButtons(button);
-	}		
+		setButtons(Gravity.RIGHT, button);
+	}	
 	
-	@Override
-	protected void onLayout(boolean changed, int l, int t, int r, int b)
+	/**
+	 * Sets the buttons in the view
+	 * @param gravity The gravity of the button host to use, Either Gravity.LEFT or Gravity.RIGHT
+	 * @param button The buttons to set 
+	 */
+	public void setButtons(int gravity, XUITitleButton... button)
+	{
+		switch (gravity)
+		{
+			case Gravity.LEFT:
+			{
+				mLeftButtonHost.setButtons(button);
+				break;
+			}
+			
+			case Gravity.RIGHT:
+			{
+				mRightButtonHost.setButtons(button);
+				break;
+			}
+		}	
+	}	
+	
+	/**
+	 * Is called when the view is being layed out
+	 * @param changed If the view has changed or not
+	 * @param l The left coordinate
+	 * @param t The top coordinate
+	 * @param r The right coordinate
+	 * @param b The bottom coordinate
+	 */
+	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{
 		super.onLayout(changed, l, t, r, b);		
 	}
-	
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+		
+	/**
+	 * Measures the view and its children
+	 * @param widthMeasureSpec the width spec for the view to calculate its width
+	 * @param heightMeasureSpec the height spec for the view to calculate its height
+	 */
+	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{						
 		super.onMeasure(MeasureSpec.makeMeasureSpec(widthMeasureSpec, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec((int)mContext.getResources().getDimension(R.dimen.titlebar_size), MeasureSpec.EXACTLY));
 	}
 	
-	@Override
-	protected void onFinishInflate()
+	/**
+	 * Called when the view has finished loading in the children 
+	 * to the view
+	 */
+	@Override protected void onFinishInflate()
 	{
 		super.onFinishInflate();
 		
@@ -252,6 +446,6 @@ public class XUITitleBar extends RelativeLayout
 			}
 		}
 				
-		mButtonHost.addButtons(titleButtons);
+		mRightButtonHost.addButtons(titleButtons);
 	}
 }
