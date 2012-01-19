@@ -7,6 +7,10 @@ The library has been used on many Android apps including Jackson Stops &amp; Sta
 
 ** Don't forget to watch the project as it's always changing! **
 
+NOTE
+====
+The location of the documentation has changed. See: Documentation.
+
 Installation
 ------------
 NOTE: The library requires your project to be 2.2 + Google APIs or higher. If you do not want to use the Google APIs, delete XUIMapOverlay.java.
@@ -43,7 +47,7 @@ There is a library demo for the UI elements and can be found [Here][demo]
 [jss]: http://market.android.com/details?id=uk.co.jacksonstops.property
 [rca]: http://market.android.com/details?id=com.cube.rca
 [mpm]: https://github.com/scruffyfox/Micro-Management
-[doc]: http://scruffyfox.github.com/X-Library
+[doc]: http://documentation.callumtaylor.net/x-library
 [demo]: http://github.com/scruffyfox/X-Library-Demo
 [website]: https://callumtaylor.net
 [twitter]: http://twitter.com/scruffyfox
