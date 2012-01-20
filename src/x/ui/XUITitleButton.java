@@ -115,24 +115,6 @@ public class XUITitleButton extends ImageButton implements Serializable
 	}
 	
 	/**
-	 * Sets the buttons drawable image
-	 * @param d The drawable of the button
-	 */
-	@Override public void setBackgroundDrawable(Drawable d)
-	{
-		setImageDrawable(d);
-	}
-	
-	/**
-	 * Sets the background image from a resource id
-	 * @param resid The resource id of the image
-	 */
-	@Override public void setBackgroundResource(int resid)
-	{
-		setImageResource(resid);
-	}
-	
-	/**
 	 * Sets the image resource of the button
 	 * @param resId The resource id of the button
 	 */
