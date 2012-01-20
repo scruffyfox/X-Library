@@ -78,8 +78,7 @@ public class XUITabHost extends RelativeLayout
 		super(context);
 		this.mContext = context;
 		
-		mOnTabSelected = null;
-		setBackgroundResource(R.drawable.xui_tabbar_bg_drawable);
+		mOnTabSelected = null;		
 	} 
 	
 	/**
@@ -96,7 +95,6 @@ public class XUITabHost extends RelativeLayout
 		mTargetView = attrs.getResourceId(R.styleable.XUITabHost_targetContainer, -1);
 		
 		mOnTabSelected = null;
-		setBackgroundResource(R.drawable.xui_tabbar_bg_drawable);
 	}	
 	
 	/**
