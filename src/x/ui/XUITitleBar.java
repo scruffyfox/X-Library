@@ -92,6 +92,7 @@ public class XUITitleBar extends RelativeLayout
 	 */
 	private void init()
 	{ 
+
 		mLayout = (RelativeLayout)mLayoutInflater.inflate(R.layout.xui_titlebar, this);
 				
 		mRightButtonHost = ((XUITitleButtonHost)mLayout.findViewById(R.id.titlebar_buttons_right));
@@ -99,8 +100,7 @@ public class XUITitleBar extends RelativeLayout
 		mLabel = (TextView)mLayout.findViewById(R.id.titlebar_label); 
 		
 		setTitleText(mTitleText); 
-		setTitleGravity(mGravity);
-		setBackgroundResource(R.drawable.xui_titlebar_bg_drawable);
+		setTitleGravity(mGravity);		
 	}
 	
 	/**
