@@ -27,8 +27,6 @@
     	android:layout_height="fill_parent"    	
     	android:gravity="center_vertical"
     	android:layout_marginLeft="10dp"
-    	android:layout_toLeftOf="@id/titlebar_buttons_right"
-    	android:layout_toRightOf="@id/titlebar_buttons_left"
     	style="@style/titlebar_label"
     />
 		  
