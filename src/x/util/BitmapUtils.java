@@ -8,15 +8,26 @@ package x.util;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import x.lib.Debug;
+import x.lib.Filter;
+import x.lib.Filter.FilterSet;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Xfermode;
 import android.media.ExifInterface;
 
 /**
@@ -35,6 +46,26 @@ public class BitmapUtils
 	public static final int ORIENTATION_90_ROTATE_RIGHT = 6;
 	public static final int ORIENTATION_HORIZONTAL_FLIP_90_ROTATE_RIGHT = 7;
 	public static final int ORIENTATION_90_ROTATE_LEFT = 8;
+	 
+	/**
+	 * Makes sure the colour does not exceed the 0-255 bounds
+	 * @param colour The colour integer
+	 * @return The numerical value of the colour
+	 */
+	public static int safe(int colour)
+	{
+		return Math.min(255, Math.max(colour, 0));
+	}
+	
+	/**
+	 * Makes sure the colour does not exceed the 0-255 bounds
+	 * @param colour The colour integer
+	 * @return The numerical value of the colour
+	 */
+	public static int safe(double colour)
+	{
+		return (int)Math.min(255.0, Math.max(colour, 0.0));
+	}
 	
 	/**
 	 * Resizes a bitmap. Original bitmap is recycled after this method is called.
@@ -188,6 +219,110 @@ public class BitmapUtils
 	    return ret;
 	}
 	
+	public static enum BlendMode
+	{			
+		//	Standard PorterDuff modes
+		CLEAR,
+		DARKEN,
+		DST,
+		DST_ATOP,
+		DST_IN,
+		DST_OUT,
+		DST_OVER,
+		LIGHTEN,
+		MULTIPLY,
+		SCREEN,
+		SRC,
+		SRC_ATOP,
+		SRC_IN,
+		SRC_OUT,
+		SRC_OVER,
+		XOR,
+		
+		//	Custom Blend modes
+		OVERLAY,
+		ADD,
+		DIFFERENCE,
+		EXCLUSION,
+		SOFTLIGHT
+	}
+	
+	public static Bitmap merge(Bitmap original, Bitmap overlay, BlendMode blendMode)
+	{
+		try
+		{
+			PorterDuff.Mode m = PorterDuff.Mode.valueOf(blendMode.name());
+
+			int w = original.getWidth();
+			int h = original.getHeight();
+			
+			Bitmap newBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+			Canvas c = new Canvas(newBitmap);
+			c.drawBitmap(original, 0, 0, null);
+			
+			
+			Paint paint = new Paint();
+			paint.setXfermode(new PorterDuffXfermode(m));
+			
+			c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), paint);
+			
+			original.recycle();
+			overlay.recycle();				
+			
+			return newBitmap;
+		}
+		catch (IllegalArgumentException e) 
+		{
+			int w = original.getWidth();
+			int h = original.getHeight();
+			
+			Bitmap newBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+			Canvas c = new Canvas(newBitmap);
+			c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), new Paint());
+			
+			for (int x = 0; x < w; x++)
+			{
+				for (int y = 0; y < h; y++)
+				{
+					int colour1 = original.getPixel(x, y);
+					int colour2 = newBitmap.getPixel(x, y);
+					
+					double[] rgb1 = new double[]{Color.red(colour1), Color.green(colour1), Color.blue(colour1)};
+					double[] rgb2 = new double[]{Color.red(colour2), Color.green(colour2), Color.blue(colour2)};
+					int[] rgb3 = new int[3];
+					
+					if (blendMode == BlendMode.OVERLAY)
+					{
+						rgb3[0] = safe(rgb1[0] > 128.0 ? (255.0 - 2.0 * (255.0 - rgb2[0]) * (255.0 - rgb1[0]) / 255.0) : ((rgb1[0] * rgb2[0] * 2.0) / 255.0));
+						rgb3[1] = safe(rgb1[1] > 128.0 ? (255.0 - 2.0 * (255.0 - rgb2[1]) * (255.0 - rgb1[1]) / 255.0) : ((rgb1[1] * rgb2[1] * 2.0) / 255.0));
+						rgb3[2] = safe(rgb1[2] > 128.0 ? (255.0 - 2.0 * (255.0 - rgb2[2]) * (255.0 - rgb1[2]) / 255.0) : ((rgb1[2] * rgb2[2] * 2.0) / 255.0));
+					} 
+					else if (blendMode == BlendMode.DIFFERENCE)
+					{
+						rgb3[0] = safe(Math.abs(rgb2[0] - rgb1[0]));
+						rgb3[1] = safe(Math.abs(rgb2[1] - rgb1[1]));
+						rgb3[2] = safe(Math.abs(rgb2[2] - rgb1[2]));
+					}
+					else if (blendMode == BlendMode.SOFTLIGHT)
+					{
+						rgb3[0] = safe(rgb1[0] > 128 ? 255 - ((255 - rgb1[0]) * (255 - (rgb2[0] - 128))) / 255 : (rgb1[0] * (rgb2[0] + 128)) / 255);
+						rgb3[1] = safe(rgb1[1] > 128 ? 255 - ((255 - rgb1[1]) * (255 - (rgb2[1] - 128))) / 255 : (rgb1[1] * (rgb2[1] + 128)) / 255);
+						rgb3[2] = safe(rgb1[2] > 128 ? 255 - ((255 - rgb1[2]) * (255 - (rgb2[2] - 128))) / 255 : (rgb1[2] * (rgb2[2] + 128)) / 255);
+					}
+					
+					Paint p = new Paint();					
+					p.setARGB(255, rgb3[0], rgb3[1], rgb3[2]);
+					c.drawRect(x, y, x + 1, y + 1, p);
+				}
+			}
+			
+			original.recycle();
+			overlay.recycle();
+			
+			return newBitmap; 
+		}		
+	}
+	
 	/**
 	 * Fixes the orientation of a bitmap. Original bitmap is recycled after this method is called
 	 * @param bm The bitmap to fix
@@ -239,8 +374,138 @@ public class BitmapUtils
 			{
 				return rotate(bm, -90);				
 			}
-		}
+		} 
 		
 		return bm;
+	}
+	
+	public static Bitmap saturation(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.saturation(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap posterize(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.posterize(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap threshold(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.threshold(amount);
+		
+		return f.flatten();
+	}	
+	
+	public static Bitmap adjust(Bitmap b, int colour)
+	{
+		Filter f = new Filter(b);
+		f.adjust(colour);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap bias(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.bias(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap brightness(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.brightness(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap contrast(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.contrast(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap gamma(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.gamma(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap invert(Bitmap b)
+	{
+		Filter f = new Filter(b);
+		f.invert();
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap monotone(Bitmap b)
+	{
+		Filter f = new Filter(b);
+		f.monotone();
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap sepia(Bitmap b)
+	{
+		Filter f = new Filter(b);
+		f.sepia();
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap opacity(Bitmap b, int amount)
+	{
+		Filter f = new Filter(b);
+		f.opacity(amount);
+		
+		return f.flatten();
+	}
+	
+	public static Bitmap applyFilterSet(Bitmap b, FilterSet[] filters)
+	{
+		Filter f = new Filter(b);
+		f.apply(filters);
+		
+		return f.flatten();
+	}
+			
+	/**
+	 * Class for holding ARGB colour
+	 */
+	public static class Colour
+	{
+		public int alpha = 255;
+		public int red = 255;
+		public int green = 255;
+		public int blue = 255;
+		
+		/**
+		 * Constructor
+		 * @param a Alpha 0-255
+		 * @param r Red channel 0-255
+		 * @param g Green channel 0-255
+		 * @param b Blue channel 0-255
+		 */
+		public Colour(int a, int r, int g, int b)
+		{
+			alpha = a;
+			red = r;
+			green = g;
+			blue = b;
+		}
 	}
 }
