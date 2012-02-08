@@ -219,6 +219,9 @@ public class BitmapUtils
 	    return ret;
 	}
 	
+	/**
+	 * Blend modes to use with the merge method
+	 */
 	public static enum BlendMode
 	{			
 		//	Standard PorterDuff modes
@@ -247,6 +250,13 @@ public class BitmapUtils
 		SOFTLIGHT
 	}
 	
+	/**
+	 * Merges an image ontop of another image using a specific blend mode. Both images are recycled after the merge.
+	 * @param original The bottom image
+	 * @param overlay The image to merge to
+	 * @param blendMode The blending mode of the merge
+	 * @return The merged images
+	 */
 	public static Bitmap merge(Bitmap original, Bitmap overlay, BlendMode blendMode)
 	{
 		try
@@ -333,43 +343,36 @@ public class BitmapUtils
 	{
 		switch (currentOrientation)
 		{
-			//	Horizontal
 			case ORIENTATION_HORIZONTAL:
 			{
 				return flip(bm, FLIP_HORIZONTAL);
 			}
 			
-			//	180 rotate left
 			case ORIENTATION_180_ROTATE_LEFT:	
 			{
 				return rotate(bm, -180);
 			}
 			
-			//	Vertical flip
 			case ORIENTATION_VERTICAL_FLIP:	
 			{
 				return flip(bm, FLIP_VERTICAL);
 			}
 			
-			//	Vertical flip + 90 rotate right
 			case ORIENTATION_VERTICAL_FLIP_90_ROTATE_RIGHT:
 			{
 				return rotate(flip(bm, FLIP_VERTICAL), 90);				
 			}
 		
-			//	90 rotate right
 			case ORIENTATION_90_ROTATE_RIGHT:	
 			{
 				return rotate(bm, 90);
 			}
 		
-			//	horizontal flip + 90 rotate right
 			case ORIENTATION_HORIZONTAL_FLIP_90_ROTATE_RIGHT:	
 			{
 				return rotate(flip(bm, FLIP_HORIZONTAL), 90);				
 			}
 		
-			//	90 rotate left
 			case ORIENTATION_90_ROTATE_LEFT:	
 			{
 				return rotate(bm, -90);				
@@ -379,6 +382,12 @@ public class BitmapUtils
 		return bm;
 	}
 	
+	/**
+	 * Applies a saturation filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of saturation to apply 0-255
+	 * @return The new image
+	 */
 	public static Bitmap saturation(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -387,6 +396,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a posterize filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of posterization to apply 0-255
+	 * @return The new image
+	 */
 	public static Bitmap posterize(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -395,6 +410,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a threshold filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of threshold to apply 0-255
+	 * @return The new image
+	 */
 	public static Bitmap threshold(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -403,14 +424,12 @@ public class BitmapUtils
 		return f.flatten();
 	}	
 	
-	public static Bitmap adjust(Bitmap b, int colour)
-	{
-		Filter f = new Filter(b);
-		f.adjust(colour);
-		
-		return f.flatten();
-	}
-	
+	/**
+	 * Applies a bais filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of bias to apply 0-255
+	 * @return The new image
+	 */
 	public static Bitmap bias(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -419,6 +438,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a brighrness filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of brightness to apply 0-255
+	 * @return The new image
+	 */
 	public static Bitmap brightness(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -427,6 +452,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a contrast filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of contrast to apply 0-100
+	 * @return The new image
+	 */
 	public static Bitmap contrast(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -435,6 +466,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a gamma filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of gamma to apply 0-100
+	 * @return The new image
+	 */
 	public static Bitmap gamma(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -443,6 +480,11 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Inverts the image's colours
+	 * @param b The image to apply the filter to
+	 * @return The new image
+	 */
 	public static Bitmap invert(Bitmap b)
 	{
 		Filter f = new Filter(b);
@@ -451,6 +493,11 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Sets the image's colour to black and white
+	 * @param b The image to apply the filter to
+	 * @return The new image
+	 */
 	public static Bitmap monotone(Bitmap b)
 	{
 		Filter f = new Filter(b);
@@ -459,6 +506,11 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a sepia filter
+	 * @param b The image to apply the filter to
+	 * @return The new image
+	 */
 	public static Bitmap sepia(Bitmap b)
 	{
 		Filter f = new Filter(b);
@@ -467,6 +519,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a opacity filter to an image
+	 * @param b The image to apply the filter to
+	 * @param amount The amount of opacity to apply 0-255
+	 * @return The new image
+	 */
 	public static Bitmap opacity(Bitmap b, int amount)
 	{
 		Filter f = new Filter(b);
@@ -475,6 +533,12 @@ public class BitmapUtils
 		return f.flatten();
 	}
 	
+	/**
+	 * Applies a filter set to the image
+	 * @param b The image to apply the filters to
+	 * @param filters The filter set
+	 * @return The new bitmap
+	 */
 	public static Bitmap applyFilterSet(Bitmap b, FilterSet[] filters)
 	{
 		Filter f = new Filter(b);
