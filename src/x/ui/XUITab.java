@@ -213,7 +213,7 @@ public class XUITab extends RelativeLayout
 	{
 		isSelected = false;  
 		
-		if (this.params.tabIcon.deselected > -1)
+		if (this.params.tabIcon.deselected == null || this.params.tabIcon.deselected > -1)
 		{
 			imageIcon.setVisibility(View.VISIBLE);
 			imageIcon.setImageDrawable(getResources().getDrawable(this.params.tabIcon.deselected != null ? this.params.tabIcon.deselected : this.params.tabIcon.selected));
