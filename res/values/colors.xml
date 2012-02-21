@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="xui_button_group_bg_selected">#6D91BA</color>
+    
+    <!-- Standard colour def -->
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
+    <color name="blue">#0000ff</color>
+    <color name="yellow">#ffff00</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#ff000000</color>
+    <color name="grey">#777777</color>
 </resources>
