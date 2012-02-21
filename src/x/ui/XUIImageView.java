@@ -63,27 +63,30 @@ public class XUIImageView extends ImageView
 	{	
 		final ScaleType scale = getScaleType();
 						
-		final AnimationDrawable loader = new AnimationDrawable();
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_1), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_2), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_3), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_4), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_5), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_6), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_7), 50);
-		loader.addFrame(getResources().getDrawable(R.drawable.image_loading_8), 50);	
+		final int[] loader = new int[]
+		{
+			R.drawable.image_loading_1,
+			R.drawable.image_loading_2,
+			R.drawable.image_loading_3,
+			R.drawable.image_loading_4,
+			R.drawable.image_loading_5,
+			R.drawable.image_loading_6,
+			R.drawable.image_loading_7,
+			R.drawable.image_loading_8
+		};
+				
+		setScaleType(ScaleType.CENTER_CROP);
+		setAdjustViewBounds(true);
 		
-		setImageResource(R.drawable.image_loading_1);						
-		setScaleType(ScaleType.CENTER_INSIDE);
-		
-		final Handler h = new Handler();
+		final Handler h = new Handler();  
 		final Runnable r = new Runnable()
 		{			
 			int index = 0;
 			public void run()
 			{
-				index = index > 7 ? 0 : index;
-				setImageDrawable(loader.getFrame(index++));
+				index = index > 7 ? 0 : index;				
+				setImageDrawable(getResources().getDrawable(loader[index++]));
+				
 				h.postDelayed(this, 100);
 			}
 		};
