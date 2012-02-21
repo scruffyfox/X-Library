@@ -6,6 +6,7 @@
 package x.type;
 
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import x.lib.Debug;
@@ -48,6 +49,44 @@ public class HttpParams implements Serializable
 			if (param == null) continue;
 						
 			addParam(param[0], param[1]);
+		}
+	}
+
+	/**
+	 * Creates a HttpParams instance from a url
+	 * @param url The url with the request params
+	 * @return Null if no request params were set
+	 */
+	public static HttpParams parseUrl(String url)
+	{
+		if (url.indexOf('?') > -1)
+		{
+			String[] parts = url.split("[?]");
+			String[] params = parts[1].split("[=]");
+			
+			HttpParams retParams = new HttpParams();
+			
+			for (int index = 0; index < params.length; index += 2)
+			{
+				retParams.addParam(params[index], params[index + 1]);
+			}
+			
+			return retParams;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Encodes the values to the URL standard 
+	 */
+	public void URLEncode()
+	{
+		int size = queryString.size();
+		for (int index = 0; index < size; index++)
+		{
+			String[] parts = queryString.get(index);
+			parts[1] = URLEncoder.encode(parts[1] == null ? "" : parts[1]);
 		}
 	}
 	
