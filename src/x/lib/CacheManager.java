@@ -160,7 +160,7 @@ public class CacheManager implements Serializable
 						
 		return totalSize;
 	}
-	
+
 	/**
 	 * Checks if a file exists within the cache
 	 * @param fileName The file to check
@@ -168,9 +168,30 @@ public class CacheManager implements Serializable
 	 */
 	public boolean fileExists(String fileName)
 	{
+		return fileExists(null, fileName);
+	}
+	
+	/**
+	 * Checks if a file exists within the cache
+	 * @param folderName The folder path to check
+	 * @param fileName The file to check	
+	 * @return True if the file exists, false if not
+	 */
+	public boolean fileExists(String folderName, String fileName)
+	{
 		try
 		{
-			File f = new File(mCachePath, "cache_" + fileName);			
+			if (folderName == null || folderName.length() < 1)
+			{
+				folderName = "";
+			}
+			else
+			{
+				folderName = "/" + folderName;
+				folderName += "/";
+			}
+			
+			File f = new File(mCachePath + folderName, "cache_" + fileName);			
 			
 			return f.exists();
 		}
