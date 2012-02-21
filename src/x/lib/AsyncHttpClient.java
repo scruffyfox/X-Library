@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,7 +199,7 @@ public class AsyncHttpClient
 	public void request(RequestMode requestMode, String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
 	{		
 		mAsyncHttpResponse = response;
-		
+				
 		switch (requestMode)
 		{
 			case POST:
@@ -245,14 +246,14 @@ public class AsyncHttpClient
 	 */
 	public void get(String endpoint, String requestParameters, AsyncHttpResponse response)
 	{		
-		String urlStr = endpoint;
-		if (requestParameters != null && requestParameters.length() > 0)
+		HttpParams params = HttpParams.parseUrl(endpoint);
+
+		if (endpoint.indexOf("?") > -1)
 		{
-			urlStr += urlStr.charAt(urlStr.length() - 1) == '?' ? "" : "?";
-			urlStr += requestParameters;
+			endpoint = endpoint.substring(0, endpoint.indexOf("?"));
 		}
 		
-		get(urlStr, null, null, response);	
+		get(endpoint, params, null, response);	
 	}
 	
 	/**
@@ -262,7 +263,14 @@ public class AsyncHttpClient
 	 */
 	public void get(String endpoint, AsyncHttpResponse response)
 	{
-		get(endpoint, null, null, response);	
+		HttpParams params = HttpParams.parseUrl(endpoint);
+
+		if (endpoint.indexOf("?") > -1)
+		{
+			endpoint = endpoint.substring(0, endpoint.indexOf("?"));
+		}
+		
+		get(endpoint, params, null, response);	
 	}
 	
 	/**
@@ -290,6 +298,7 @@ public class AsyncHttpClient
 		
 		if (requestParameters != null)
 		{
+			requestParameters.URLEncode();
 			urlStr += requestParameters.toString();
 		}
 		
@@ -421,6 +430,7 @@ public class AsyncHttpClient
 		
 		if (requestParameters != null)
 		{
+			requestParameters.URLEncode();
 			urlStr += requestParameters.toString();
 		}
 		
@@ -465,6 +475,7 @@ public class AsyncHttpClient
 		
 		if (requestParameters != null)
 		{
+			requestParameters.URLEncode();
 			url += requestParameters.toString();
 		}
 			
@@ -509,6 +520,7 @@ public class AsyncHttpClient
 		
 		if (requestParameters != null)
 		{
+			requestParameters.URLEncode();
 			url += requestParameters.toString();
 		}
 			
@@ -527,7 +539,7 @@ public class AsyncHttpClient
 		private final int GET_IMAGE = 0x11;		
 		private final int POST = 0x02;
 		private final int PUT = 0x03;
-		private final int DELETE = 0x04;
+		private final int DELETE = 0x04; 
 		
 		private static final int MAXIMUM_POOL_SIZE = 1024;
 		
@@ -693,7 +705,7 @@ public class AsyncHttpClient
 		
 		@Override protected Object doInBackground(String... url)
 		{				
-			mLoadTime = System.currentTimeMillis();
+			mLoadTime = System.currentTimeMillis();					
 			
 			mConnectionInfo.connectionHeaders = mHttpParams;
 			mConnectionInfo.connectionResponseTime = mLoadTime;
