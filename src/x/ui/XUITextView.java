@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 import x.lib.Debug;
 import x.type.TextStyle;
+import x.util.StringUtils;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -34,6 +35,13 @@ import android.widget.TextView;
  */
 public class XUITextView extends TextView
 {
+	public static final int TEXT_TRANSFORM_NORMAL = 0x0;
+	public static final int TEXT_TRANSFORM_UPPERCASE = 0x01;
+	public static final int TEXT_TRANSFORM_LOWERCASE = 0x10;
+	public static final int TEXT_TRANSFORM_CAPITALIZE = 0x100;
+	public static final int TEXT_TRANSFORM_CAMEL_CASE = 0x1000;
+	
+	private int mTextTransform = TEXT_TRANSFORM_NORMAL;
 	private String mFontResource;
 	private Context mContext;
 	
@@ -60,6 +68,7 @@ public class XUITextView extends TextView
 		
 		TypedArray attrs = context.obtainStyledAttributes(attributes, R.styleable.XUITextView);	
 		mFontResource = attrs.getString(R.styleable.XUITextView_font);
+		mTextTransform = attrs.getInteger(R.styleable.XUITextView_text_transform, TEXT_TRANSFORM_NORMAL);
 		
 		attrs.recycle();
 		
@@ -72,12 +81,81 @@ public class XUITextView extends TextView
 	 */
 	private void init()
 	{
+		updateText();
+		
 		if (mFontResource != null)
 		{
 			setFont(mFontResource);
+		}				
+	}	
+	
+	/**
+	 * Updates the text in the view
+	 */
+	private void updateText()
+	{
+		if (mTextTransform == TEXT_TRANSFORM_UPPERCASE)
+		{
+			char[] characters = getText().toString().toCharArray();
+			for (int index = 0; index < characters.length; index++)
+			{
+				if ((int)characters[index] < 123 && (int)characters[index] > 96)
+				{
+					characters[index] = (char)((int)characters[index] - 32);
+				}
+			}
+			
+			setText(characters);
+		}
+		else if (mTextTransform == TEXT_TRANSFORM_LOWERCASE)
+		{
+			char[] characters = getText().toString().toCharArray();
+			for (int index = 0; index < characters.length; index++)
+			{
+				if ((int)characters[index] < 91 && (int)characters[index] > 64)
+				{
+					characters[index] = (char)((int)characters[index] + 32);
+				}
+			}
+			
+			setText(characters);
+		}
+		else if (mTextTransform == TEXT_TRANSFORM_CAPITALIZE)
+		{
+			setText(StringUtils.capitalize(getText().toString()));
 		}
 	}
+	
+	/**
+	 * Sets the text transformation in the view
+	 * @param transform The transformation
+	 */
+	public void setTextTransform(int transform)
+	{
+		mTextTransform = transform;
+		updateText();
+	}
+	
+	/**
+	 * Gets the text transformation
+	 * @return The text transformation
+	 */
+	public int getTextTransform()
+	{
+		return mTextTransform;
+	}
 
+	/**
+	 * Sets the text of the view using a character arra
+	 * @param charArray The array to use
+	 */
+	public void setText(char[] charArray)
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(charArray);
+		setText((CharSequence)builder.toString());
+	}
+	
 	/**
 	 * Sets the text style. Using {@link TextStyle} for the attributes.
 	 * @param style The new text style 
