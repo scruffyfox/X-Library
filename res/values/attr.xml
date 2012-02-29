@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>	
+	<declare-styleable name="XUISwitchView">
+		<attr name="color" format="color" />
+		<attr name="state" format="enum">
+			<enum name="on" value="0x01"/>
+			<enum name="off" value="0x10"/>
+			<enum name="both" value="0x11"/>			
+		</attr>
+	</declare-styleable>
 	<declare-styleable name="XUITabHost">	
 		<attr name="targetContainer" format="integer"/>		
+	</declare-styleable>
+	<declare-styleable name="XUIScrollView">	
+		<attr name="allowOverScroll" format="boolean"/>		
 	</declare-styleable>
 	<declare-styleable name="XUIMenuButtonGroup">	
 		<attr name="groupName" format="string"/>		
@@ -31,8 +42,18 @@
 	<declare-styleable name="XUITitleButton">
 		<attr name="onClick" format="string" />				
 	</declare-styleable>
+	<declare-styleable name="XUIButtonList">
+		<attr name="onButtonClick" format="string" />				
+	</declare-styleable>
 	<declare-styleable name="XUITextView">
-	    <attr name="font" format="string" />
+	    <attr name="font" format="string" /> 
+	    <attr name="text_transform" format="enum">
+	    	<enum name="normal" value="0x00" />
+	    	<enum name="uppercase" value="0x01" />
+	    	<enum name="lowercase" value="0x10" />
+	    	<enum name="capitalize" value="0x100" />
+	    	<enum name="camel_case" value="0x1000" />
+	    </attr>
 	</declare-styleable>
 	<declare-styleable name="XUILinearLayout">
 	    <attr name="childSpacing" format="dimension" />
