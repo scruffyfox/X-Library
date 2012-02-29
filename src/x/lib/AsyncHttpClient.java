@@ -78,6 +78,12 @@ import android.util.Log;
  */
 public class AsyncHttpClient
 {	
+	private String mUrl;
+	private HttpParams mHeaders, mRequestParams;
+	private Object mPost;
+	private RequestMode mRequestMode;
+	private AsyncHttpResponse mResponse;
+	
 	/**
 	 * @brief The request mode enumerator for making AsyncHttp requests	 
 	 */
@@ -113,17 +119,149 @@ public class AsyncHttpClient
 	 * Cancels the request
 	 */ 
 	public void cancel() 
-	{
+	{ 
 		mHttpLoader.cancel(true); 
 	}
 	
-	/** 
-	 * Sets the bytes written listener
-	 * @param mOnBytesWrittenListener Thew new listener
+	/**
+	 * Creates a AsyncHttpClient for later use
+	 * @param requestMode The request mode
+	 * @param urlStr The URL
+	 * @return The newly created async client
 	 */
-	public void setOnBytesWrittenListener(OnBytesWrittenListener mOnBytesWrittenListener)
-	{		
-		mHttpLoader.setOnBytesWrittenListener(mOnBytesWrittenListener);		
+	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.mUrl = urlStr;
+		client.mRequestMode = requestMode;
+
+		return client;
+	}
+	
+	/**
+	 * Creates a AsyncHttpClient for later use
+	 * @param requestMode The request mode
+	 * @param urlStr The URL
+	 * @param response The response for the request
+	 * @return The newly created async client
+	 */
+	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, AsyncHttpResponse response)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.mUrl = urlStr;
+		client.mRequestMode = requestMode;
+		client.mResponse = response;
+		
+		return client;
+	}
+	
+	/**
+	 * Creates a AsyncHttpClient for later use
+	 * @param requestMode The request mode
+	 * @param urlStr The URL
+	 * @param postData The post data	 
+	 * @return The newly created async client
+	 */
+	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, Object postData)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.mUrl = urlStr;
+		client.mPost = postData;
+		client.mRequestMode = requestMode;
+		
+		return client;
+	}
+	
+	/**
+	 * Creates a AsyncHttpClient for later use
+	 * @param requestMode The request mode
+	 * @param urlStr The URL
+	 * @param requestParameters The request params for the url	
+	 * @param postData The post data
+	 * @return The newly created async client
+	 */
+	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, HttpParams requestParameters, Object postData)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.mUrl = urlStr;
+		client.mPost = postData;
+		client.mRequestMode = requestMode;
+		
+		return client;
+	}
+	
+	/**
+	 * Creates a AsyncHttpClient for later use
+	 * @param requestMode The request mode
+	 * @param urlStr The URL
+	 * @param requestParameters The request params for the url
+	 * @param postData The post data
+	 * @param httpHeaders The HTTP Headers to send to the server
+	 * @return The newly created async client
+	 */
+	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, HttpParams requestParameters, Object postData, HttpParams httpHeaders)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.mUrl = urlStr;
+		client.mHeaders = httpHeaders;
+		client.mPost = postData;
+		client.mRequestMode = requestMode;
+		
+		return client;
+	}
+	
+	/**
+	 * Creates a AsyncHttpClient for later use
+	 * @param requestMode The request mode
+	 * @param urlStr The URL
+	 * @param requestParameters The request params for the url
+	 * @param postData The post data
+	 * @param httpHeaders The HTTP Headers to send to the server
+	 * @param response The response
+	 * @return The newly created async client
+	 */
+	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, HttpParams requestParameters, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
+	{
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.mUrl = urlStr;
+		client.mHeaders = httpHeaders;
+		client.mPost = postData;
+		client.mRequestMode = requestMode;
+		client.mResponse = response;
+		
+		return client;
+	}
+	
+	/**
+	 * Executes a pre-created request built by {@link AsyncHttpClient.createClient}
+	 */
+	public void execute()
+	{			
+		if (mUrl != null)
+		{
+			request(mRequestMode, mUrl, mPost, mRequestParams, mHeaders, mResponse);
+		}
+	}
+	
+	/**
+	 * Executes a pre-created request built by {@link AsyncHttpClient.createClient}
+	 */
+	protected void execute(AsyncHttpResponse response)
+	{
+		if (mUrl != null)
+		{
+			request(mRequestMode, mUrl, mPost, mRequestParams, mHeaders, response);
+		}
+	}
+	
+	/**
+	 * Initiates a request with a server
+	 * @param requestMode The request mode for the connection
+	 * @param urlStr The URLs to the server
+	 */	
+	public void request(RequestMode requestMode, String urlStr)
+	{
+		request(requestMode, urlStr, null, null);
 	}
 	
 	/**
@@ -551,7 +689,6 @@ public class AsyncHttpClient
 		private int mTimeout = 10000;
 		private Object mSendData;
 		private HttpParams mHttpParams;
-		private OnBytesWrittenListener mOnBytesWrittenListener;		
 		
 		/**
 		 * Default Constructor
@@ -568,16 +705,7 @@ public class AsyncHttpClient
 		{
 			this.mTimeout = timeout;
 		}
-		
-		/**
-		 * Sets the bytes written listener
-		 * @param mOnBytesWrittenListener The new listener
-		 */
-		public void setOnBytesWrittenListener(OnBytesWrittenListener mOnBytesWrittenListener)
-		{
-			this.mOnBytesWrittenListener = mOnBytesWrittenListener;
-		}
-		
+
 		/**
 		 * Initiates a download request on the urlStr
 		 * @param urlStr The URL for the request
@@ -1017,21 +1145,7 @@ public class AsyncHttpClient
 			}
 		}				
 	}
-	
-	/**
-	 * @brief Listener for when bytes are written to the server
-	 */
-	public interface OnBytesWrittenListener
-	{
-		/**
-		 * Called when the 
-		 * @param index
-		 * @param count 
-		 * @param total
-		 */
-		public void onBytesWritten(int index, int count, int total);
-	}
-	
+
 	private class PatchInputStream extends FilterInputStream
 	{
 		public PatchInputStream(InputStream in)
