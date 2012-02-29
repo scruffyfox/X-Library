@@ -422,19 +422,7 @@ public class XUIActionView extends ViewFlipper
 			}
 		}
 	};
-	
-	/**
-	 * @brief Interface for when the view is clicked	 
-	 */
-	public interface OnClickListener
-	{
-		/**
-		 * Called when the view is clicked
-		 * @param v The view that has been clicked
-		 */
-		void onClick(View v);		
-	}
-	
+
 	/**
 	 * @brief Interface for when the view changes 
 	 */
