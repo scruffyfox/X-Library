@@ -14,7 +14,10 @@ public abstract class AsyncHttpResponse
 	/**
 	 * Default constructor
 	 */
-	public AsyncHttpResponse(){}
+	public AsyncHttpResponse()
+	{
+		mExtras = new Bundle();
+	}
 	
 	/**
 	 * Default constructor
@@ -76,7 +79,7 @@ public abstract class AsyncHttpResponse
 	 */
 	public void onSuccess(Object[] response){}
 	
-	/*
+	/**
 	 * The function that gets called when the response from the server fails
 	 */
 	public void onFailure(){}
