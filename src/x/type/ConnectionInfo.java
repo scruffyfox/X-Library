@@ -12,7 +12,7 @@ public class ConnectionInfo
 {
 	public String connectionUrl = "";
 	public HttpParams connectionHeaders = null;
-	public String connectionSentData = null;
+	public Object connectionSentData = null;
 	public long connectionInitiationTime = 0;
 	public long connectionResponseTime = 0;
 	public int connectionResponseCode = 0;
