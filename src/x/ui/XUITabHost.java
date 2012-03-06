@@ -261,7 +261,10 @@ public class XUITabHost extends RelativeLayout
 	{
 		super.onLayout(changed, l, t, r, b);
 		
-		updateLayout();
+		//if (changed)
+		{
+			updateLayout();
+		}
 	}		
 	
 	/**
@@ -273,8 +276,8 @@ public class XUITabHost extends RelativeLayout
 		
 		//	Get how much width is left in the container for the tabs
 		int widthLeft = this.getMeasuredWidth();
-		int currentXPos = 0;				
-		
+		int currentXPos = 0;			
+			
 		for (int childCount = 0; childCount < mTotalChildren; childCount++)
 		{			
 			XUITab child = (XUITab)this.getChildAt(childCount);	
@@ -305,18 +308,18 @@ public class XUITabHost extends RelativeLayout
 			
 			//	Center gravity
 			if ((Gravity.CENTER & child.getParams().gravity) == Gravity.CENTER)
-			{					
+			{			
 				if ((Gravity.CENTER_HORIZONTAL & child.getParams().gravity) == Gravity.CENTER_HORIZONTAL)
 				{
-					marginLeft = (tabWidth - mWidth) / 2;
+					marginLeft = (int)(((double)tabWidth - (double)mWidth) / 2.0);
 				}
 				
 				if ((Gravity.CENTER_VERTICAL & child.getParams().gravity) == Gravity.CENTER_VERTICAL)
 				{
-					marginTop = (tabHeight - mHeight) / 2;
-				}				
+					marginTop = (int)(((double)tabHeight - (double)mHeight) / 2.0);
+				}						
 			}	
-			
+			 
 			//	Left gravity
 			if ((Gravity.LEFT & child.getParams().gravity) == Gravity.LEFT)
 			{												
