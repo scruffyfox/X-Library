@@ -4,6 +4,8 @@ import java.util.jar.Attributes;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -73,7 +75,7 @@ public class XUILinearLayout extends LinearLayout
 	{
 		return mSpacing;
 	}
-	
+	 
 	/**
 	 * Is called when the view is being layed out
 	 * @param changed If the view has changed or not
@@ -84,9 +86,7 @@ public class XUILinearLayout extends LinearLayout
 	 */
 	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
 	{	
-		super.onLayout(changed, l, t, r, b);
-		
-		if (changed)
+		if (mSpacing > 0)
 		{
 			int childCount = getChildCount();
 			int orientation = getOrientation();
@@ -100,18 +100,21 @@ public class XUILinearLayout extends LinearLayout
 					//	Margin goes left
 					case LinearLayout.HORIZONTAL:
 					{
-						((LinearLayout.LayoutParams)child.getLayoutParams()).leftMargin += mSpacing;							
+						((LinearLayout.LayoutParams)child.getLayoutParams()).leftMargin = mSpacing;
+						break;
 					}
 					
 					//	Margin goes top
 					case LinearLayout.VERTICAL:
 					{						
-						((LinearLayout.LayoutParams)child.getLayoutParams()).topMargin += mSpacing;
+						((LinearLayout.LayoutParams)child.getLayoutParams()).topMargin = mSpacing;
+						break;
 					}
 				}
 			}
-			
-			requestLayout();
+						
+			requestLayout();			
 		}
+		super.onLayout(changed, l, t, r, b);
 	}
 }
