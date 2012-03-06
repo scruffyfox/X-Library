@@ -21,12 +21,12 @@
     android:gravity="center"
     android:background="#ff0000"
 >
-	    <ProgressBar 
-	        android:id="@+id/pull_to_refresh_progress"
-	        android:indeterminate="true"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"      
-	        android:layout_centerVertical="true"
-	        style="?android:attr/progressBarStyleSmall"
-	    />
+    <ProgressBar 
+        android:id="@+id/pull_to_refresh_progress"
+        android:indeterminate="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"      
+        android:layout_centerVertical="true"
+        style="?android:attr/progressBarStyleSmall"
+    />
 </RelativeLayout> 
