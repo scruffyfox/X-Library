@@ -68,7 +68,7 @@ public class HttpParams implements Serializable
 			
 			for (int index = 0; index < params.length; index += 2)
 			{
-				retParams.addParam(params[index], params[index + 1]);
+				retParams.addParam(params[index], params.length > index ? params[index + 1] : null);
 			}
 			
 			return retParams;
