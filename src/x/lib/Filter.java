@@ -9,6 +9,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 
+/**
+ * !! Still in development !!
+ */
 public class Filter
 {
 	private Bitmap bm;
