@@ -7,6 +7,10 @@ The library has been used on many Android apps including Jackson Stops &amp; Sta
 
 ** Don't forget to watch the project as it's always changing! **
 
+IMPORTANT UPDATE
+================
+The latest commit adds support to Google support libraries for Fragments. You must add this to your main project. The location of the external JAR can be found in X-Library/lib/android-support-v13.jar
+
 NOTE
 ====
 The location of the documentation has changed. See: Documentation.
