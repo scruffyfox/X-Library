@@ -11,6 +11,9 @@ import android.app.LocalActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -181,6 +184,71 @@ public class XUITab extends RelativeLayout
         
         select();
 	}		
+	
+	/**
+	 * Selects the tab
+	 * @param fragmentManager The FragmentManager used for initiating fragment views
+	 * @param targetView The target container
+	 */
+	public Fragment select(FragmentManager fragmentManager, Fragment lastFragment, int targetView)
+	{
+		if (isSelected) return lastFragment;
+		
+		//	Start the new intent
+		if (fragmentManager == null)
+		{
+			Log.e("XUITab", "No fragment manager");
+			select();
+			return null;
+		}
+		
+		if (targetView < 1)
+		{
+			Log.e("XUITab", "No Target view"); 
+			select();
+			return null;
+		}
+		
+		if (this.params.intent == null)
+		{
+			Log.e("XUITab", "No Intent for tab");
+			select();
+			return null;
+		}
+			
+		try
+		{
+			Class<?> fragmentClass = Class.forName(this.params.intent.getComponent().getClassName());
+			
+			if (!(fragmentClass.getSuperclass().equals(Fragment.class)))
+			{
+				throw new IllegalArgumentException("Class does not extend Fragment");
+			}
+			
+			Fragment clazz = Fragment.instantiate(context, fragmentClass.getName());
+			FragmentTransaction ft = fragmentManager.beginTransaction();
+			
+			if (lastFragment != null)
+			{
+				ft.detach(lastFragment);					
+			}		    				
+					    	
+	    	ft.add(targetView, clazz);
+	    	ft.commit(); 
+	    	
+	    	lastFragment = clazz;
+	    	
+	    	fragmentManager.executePendingTransactions();    	        
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+        
+        select();
+
+        return lastFragment;
+	}	
 	
 	/**
 	 * Selects the tab

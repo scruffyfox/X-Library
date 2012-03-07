@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -59,6 +61,11 @@ import android.widget.RelativeLayout;
  *  tabHost.addTab(tab, tabParams);        	   
  *  tabHost.selectTab(0);
  *  @endcode
+ *  
+ *  If you are using fragments instead of Activities, you need to extend FragmentActivity and call setup with getSupportFragmentManager();
+ *  @code
+ *  tabHost.setup(getSupportFragmentManager());
+ *  @endcode
  */
 public class XUITabHost extends RelativeLayout
 {
@@ -66,8 +73,10 @@ public class XUITabHost extends RelativeLayout
 	private int mTotalChildren;
 	private int mTargetView = -1;
 	private LocalActivityManager mActivityManager;
+	private FragmentManager mFragmentManager;
 	private OnTabSelectedListener mOnTabSelected;
 	private Animation mContentAnimation;
+	private Fragment lastFragment = null;
 	
 	/**
 	 * Default constructor
@@ -112,14 +121,33 @@ public class XUITabHost extends RelativeLayout
 	 */
 	public void setup(LocalActivityManager activityManager)
 	{
+		if (mFragmentManager != null)
+		{
+			throw new IllegalArgumentException("Setup has already been called before with FragmentManager");
+		}
+		
 		this.mActivityManager = activityManager;		
+	}
+	
+	/**
+	 * Calls to set up the tab host
+	 * @param fragmentManager The activity manager from FragmentActivity
+	 */
+	public void setup(FragmentManager fragmentManager)
+	{
+		if (mActivityManager != null)
+		{
+			throw new IllegalArgumentException("Setup has already been called before with LocalActivityManager");
+		}
+		
+		this.mFragmentManager = fragmentManager;		
 	}
 	
 	/**
 	 * Selects a tab at a specific index
 	 * @param index The index of the tab
 	 */
-	public void selectTab(final int index)
+	public void selectTab(int index)
 	{ 						
 		XUITab tab = (XUITab)getChildAt(index);
 		tab.setSoundEffectsEnabled(false);
@@ -215,7 +243,7 @@ public class XUITabHost extends RelativeLayout
 	 */
 	private class CustomTabClickListener implements OnClickListener
 	{
-		private int index;
+		private int index;		
 		
 		/**
 		 * Default constructor
@@ -232,7 +260,7 @@ public class XUITabHost extends RelativeLayout
 		 */
 		public void onClick(View view)
 		{				
-			if (((XUITab)view).isSelected()) return;
+			if (((XUITab)view).isSelected()) return; 
 			
 			if (mContentAnimation != null)
 			{
@@ -240,7 +268,15 @@ public class XUITabHost extends RelativeLayout
 			}
 			
 			deselectAll();								
-	        ((XUITab)view).select(mActivityManager, mTargetView);
+	        
+			if (mFragmentManager != null)
+			{
+				lastFragment = ((XUITab)view).select(mFragmentManager, lastFragment, mTargetView);
+			}
+			else
+			{
+				((XUITab)view).select(mActivityManager, mTargetView);
+			}
 	        
 	        if (mOnTabSelected != null)
 			{
