@@ -28,6 +28,34 @@ public class ItemList<E> extends ArrayList
 	{
 		add(object);
 	}
+	
+	/**
+	 * Interface for use with {@link map}
+	 * @param <E> The type of the ItemList
+	 */
+	public interface MapInterface<E>
+	{
+		/**
+		 * Called on each iteration in the current list
+		 * @param item The item in the list
+		 * @param index The index of the item
+		 * @return The item that has been changed. This will replace the original value
+		 */
+		public E apply(E item, int index);
+	}
+	
+	/**
+	 * Loops through the current list and calls the {@link MapInterface.apply} method on each item
+	 * @param itemInterface The map interface to use
+	 */
+	public void map(MapInterface itemInterface)
+	{
+		int count = size();
+		for (int index = 0; index < count; index++)
+		{
+			set(index, itemInterface.apply(get(index), index));
+		}
+	}
 		
 	/**
 	 * Method to add items to the list
