@@ -186,7 +186,7 @@ public class XUITab extends RelativeLayout
 	}		
 	
 	/**
-	 * Selects the tab
+	 * Selects the tab using the fragment manager
 	 * @param fragmentManager The FragmentManager used for initiating fragment views
 	 * @param targetView The target container
 	 */
@@ -218,13 +218,7 @@ public class XUITab extends RelativeLayout
 			
 		try
 		{
-			Class<?> fragmentClass = Class.forName(this.params.intent.getComponent().getClassName());
-			
-			if (!(fragmentClass.getSuperclass().equals(Fragment.class)))
-			{
-				throw new IllegalArgumentException("Class does not extend Fragment");
-			}
-			
+			Class<?> fragmentClass = Class.forName(this.params.intent.getComponent().getClassName());			
 			Fragment clazz = Fragment.instantiate(context, fragmentClass.getName());
 			FragmentTransaction ft = fragmentManager.beginTransaction();
 			
