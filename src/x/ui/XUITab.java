@@ -5,6 +5,7 @@
 **/
 package x.ui;
 
+import x.lib.Debug;
 import x.ui.R;
 import android.app.Activity;
 import android.app.LocalActivityManager;
@@ -192,6 +193,8 @@ public class XUITab extends RelativeLayout
 	 */
 	public Fragment select(FragmentManager fragmentManager, Fragment lastFragment, int targetView)
 	{
+		Fragment retLastFragment = null;
+		
 		if (isSelected) return lastFragment;
 		
 		//	Start the new intent
@@ -199,40 +202,45 @@ public class XUITab extends RelativeLayout
 		{
 			Log.e("XUITab", "No fragment manager");
 			select();
-			return null;
+			return lastFragment;
 		}
 		
 		if (targetView < 1)
 		{
 			Log.e("XUITab", "No Target view"); 
 			select();
-			return null;
+			return lastFragment;
 		}
 		
 		if (this.params.intent == null)
 		{
 			Log.e("XUITab", "No Intent for tab");
 			select();
-			return null;
+			return lastFragment;
 		}
 			
 		try
-		{
+		{						
 			Class<?> fragmentClass = Class.forName(this.params.intent.getComponent().getClassName());			
 			Fragment clazz = Fragment.instantiate(context, fragmentClass.getName());
 			FragmentTransaction ft = fragmentManager.beginTransaction();
 			
-			if (lastFragment != null)
-			{
-				ft.detach(lastFragment);					
-			}		    				
+//			if (lastFragment != null)
+//			{
+//				ft.detach(lastFragment);	
+//				((ViewGroup)((Activity)context).findViewById(targetView)).removeAllViewsInLayout();
+//			}		    				
 					    	
-	    	ft.add(targetView, clazz);
-	    	ft.commit(); 
+	    	ft.replace(targetView, clazz);
+	    	ft.commit(); 	    		    	
 	    	
-	    	lastFragment = clazz;
+	    	retLastFragment = clazz;
 	    	
-	    	fragmentManager.executePendingTransactions();    	        
+	    	fragmentManager.executePendingTransactions();
+	    	
+	    	((ViewGroup)((Activity)context).findViewById(targetView)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+	    	((ViewGroup)((Activity)context).findViewById(targetView)).requestFocus();
+	    	Debug.out("CHILD COUNT: " + ((ViewGroup)((Activity)context).findViewById(targetView)).getChildCount());
 		}
 		catch (Exception e)
 		{
@@ -241,7 +249,7 @@ public class XUITab extends RelativeLayout
         
         select();
 
-        return lastFragment;
+        return retLastFragment;
 	}	
 	
 	/**
