@@ -56,6 +56,10 @@ public class AsyncHttpQueuer
 	 * The key for the position of the request passed in the bundle of the AsyncHttpResponse
 	 */
 	public static final String BUNDLE_POSITION = "position";
+	/**
+	 * The key for if the request is the last request being sent
+	 */
+	public static final String IS_LAST = "is_last";
 	
 	private Queue<AsyncHttpClient> requestQueue = new LinkedList<AsyncHttpClient>();
 	private AsyncHttpResponse mResponse;
@@ -64,7 +68,7 @@ public class AsyncHttpQueuer
 	private int totalPos = 0;
 	
 	private Handler processer = new Handler()
-	{
+	{ 
 		public void handleMessage(android.os.Message msg) 
 		{		
 			if (msg.what == 1)
@@ -72,7 +76,8 @@ public class AsyncHttpQueuer
 				return;
 			}
 			
-			while (currentQueuePos < mMaxProcess)
+			int count = mMaxProcess > requestQueue.size() ? requestQueue.size() : mMaxProcess;					
+			while (currentQueuePos < count)
 			{
 				executeRequest(requestQueue.poll());
 			}
@@ -84,7 +89,10 @@ public class AsyncHttpQueuer
 	 */
 	public void start()
 	{
-		processer.sendEmptyMessage(0);
+		if (requestQueue.size() > 0)
+		{		
+			processer.sendEmptyMessage(0);
+		}
 	} 
 	
 	/**
@@ -95,77 +103,111 @@ public class AsyncHttpQueuer
 	{
 		if (client == null) return;			
 		 
-		currentQueuePos++;	
+		currentQueuePos++;	 
 		totalPos++;
 						
 		Bundle b = new Bundle();
 		b.putInt(BUNDLE_POSITION, totalPos - 1);
-		client.execute(new AsyncHttpResponse(b)
+		
 		{
-			@Override public void beforeFinish()
+			final AsyncHttpResponse originalResponse = client.getResponse();			
+						
+			client.execute(new AsyncHttpResponse(b)
 			{
-				if (mResponse != null)
+				@Override public void beforeFinish()
 				{
-					mResponse.beforeFinish();
-				}
-			}
-			
-			@Override public void onFailure(Object response)
-			{
-				if (mResponse != null)
-				{
-					mResponse.onFailure(response);
-				}
-			}
-			
-			@Override public void onFailure(int responseCode, String responseMessage)
-			{
-				super.onFailure(responseCode, responseMessage);
-				
-				if (mResponse != null)
-				{
-					mResponse.onFailure(responseCode, responseMessage);
-				}
-			}
-			
-			@Override public void onFinish()
-			{
-				currentQueuePos--;
-								
-				if (requestQueue.size() < 1)
-				{
-					processer.sendEmptyMessage(1);	
-				}
-				else
-				{
-					processer.sendEmptyMessage(0);
-				}
-
-				if (mResponse != null)
-				{
-					mResponse.onFinish();
+					currentQueuePos--;
+					
+					if (originalResponse != null)
+					{
+						originalResponse.getExtras().putBoolean(IS_LAST, currentQueuePos <= 0);
+						originalResponse.beforeFinish();
+					}
+					
+					if (mResponse != null)
+					{
+						mResponse.getExtras().putBoolean(IS_LAST, currentQueuePos <= 0);
+						mResponse.beforeFinish();
+					}
 				}
 				
-				super.onFinish();
-			}
-			 
-			@Override public void onSend()
-			{
-				if (mResponse != null)
+				@Override public void onFailure(Object response)
 				{
-					mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
-					mResponse.onSend();
-				}					
-			}
-			
-			@Override public void onSuccess(Object response)
-			{				
-				if (mResponse != null)
-				{										
-					mResponse.onSuccess(response);
+					if (originalResponse != null)
+					{
+						originalResponse.onFailure(response);
+					}
+					
+					if (mResponse != null)
+					{
+						mResponse.onFailure(response);
+					}				
 				}
-			}
-		});		
+				
+				@Override public void onFailure(int responseCode, String responseMessage)
+				{
+					if (originalResponse != null)
+					{
+						originalResponse.onFailure(responseCode, responseMessage);
+					}
+					
+					if (mResponse != null)
+					{
+						mResponse.onFailure(responseCode, responseMessage);
+					}
+				}
+				
+				@Override public void onFinish()
+				{					
+					if (requestQueue.size() < 1)
+					{
+						processer.sendEmptyMessage(1);	
+					}
+					else
+					{
+						processer.sendEmptyMessage(0);
+					}
+	
+					if (originalResponse != null)
+					{
+						originalResponse.onFinish();
+					}
+					
+					if (mResponse != null)
+					{
+						mResponse.onFinish();
+					}
+				}
+				 
+				@Override public void onSend()
+				{
+					if (originalResponse != null)
+					{
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));						
+						originalResponse.onSend();
+					}
+					
+					if (mResponse != null)
+					{
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));						
+						mResponse.onSend();
+					}					
+				}
+				
+				@Override public void onSuccess(Object response)
+				{				
+					if (originalResponse != null)
+					{
+						originalResponse.onSuccess(response);
+					}
+					
+					if (mResponse != null)
+					{										
+						mResponse.onSuccess(response);
+					}
+				}
+			});		
+		}
 	}
 	
 	/**
