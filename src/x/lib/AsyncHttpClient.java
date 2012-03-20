@@ -92,7 +92,8 @@ public class AsyncHttpClient
 		POST,
 		GET,
 		PUT,
-		DELETE
+		DELETE,
+		DOWNLOAD
 	}
 	
 	private HttpLoader mHttpLoader; 
@@ -381,6 +382,12 @@ public class AsyncHttpClient
 				delete(urlStr, requestParameters, httpHeaders, response);
 				break;
 			}
+			
+			case DOWNLOAD:
+			{
+				download(urlStr, requestParameters, httpHeaders, response);
+				break;
+			}
 		}	
 	}
 	
@@ -391,7 +398,38 @@ public class AsyncHttpClient
 	 */
 	public void download(String url, AsyncHttpResponse response)
 	{
-		mHttpLoader.download(url, response);
+		download(url, null, null, response);
+	}
+	
+	/**
+	 * Downloads a file from a url as an instance of a byte array
+	 * @param url The url to download
+	 * @param requestParameters The request parameters
+	 * @param response The response
+	 */
+	public void download(String url, HttpParams requestParameters, AsyncHttpResponse response)
+	{
+		download(url, requestParameters, null, response);
+	}
+	
+	/**
+	 * Downloads a file from a url as an instance of a byte array
+	 * @param url The url to download
+	 * @param requestParameters The request parameters
+	 * @param params The header parameters
+	 * @param response The response
+	 */
+	public void download(String url, HttpParams requestParameters, HttpParams params, AsyncHttpResponse response)
+	{
+		String urlStr = url;
+		
+		if (requestParameters != null)
+		{
+			requestParameters.URLEncode();
+			urlStr += requestParameters.toString();
+		}
+		
+		mHttpLoader.download(urlStr, params, response);
 	}
 	
 	/**
@@ -729,9 +767,10 @@ public class AsyncHttpClient
 		 * @param urlStr The URL for the request
 		 * @param responseHandler The response handler
 		 */
-		public void download(String urlStr, AsyncHttpResponse responseHandler)
+		public void download(String urlStr, HttpParams headers, AsyncHttpResponse responseHandler)
 		{
 			this.mAsyncHttpResponse = responseHandler;
+			this.mHttpParams = headers;
 			type = DOWNLOAD;
 			
 			this.execute(urlStr);
@@ -836,8 +875,13 @@ public class AsyncHttpClient
 		
 		@Override protected void onPreExecute()
 		{
+			mConnectionInfo.connectionHeaders = mHttpParams;
+			mConnectionInfo.connectionResponseTime = mLoadTime;
+			mConnectionInfo.connectionUrl = mUrl;
+			
 			if (mAsyncHttpResponse != null)
-			{
+			{				
+				mAsyncHttpResponse.setConnectionInfo(mConnectionInfo);				
 				mAsyncHttpResponse.onSend();
 			}
 					
@@ -851,15 +895,7 @@ public class AsyncHttpClient
 		
 		@Override protected Object doInBackground(String... url)
 		{				
-			mLoadTime = System.currentTimeMillis();					
-			
-			mConnectionInfo.connectionHeaders = mHttpParams;
-			mConnectionInfo.connectionResponseTime = mLoadTime;
-			mConnectionInfo.connectionUrl = url[0];
-			if (mAsyncHttpResponse != null)
-			{	
-				mAsyncHttpResponse.setConnectionInfo(mConnectionInfo);
-			}
+			mLoadTime = System.currentTimeMillis();											
 			
 			switch (type)
 			{
@@ -883,6 +919,15 @@ public class AsyncHttpClient
 					    					  
 					    // Get the response
 					    PatchInputStream i = new PatchInputStream(conn.getInputStream());
+					    if ((mConnectionInfo.connectionResponseCode / 100) != 2)
+					    {
+					    	i = new PatchInputStream(conn.getErrorStream());
+					    }
+					    else
+					    {
+					    	i = new PatchInputStream(conn.getInputStream());
+					    }
+					    
 					    InputStream is = new BufferedInputStream(i);
 					   
 					    ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
@@ -893,7 +938,7 @@ public class AsyncHttpClient
 						while ((len = is.read(buffer)) != -1)
 						{									
 							byteBuffer.write(buffer, 0, len);
-						}
+						}											
 						
 						is.close();
 						i.close();
