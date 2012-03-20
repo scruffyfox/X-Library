@@ -61,16 +61,21 @@ public class HttpParams implements Serializable
 	{
 		if (url.indexOf('?') > -1)
 		{
-			String[] parts = url.split("[?]");
-			String[] params = parts[1].split("[=]");
-			
 			HttpParams retParams = new HttpParams();
 			
-			for (int index = 0; index < params.length; index += 2)
-			{
-				retParams.addParam(params[index], params.length > index ? params[index + 1] : null);
-			}
+			String[] parts = url.split("[?]");
+			String[] variables = parts[1].split("[&]");			
 			
+			for (int varIndex = 0; varIndex < variables.length; varIndex++)
+			{
+				String[] params = variables[varIndex].split("[=]");								
+				
+				for (int index = 0; index < params.length; index += 2)
+				{
+					retParams.addParam(params[index], params.length > index ? params[index + 1] : null);
+				}
+			}
+						
 			return retParams;
 		}
 		
