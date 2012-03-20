@@ -9,7 +9,7 @@ import android.os.Bundle;
 public abstract class AsyncHttpResponse
 {
 	private Bundle mExtras = null;
-	private ConnectionInfo mConnectionInfo = null;
+	private ConnectionInfo mConnectionInfo = new ConnectionInfo();
 	
 	/**
 	 * Default constructor
@@ -98,7 +98,7 @@ public abstract class AsyncHttpResponse
 	public void onFailure(int responseCode, String responseMessage){}
 	
 	/**
-	 * The function that gets called before the async task ends
+	 * The function that gets called before the async task ends. Called before onSuccess/onFailure.
 	 */
 	public void beforeFinish(){}
 	
