@@ -233,6 +233,24 @@ public class AsyncHttpClient
 	}
 	
 	/**
+	 * Sets the response of a client
+	 * @param response The response to set
+	 */
+	public void setResponse(AsyncHttpResponse response)
+	{
+		mResponse = response;
+	}
+	
+	/**
+	 * Gets the response for the client
+	 * @return The response for the client
+	 */
+	public AsyncHttpResponse getResponse()
+	{
+		return mResponse;
+	}
+	
+	/**
 	 * Executes a pre-created request built by {@link AsyncHttpClient.createClient}
 	 */
 	public void execute()
