@@ -8,8 +8,10 @@ import x.lib.AsyncHttpResponse;
 import x.lib.Debug;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -24,6 +26,7 @@ import android.widget.ImageView;
 public class XUIImageView extends ImageView
 {
 	private Context mContext;
+	private float mOpacity;
 	
 	/**
 	 * Default constructor
@@ -43,7 +46,31 @@ public class XUIImageView extends ImageView
 	public XUIImageView(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
+		
+		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUIImageView);
+		mOpacity = attributes.getFloat(R.styleable.XUIImageView_opacity, 1.0f);				
+		attributes.recycle();
+		
 		mContext = context;
+	}
+	
+	/**
+	 * Sets the opacity of the image view
+	 * @param opacity The opacity 0-1.0
+	 */
+	public void setOpacity(float opacity)
+	{
+		mOpacity = opacity;
+		getBackground().setAlpha((int)(mOpacity * 255));
+	}
+	
+	/**
+	 * Gets the opacity of the image view
+	 * @return The opacity 0-1.0
+	 */
+	public float getOpacity()
+	{
+		return mOpacity;
 	}
 	
 	/**
@@ -111,5 +138,17 @@ public class XUIImageView extends ImageView
 				Debug.out(responseCode + " " + responseMessage);
 			}
 		});
+	}
+	
+	@Override protected void onDraw(Canvas canvas)
+	{	
+		super.onDraw(canvas);
+		
+		setAlpha((int)(mOpacity * 255));
+	}
+	
+	@Override protected void onFinishInflate()
+	{	
+		super.onFinishInflate();				
 	}
 }

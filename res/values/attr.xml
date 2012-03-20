@@ -16,6 +16,9 @@
 	</declare-styleable>
 	<declare-styleable name="XUIMenuButtonGroup">	
 		<attr name="groupName" format="string"/>		
+	</declare-styleable> 
+	<declare-styleable name="XUIImageView">
+	    <attr name="opacity" format="float"/>
 	</declare-styleable>
 	<declare-styleable name="XUIHorizontalScrollView">	
 		<attr name="fillWidth" format="boolean" />
