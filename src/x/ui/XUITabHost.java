@@ -118,8 +118,9 @@ public class XUITabHost extends RelativeLayout
 	/**
 	 * Calls to set up the tab host
 	 * @param activityManager The activity manager from XUITabActivity
+	 * @deprecated Tabbing with Activities is depreicated, use Fragments {@link Fragment}
 	 */
-	public void setup(LocalActivityManager activityManager)
+	@Deprecated public void setup(LocalActivityManager activityManager)
 	{
 		if (mFragmentManager != null)
 		{
