@@ -628,7 +628,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		{				
 			mCanScroll = true;
 			if (e1 == null || e2 == null) return false;
-			if (mScrollMode == SMOOTH) return true;
+			if (mScrollMode == SMOOTH || mChildCount == 0) return true;
 			if (mScrollingVertically) return false;
 			
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
