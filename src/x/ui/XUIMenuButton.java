@@ -2,7 +2,7 @@
  * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
  * 
  * @author Callum Taylor
-**/
+ **/
 package x.ui;
 
 import java.lang.reflect.Method;
@@ -46,7 +46,7 @@ import android.widget.TextView;
  * Example XML Code (Note to make a button clickable, you must declare it clickable by using android:clickable="true") 
  * This example uses the 4th combination of [text view, view]
  * @code
- * <x.ui.XUIMenuButton
+ *	<x.ui.XUIMenuButton
  *		android:layout_width="fill_parent" 
  *		android:layout_height="wrap_content"
  *		android:id="@+id/town"
@@ -64,7 +64,7 @@ import android.widget.TextView;
  *			android:text=""
  *			android:textSize="16dp"
  *		/>
- * </x.ui.XUIMenuButton>
+ *	</x.ui.XUIMenuButton>
  * @endcode
  * 
  * When using clickable, its important to use colour lists for when the button is pressed for accessibility. Changing the colour to a brighter colour (if the press state is dark) or
@@ -91,7 +91,7 @@ public class XUIMenuButton extends LinearLayout
 	private TextView mLabel;
 	private View mContentView;
 	private boolean mSetOnClickListener;
-	
+
 	/**
 	 * Default Constructor
 	 * @param context
@@ -99,16 +99,16 @@ public class XUIMenuButton extends LinearLayout
 	public XUIMenuButton(Context context)
 	{
 		super(context);		
-		
+
 		this.mContext = context;
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
 		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this);
 		mLayout = (ViewGroup)mLayoutView;
-		
+
 		init();
 	}
-	
+
 	/** 
 	 * Default Constructor
 	 * @param context 
@@ -117,14 +117,14 @@ public class XUIMenuButton extends LinearLayout
 	public XUIMenuButton(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-				
+
 		this.mContext = context; 
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
-			 
+
 		init();
 	}	 
-		
+
 	/**
 	 * Override of the padding method
 	 * @param l Left padding
@@ -136,7 +136,7 @@ public class XUIMenuButton extends LinearLayout
 	{
 		mLayout.getChildAt(0).setPadding(l, t, r, b);
 	}
-	
+
 	private void init()
 	{		
 		//	Only set the onlick listener if it hasn't already		
@@ -149,14 +149,14 @@ public class XUIMenuButton extends LinearLayout
 					View input = ((LinearLayout)mLayout.findViewById(R.id.input_container)).getChildAt(0);
 					input.requestFocus();
 					input.requestFocusFromTouch(); 
-					
+
 					if (input instanceof EditText)
 					{
 						EditText t = ((EditText)input);
 						t.requestFocus();
 						t.requestFocusFromTouch();
 						InputMethodManager m = (InputMethodManager)mContext.getSystemService(Context.INPUT_METHOD_SERVICE);						        
-				       	m.showSoftInput(t, 0);		 
+						m.showSoftInput(t, 0);		 
 					}
 					else if (input instanceof CheckBox)
 					{
@@ -168,24 +168,24 @@ public class XUIMenuButton extends LinearLayout
 					}				
 				}
 			};
-			 
+
 			this.setOnClickListener(l);
 		}
 	}
-	
+
 	@Override public void setClickable(boolean clickable)
 	{		
 		super.setClickable(clickable);
 		init();
 	};
-	
+
 	@Override public void setOnClickListener(OnClickListener l)
 	{	
 		mSetOnClickListener = true;
-		
+
 		super.setOnClickListener(l);
 	}
-	
+
 	/**
 	 * Sets the label text
 	 * @param text The new text for the label
@@ -194,7 +194,7 @@ public class XUIMenuButton extends LinearLayout
 	{
 		int childCount = ((LinearLayout)mLayout.findViewById(R.id.label)).getChildCount();	
 		ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
-		
+
 		if (childCount < 1)
 		{
 			TextView t = new TextView(mContext);
@@ -216,7 +216,7 @@ public class XUIMenuButton extends LinearLayout
 			t.setText(text); 	
 		}
 	}
-	
+
 	/**
 	 * Sets the input view
 	 * @param v The new input view
@@ -224,11 +224,11 @@ public class XUIMenuButton extends LinearLayout
 	public void setInput(View v)
 	{
 		mContentView = v;
-		
+
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(v);
 	} 
-	
+
 	/**
 	 * Gets the input view
 	 * @return The input view
@@ -246,7 +246,7 @@ public class XUIMenuButton extends LinearLayout
 	{
 		mLayoutView.setBackgroundResource(res);
 	} 
-	
+
 	/**
 	 * Sets the icon in the menu item
 	 * @param v The new ImageView
@@ -255,12 +255,12 @@ public class XUIMenuButton extends LinearLayout
 	{
 		mImageView = v;		
 		mImageView.setDuplicateParentStateEnabled(true);
-		
+
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
 		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
-	
+
 	/**
 	 * Sets the icon in the menu item
 	 * @param b The new bitmap of the icon
@@ -271,12 +271,12 @@ public class XUIMenuButton extends LinearLayout
 		mImageView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		mImageView.setImageBitmap(b);
 		mImageView.setDuplicateParentStateEnabled(true);
-		
+
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
 		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
-	
+
 	/**
 	 * Sets the icon in the menu item
 	 * @param d The new Drawable of the icon
@@ -288,12 +288,12 @@ public class XUIMenuButton extends LinearLayout
 		mImageView.setBackgroundDrawable(d);
 		mImageView.setDuplicateParentStateEnabled(true);
 		mImageView.setFocusable(true);
-		
+
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
 		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
-	
+
 	/**
 	 * Sets the icon in the menu item
 	 * @param res The new Drawable of the icon
@@ -305,12 +305,12 @@ public class XUIMenuButton extends LinearLayout
 		mImageView.setImageResource(res);
 		mImageView.setDuplicateParentStateEnabled(true);
 		mImageView.setFocusable(true);
-		
+
 		((LinearLayout)mLayout.findViewById(R.id.icon)).removeAllViews();
 		((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);
 		((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
 	}
-	
+
 	/**
 	 * Is called when the view is being layed out
 	 * @param changed If the view has changed or not
@@ -322,7 +322,7 @@ public class XUIMenuButton extends LinearLayout
 	@Override protected void onLayout(boolean changed, int l, int t, int r, int b) 
 	{	
 		super.onLayout(changed, l, t, r, b);
-		
+
 		mChildCount = getChildCount();	
 	}
 
@@ -332,7 +332,7 @@ public class XUIMenuButton extends LinearLayout
 	@Override protected void onFinishInflate()  
 	{	
 		super.onFinishInflate();
-	
+
 		/**
 		 * Possible combinations:
 		 * [layout]
@@ -371,44 +371,44 @@ public class XUIMenuButton extends LinearLayout
 			mLabel = (TextView)getChildAt(1); 
 			mContentView = (View)getChildAt(2); 
 		}
-		
+
 		Rect padding = new Rect(this.getPaddingLeft(), this.getPaddingTop(), this.getPaddingRight(), this.getPaddingBottom());
-		
+
 		this.detachAllViewsFromParent(); 
-		
+
 		if (mLabel != null)
 		{
 			ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
-	
+
 			mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 			mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));		
 			mLabel.setTextColor(list);
 			mLabel.setDuplicateParentStateEnabled(true);		
 		}
-		
+
 		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true);
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
-		
+
 		setMenuPadding(padding.left, padding.top, padding.right, padding.bottom);
-		
+
 		if (mLabel != null)
 		{						 
 			((LinearLayout)mLayoutView.findViewById(R.id.label)).addView(mLabel);			
 		}
-		 
+
 		if (mContentView != null)
 		{			
 			((LinearLayout)mLayout.findViewById(R.id.input_container)).addView(mContentView);
-			
+
 			int gravity = ((LinearLayout.LayoutParams)mContentView.getLayoutParams()).gravity;
 			if (gravity != Gravity.LEFT || gravity != Gravity.RIGHT)
 			{
 				gravity = Gravity.RIGHT;
 			}
-			
+
 			((LinearLayout)mLayout.findViewById(R.id.input_container)).setGravity(gravity);			
 		}
-		
+
 		if (mImageView != null)
 		{
 			((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);		
