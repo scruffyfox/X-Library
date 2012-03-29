@@ -426,7 +426,7 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
-	 * Adds an image to the cache
+	 * Adds an image to the cache 
 	 * @param fileName The file name for the file
 	 * @param fileContents The contents for the file
 	 * @param l The on file written listener, called after the file was written to cache
@@ -531,6 +531,18 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
+	 * Adds a file to the cache 
+	 * @param fileName The file name for the file
+	 * @param fileContents The contents for the file
+	 * @param l The listener for when the file has been written to cache
+	 * @return true
+	 */
+	public boolean addFile(String fileName, Serializable fileContents, OnFileWrittenListener l)
+	{
+		return addFile(null, fileName, fileContents, l);
+	}
+	
+	/**
 	 * Adds a file to the cache
 	 * @param folderName The folder for the file to be stored in
 	 * @param fileName The file name for the file
@@ -569,7 +581,7 @@ public class CacheManager implements Serializable
 						}
 						
 					    fos.write((byte[])mContents);
-					    fos.close();
+					    fos.close();					    
 					}
 					catch (Exception e)
 					{
@@ -587,7 +599,12 @@ public class CacheManager implements Serializable
 						stream.close();
 						fos.close();		
 					} 
-										
+					finally
+					{
+						mContents = null;
+						System.gc();
+					}					
+					
 					if (mListener != null)
 					{
 						mListener.onFileWritten(mFileName);
