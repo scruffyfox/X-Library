@@ -40,97 +40,97 @@ import x.lib.Debug;
  */
 @RemoteView public class XUIAnalogClock extends View 
 {
-    private Time mCalendar;
-    private long mCurrentTime;
+	private Time mCalendar;
+	private long mCurrentTime;
 
-    private Drawable mHourHand;
-    private Drawable mMinuteHand;
-    private Drawable mDial;
+	private Drawable mHourHand;
+	private Drawable mMinuteHand;
+	private Drawable mDial;
 
-    private int mDialWidth;
-    private int mDialHeight;
+	private int mDialWidth;
+	private int mDialHeight;
 
-    private boolean mAttached;
-    private boolean mClockFrozen = false;
-    private TimerTick mTimerHandler = new TimerTick();
+	private boolean mAttached;
+	private boolean mClockFrozen = false;
+	private TimerTick mTimerHandler = new TimerTick();
 
-    private final Handler mHandler = new Handler();
-    private float mMinutes;
-    private float mHour;
-    private boolean mChanged;
-    private Context mContext;
+	private final Handler mHandler = new Handler();
+	private float mMinutes;
+	private float mHour;
+	private boolean mChanged;
+	private Context mContext;
 
-    /**
-     * Default constructor
-     * @param context
-     */
-    public XUIAnalogClock(Context context) 
-    {
-        this(context, null);
-    }
+	/**
+	 * Default constructor
+	 * @param context
+	 */
+	public XUIAnalogClock(Context context) 
+	{
+		this(context, null);
+	}
 
-    /**
-     * Default constructor
-     * @param context
-     * @param attrs
-     */
-    public XUIAnalogClock(Context context, AttributeSet attrs) 
-    {
-        this(context, attrs, 0);
-    }
+	/**
+	 * Default constructor
+	 * @param context
+	 * @param attrs
+	 */
+	public XUIAnalogClock(Context context, AttributeSet attrs) 
+	{
+		this(context, attrs, 0);
+	}
 
-    /**
-     * Default constructor
-     * @param context
-     * @param attrs
-     * @param defStyle
-     */
-    public XUIAnalogClock(Context context, AttributeSet attrs, int defStyle) 
-    {
-        super(context, attrs, defStyle);
-        mContext = context;
-        
-        Resources r = mContext.getResources();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.XUIAnalogClock, defStyle, 0);
+	/**
+	 * Default constructor
+	 * @param context
+	 * @param attrs
+	 * @param defStyle
+	 */
+	public XUIAnalogClock(Context context, AttributeSet attrs, int defStyle) 
+	{
+		super(context, attrs, defStyle);
+		mContext = context;
 
-        mDial = a.getDrawable(R.styleable.XUIAnalogClock_dial);
-        if (mDial == null) 
-        {
-            mDial = r.getDrawable(R.drawable.clock_dial);
-        }
+		Resources r = mContext.getResources();
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.XUIAnalogClock, defStyle, 0);
 
-        mHourHand = a.getDrawable(R.styleable.XUIAnalogClock_hand_hour);
-        if (mHourHand == null) 
-        {        	
-            mHourHand = r.getDrawable(R.drawable.clock_hand_hour);
-        }
+		mDial = a.getDrawable(R.styleable.XUIAnalogClock_dial);
+		if (mDial == null) 
+		{
+			mDial = r.getDrawable(R.drawable.clock_dial);
+		}
 
-        mMinuteHand = a.getDrawable(R.styleable.XUIAnalogClock_hand_minute);
-        if (mMinuteHand == null) 
-        {
-            mMinuteHand = r.getDrawable(R.drawable.clock_hand_minute);
-        }
- 
-        mCalendar = new Time();
-        mCalendar.switchTimezone("UTC");
-        mCurrentTime = System.currentTimeMillis();
-        
-        mDialWidth = mDial.getIntrinsicWidth();
-        mDialHeight = mDial.getIntrinsicHeight();
-    }
+		mHourHand = a.getDrawable(R.styleable.XUIAnalogClock_hand_hour);
+		if (mHourHand == null) 
+		{        	
+			mHourHand = r.getDrawable(R.drawable.clock_hand_hour);
+		}
+
+		mMinuteHand = a.getDrawable(R.styleable.XUIAnalogClock_hand_minute);
+		if (mMinuteHand == null) 
+		{
+			mMinuteHand = r.getDrawable(R.drawable.clock_hand_minute);
+		}
+
+		mCalendar = new Time();
+		mCalendar.switchTimezone("UTC");
+		mCurrentTime = System.currentTimeMillis();
+
+		mDialWidth = mDial.getIntrinsicWidth();
+		mDialHeight = mDial.getIntrinsicHeight();
+	}
 
 	@Override protected void onAttachedToWindow()
 	{
 		super.onAttachedToWindow();
-		
+
 		onTimeChanged();		
 		mTimerHandler.start();
 	}
-	
+
 	@Override protected void onDetachedFromWindow()
 	{	
 		super.onDetachedFromWindow();
-		
+
 		try
 		{
 			mTimerHandler.join();
@@ -152,11 +152,11 @@ import x.lib.Debug;
 	public void setTime(long time)
 	{		
 		mCurrentTime = time;
-	
+
 		onTimeChanged();
 		invalidate();
 	}
-	
+
 	/**
 	 * Sets whether the clock is frozen or not
 	 * @param clockFrozen True if the clock should be frozen
@@ -232,12 +232,12 @@ import x.lib.Debug;
 		{
 			dial.setBounds(x - (w / 2), y - (h / 2), x + (w / 2), y + (h / 2));
 		}
-		
+
 		dial.draw(canvas);
 
 		canvas.save();
 		canvas.rotate(mHour / 12.0f * 360.0f, x, y);
-		
+
 		final Drawable hourHand = mHourHand;
 		if (changed)
 		{
@@ -245,7 +245,7 @@ import x.lib.Debug;
 			h = hourHand.getIntrinsicHeight();
 			hourHand.setBounds(x - (w / 2), y - (h / 2), x + (w / 2), y + (h / 2));
 		}
-		
+
 		hourHand.draw(canvas);
 		canvas.restore();
 
@@ -259,7 +259,7 @@ import x.lib.Debug;
 			h = minuteHand.getIntrinsicHeight();
 			minuteHand.setBounds(x - (w / 2), y - (h / 2), x + (w / 2), y + (h / 2));
 		}
-		
+
 		minuteHand.draw(canvas);
 		canvas.restore();
 
@@ -272,16 +272,16 @@ import x.lib.Debug;
 	private void onTimeChanged()
 	{			
 		if (mClockFrozen) return;
-		
+
 		mCalendar.set(mCurrentTime);		
-		
+
 		int hour = mCalendar.hour;
 		int minute = mCalendar.minute;
 		int second = mCalendar.second;
-		
+
 		mMinutes = minute + second / 60.0f;
 		mHour = hour + mMinutes / 60.0f;
-		
+
 		mChanged = true;
 	}
 
@@ -292,7 +292,7 @@ import x.lib.Debug;
 			mCurrentTime += 1000;
 			onTimeChanged();
 			invalidate();
-			
+
 			postDelayed(this, 1000);
 		}
 	}
