@@ -138,11 +138,7 @@ import x.lib.Debug;
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}
-		finally
-		{
-			mTimerHandler.stop();
-		}
+		}		
 	}
 
 	/**
@@ -154,7 +150,7 @@ import x.lib.Debug;
 		mCurrentTime = time;
 
 		onTimeChanged();
-		invalidate();
+		invalidate(); 
 	}
 
 	/**
