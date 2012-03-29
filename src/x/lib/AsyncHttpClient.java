@@ -910,14 +910,14 @@ public class AsyncHttpClient
 							i = new PatchInputStream(conn.getInputStream());
 						}
 						
-						InputStream is = new BufferedInputStream(i, 8192);
+						InputStream is = new BufferedInputStream(i, 1024);
 
 						ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-						int bufferSize = 8192;
+						int bufferSize = 1024;
 						byte[] buffer = new byte[bufferSize];
 
 						int len = 0;						
-						while ((len = is.read(buffer)) != -1)
+						while ((len = is.read(buffer)) > 0)
 						{									
 							byteBuffer.write(buffer, 0, len);
 						}											
@@ -1108,7 +1108,7 @@ public class AsyncHttpClient
 						i.close();
 						reader.close();
 						conn.disconnect();
-
+ 
 						return sb.toString();
 					}
 					catch (EOFException e)
