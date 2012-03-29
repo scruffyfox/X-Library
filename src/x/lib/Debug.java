@@ -7,12 +7,15 @@ package x.lib;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Set;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import x.type.HttpParams;
 import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
 
 /**
@@ -278,6 +281,28 @@ public class Debug
 		{
 			e.printStackTrace();
 		}	
+	}
+	
+	/**
+	 * Outputs a message to the debug console
+	 * @param bundle The bundle to output
+	 */
+	public static void out(Bundle bundle)
+	{
+		try
+		{
+			Set<String> keys = bundle.keySet();
+			out(bundle.toString());
+			
+			for (String key : keys)
+			{
+				out("\t[" + key + "] : " + bundle.get(key).toString());
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
