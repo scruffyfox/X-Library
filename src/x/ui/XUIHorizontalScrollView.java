@@ -198,6 +198,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	{
 		((ViewGroup)this.getChildAt(0)).removeView(view);
 		mChildCount = getChildViewCount();
+		updateCurrentChildView();
 	}
 	
 	/**
@@ -208,6 +209,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	{
 		((ViewGroup)this.getChildAt(0)).removeViewAt(index);
 		mChildCount = getChildViewCount();
+		updateCurrentChildView();
 	}
 	
 	/**
@@ -217,8 +219,17 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	{		
 		((ViewGroup)this.getChildAt(0)).removeAllViews();
 		mChildCount = getChildViewCount();
+		updateCurrentChildView();
 	}
 
+	private void updateCurrentChildView()
+	{
+		if (mChildCount <= 1)
+		{
+			mCurrentChildIndex = mChildCount - 1;
+		}
+	}
+	
 	/**
 	 * Gets a view from an index
 	 * @param index The index of the view
@@ -273,18 +284,23 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
 		
-		int featureWidth = getMeasuredWidth();
+		int leftCount = 0;
+		for (int i = 0; i < index; i++)
+		{
+			leftCount += getChildViewAt(i).getMeasuredWidth();
+		}
+
 		scrollTo(getChildViewAt(index).getLeft(), 0);
         
+		if (mOnViewChangedLister != null && mCurrentChildIndex != index)
+		{
+			mOnViewChangedLister.onViewChange(index);                		                   	
+		}
+		
 		if (mCurrentChildIndex != index)
         {
 			mCurrentChildIndex = index;
-        }
-        
-		if (mOnViewChangedLister != null)
-		{
-			mOnViewChangedLister.onViewChange(index);                		                   	
-		}        
+        }        		       
 	}
 	
 	/**
@@ -298,18 +314,23 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
 		
-		int featureWidth = getMeasuredWidth();
-		smoothScrollTo(getChildViewAt(index).getLeft(), 0);
-       
-		if (mCurrentChildIndex != index)
+		int leftCount = 0;
+		for (int i = 0; i < index; i++)
 		{
+			leftCount += getChildViewAt(i).getMeasuredWidth();
+		}
+		
+		smoothScrollTo(getChildViewAt(index).getLeft(), 0);
+
+		if (mOnViewChangedLister != null && mCurrentChildIndex != index)
+		{
+			mOnViewChangedLister.onViewChange(index);                		                   	
+		}
+		
+		if (mCurrentChildIndex != index)
+        { 
 			mCurrentChildIndex = index;
-		}
-        
-		if (mOnViewChangedLister != null)
-		{        
-			mOnViewChangedLister.onViewChange(index);                		        	                    
-		}
+        }   
 	}
 	
 	/**
@@ -331,7 +352,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		Dimension dm = new Dimension(getContext());
 		mScreenWidth = dm.getScreenWidth();
         				         
-		if (mScrollMode == STEP || mScrollMode == SMOOTH)
+		if (mScrollMode == STEP)
 		{
 			mGestureDetector = new GestureDetector(new SwipeGestureDetector());
 			setOnTouchListener(new View.OnTouchListener() 
@@ -347,7 +368,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 					}                
 					else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
 					{
-						if (mScrollMode == SMOOTH) return true;
+						if (mScrollMode == SMOOTH || getChildViewCount() < 1) return true;
 	                	
 						mScrollingHorizontally = false;
 						mScrollingVertically = false;
@@ -527,8 +548,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
     				}    				    				
     				    				
     				child.getLayoutParams().width = featureWidth;
-    				child.measure(MeasureSpec.makeMeasureSpec(featureWidth, MeasureSpec.EXACTLY), height);    				
-    				requestLayout();
+    				child.measure(MeasureSpec.makeMeasureSpec(featureWidth, MeasureSpec.EXACTLY), height);    
+    				//child.layout(totalWidth - featureWidth, child.getTop(), featureWidth, height);
+    				child.requestLayout();    				
     			}    			
     			 
     			totalWidth += child.getMeasuredWidth();			
@@ -543,12 +565,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			if (mChildCount > 0)
 			{
 				scrollToChildAt(mCurrentChildIndex);
-			}
-            
-			if (mOnViewChangedLister != null)
-			{            	
-				mOnViewChangedLister.onViewChange(mCurrentChildIndex);                		            	                    
-			}                        
+			}            			                  
 		}	
 		
 		super.onLayout(changed, l, t, r, b);
@@ -627,8 +644,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		@Override public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
 		{				
 			mCanScroll = true;
+			if (mChildCount < 1) return true;
 			if (e1 == null || e2 == null) return false;
-			if (mScrollMode == SMOOTH || mChildCount == 0) return true;
+			if (mScrollMode == SMOOTH) return super.onFling(e1, e2, velocityX, velocityY);
 			if (mScrollingVertically) return false;
 			
 			if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY)
@@ -637,15 +655,15 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 				int mActiveFeature = (mCurrentChildIndex < (mChildCount - 1)) ? mCurrentChildIndex + 1 : mChildCount - 1;
 				smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
 	            
-				if (mCurrentChildIndex != mActiveFeature)
-				{
-					mCurrentChildIndex = mActiveFeature;
-				}
-	            
-				if (mOnViewChangedLister != null)
+				if (mOnViewChangedLister != null && mCurrentChildIndex != mActiveFeature)
 				{	            	
 					mOnViewChangedLister.onViewChange(mActiveFeature);                		                                    
 				}
+				
+				if (mCurrentChildIndex != mActiveFeature)
+				{
+					mCurrentChildIndex = mActiveFeature;
+				}	            				
 	            
 				return true;				            	
 			}
@@ -656,15 +674,15 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 				int mActiveFeature = (mCurrentChildIndex > 0) ? mCurrentChildIndex - 1 : 0;
 				smoothScrollTo(getChildViewAt(mActiveFeature).getLeft(), 0);
                 
-				if (mCurrentChildIndex != mActiveFeature)
-				{
-					mCurrentChildIndex = mActiveFeature;
-				}
-                
-				if (mOnViewChangedLister != null)
+				if (mOnViewChangedLister != null && mCurrentChildIndex != mActiveFeature)
 				{                	
 					mOnViewChangedLister.onViewChange(mActiveFeature);                		                	                    
 				}
+				 
+				if (mCurrentChildIndex != mActiveFeature)
+				{
+					mCurrentChildIndex = mActiveFeature;
+				}                				
                 
 				return true;
 			}
