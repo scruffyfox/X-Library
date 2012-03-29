@@ -890,8 +890,8 @@ public class AsyncHttpClient
 						URL murl = new URL(url[0]);		
 						System.setProperty("http.keepAlive", "false");
 
-						HttpURLConnection conn = (HttpURLConnection) murl.openConnection();
-						conn.setDoInput(false);
+						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
+						conn.setDoInput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
 						conn.setRequestMethod("GET");	
@@ -901,7 +901,7 @@ public class AsyncHttpClient
 
 						// Get the response
 						PatchInputStream i = new PatchInputStream(conn.getInputStream());
-						if ((mConnectionInfo.connectionResponseCode / 100) != 2)
+						if ((mConnectionInfo.connectionResponseCode / 100) != 2) 
 						{
 							i = new PatchInputStream(conn.getErrorStream());
 						}
