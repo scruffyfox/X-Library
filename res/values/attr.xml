@@ -8,6 +8,12 @@
 			<enum name="both" value="0x11"/>			
 		</attr>
 	</declare-styleable>
+	<declare-styleable name="XUIAnalogClock">
+	    <attr name="dial" format="reference"/>
+	    <attr name="hand_hour" format="reference"/>
+	    <attr name="hand_minute" format="reference"/>
+	    <attr name="time" format="integer"/>
+	</declare-styleable>
 	<declare-styleable name="XUITabHost">	
 		<attr name="targetContainer" format="integer"/>		
 	</declare-styleable>
