@@ -908,8 +908,7 @@ public class AsyncHttpClient
 						System.setProperty("http.keepAlive", "false");
 						
 						HttpURLConnection conn = (HttpURLConnection) murl.openConnection();
-						conn.setDoInput(true);
-						conn.setDoOutput(true);
+						conn.setDoInput(false);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
 						conn.setRequestMethod("GET");	
@@ -972,7 +971,6 @@ public class AsyncHttpClient
 						
 						HttpURLConnection conn = (HttpURLConnection) murl.openConnection();
 						conn.setDoInput(true);
-						conn.setDoOutput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
 						
@@ -1150,7 +1148,6 @@ public class AsyncHttpClient
 	                {                           	
 	                	HttpURLConnection conn = (HttpURLConnection)new URL(url[0]).openConnection();
 						conn.setDoInput(true);
-						conn.setDoOutput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
 				
