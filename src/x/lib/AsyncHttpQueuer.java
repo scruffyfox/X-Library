@@ -66,6 +66,8 @@ public class AsyncHttpQueuer
 	private int mMaxProcess = 1;
 	private int currentQueuePos = 0;	
 	private int totalPos = 0;
+	private int totalQueueCount = 0;
+	private long queueTimeout = 0;
 	
 	private Handler processer = new Handler()
 	{ 
@@ -76,7 +78,7 @@ public class AsyncHttpQueuer
 				return;
 			}
 			
-			int count = mMaxProcess > requestQueue.size() ? requestQueue.size() : mMaxProcess;					
+			int count = mMaxProcess > totalQueueCount ? totalQueueCount : mMaxProcess;					
 			while (currentQueuePos < count)
 			{
 				executeRequest(requestQueue.poll());
@@ -89,9 +91,21 @@ public class AsyncHttpQueuer
 	 */
 	public void start()
 	{
+		start(0);
+	}
+	
+	/**
+	 * Starts the queue
+	 * @param timeout The timeout between each request in MS
+	 */
+	public void start(long timeout)
+	{
+		queueTimeout = timeout;
+		
 		if (requestQueue.size() > 0)
 		{		
-			processer.sendEmptyMessage(0);
+			totalQueueCount = requestQueue.size();
+			processer.sendEmptyMessage(0);			
 		}
 	} 
 	
@@ -105,10 +119,9 @@ public class AsyncHttpQueuer
 		 
 		currentQueuePos++;	 
 		totalPos++;
-						
+								
 		Bundle b = new Bundle();
 		b.putInt(BUNDLE_POSITION, totalPos - 1);
-		
 		{
 			final AsyncHttpResponse originalResponse = client.getResponse();			
 						
@@ -120,13 +133,17 @@ public class AsyncHttpQueuer
 					
 					if (originalResponse != null)
 					{
-						originalResponse.getExtras().putBoolean(IS_LAST, currentQueuePos <= 0);
+						originalResponse.setConnectionInfo(getConnectionInfo());
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						originalResponse.getExtras().putBoolean(IS_LAST, totalPos >= totalQueueCount);
 						originalResponse.beforeFinish();
 					}
 					
 					if (mResponse != null)
 					{
-						mResponse.getExtras().putBoolean(IS_LAST, currentQueuePos <= 0);
+						mResponse.setConnectionInfo(getConnectionInfo());
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						mResponse.getExtras().putBoolean(IS_LAST, totalPos >= totalQueueCount);
 						mResponse.beforeFinish();
 					}
 				}
@@ -135,11 +152,14 @@ public class AsyncHttpQueuer
 				{
 					if (originalResponse != null)
 					{
+						originalResponse.setConnectionInfo(getConnectionInfo());
 						originalResponse.onFailure(response);
 					}
 					
 					if (mResponse != null)
 					{
+						mResponse.setConnectionInfo(getConnectionInfo());
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
 						mResponse.onFailure(response);
 					}				
 				}
@@ -148,11 +168,15 @@ public class AsyncHttpQueuer
 				{
 					if (originalResponse != null)
 					{
+						originalResponse.setConnectionInfo(getConnectionInfo());
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
 						originalResponse.onFailure(responseCode, responseMessage);
 					}
 					
 					if (mResponse != null)
 					{
+						mResponse.setConnectionInfo(getConnectionInfo());
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
 						mResponse.onFailure(responseCode, responseMessage);
 					}
 				}
@@ -161,49 +185,92 @@ public class AsyncHttpQueuer
 				{					
 					if (requestQueue.size() < 1)
 					{
-						processer.sendEmptyMessage(1);	
+						processer.sendEmptyMessageAtTime(1, queueTimeout);	
 					}
 					else
 					{
-						processer.sendEmptyMessage(0);
+						processer.sendEmptyMessageAtTime(0, queueTimeout);
 					}
 	
 					if (originalResponse != null)
 					{
+						originalResponse.setConnectionInfo(getConnectionInfo());
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
 						originalResponse.onFinish();
 					}
 					
 					if (mResponse != null)
 					{
+						mResponse.setConnectionInfo(getConnectionInfo());
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
 						mResponse.onFinish();
 					}
 				}
 				 
 				@Override public void onSend()
-				{
+				{					
 					if (originalResponse != null)
 					{
+						originalResponse.setConnectionInfo(getConnectionInfo());
 						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));						
 						originalResponse.onSend();
 					}
 					
 					if (mResponse != null)
 					{
+						mResponse.setConnectionInfo(getConnectionInfo());
 						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));						
 						mResponse.onSend();
 					}					
 				}
 				
-				@Override public void onSuccess(Object response)
-				{				
+				@Override public void onSuccess(byte[] response)
+				{
 					if (originalResponse != null)
 					{
-						originalResponse.onSuccess(response);
+						originalResponse.setConnectionInfo(getConnectionInfo());				
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						originalResponse.onSuccess(response);						
 					}
-					
-					if (mResponse != null)
-					{										
+										
+					if (mResponse != null) 						
+					{						
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						mResponse.setConnectionInfo(getConnectionInfo());
 						mResponse.onSuccess(response);
+					}
+				}
+				
+				@Override public void onSuccess(Object response)
+				{									
+					if (originalResponse != null)
+					{
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						originalResponse.setConnectionInfo(getConnectionInfo());
+						
+						if (response.getClass().equals(byte[].class))
+						{						
+							originalResponse.onSuccess((byte[])response);
+						}
+						else
+						{
+							originalResponse.onSuccess(response);
+						}
+					}
+										
+					if (mResponse != null) 						
+					{						
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						mResponse.setConnectionInfo(getConnectionInfo());
+						
+						if (response.getClass().equals(byte[].class))
+						{						
+							mResponse.onSuccess((byte[])response);
+						}
+						else
+						{
+							mResponse.onSuccess(response);
+						}
 					}
 				}
 			});		
@@ -280,6 +347,14 @@ public class AsyncHttpQueuer
 	public void setResponse(AsyncHttpResponse response)
 	{
 		mResponse = response;
+	}
+	
+	/**
+	 * Stops the queuer
+	 */
+	public void stop()
+	{
+		processer.sendEmptyMessage(1);
 	}
 	
 	/**
