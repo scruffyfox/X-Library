@@ -59,6 +59,21 @@ public class XUIImageView extends ImageView
 		mContext = context;
 	}
 	
+	@Override protected void onDetachedFromWindow()
+	{	
+		super.onDetachedFromWindow();
+		
+		try
+		{
+			setBackgroundDrawable(null);
+			setImageDrawable(null);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Sets the opacity of the image view
 	 * @param opacity The opacity 0-1.0
