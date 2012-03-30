@@ -606,7 +606,7 @@ public class CacheManager implements Serializable
 					}					
 					
 					if (mListener != null)
-					{
+					{						
 						mListener.onFileWritten(mFileName);
 					}					
 					
@@ -622,7 +622,8 @@ public class CacheManager implements Serializable
 			} 
 		};				
 		
-		r.start();
+		//	This might be a bad idea, keep an eye on it
+		((Activity)context).runOnUiThread(r);
 		
 		return true;		
 	}
@@ -634,29 +635,7 @@ public class CacheManager implements Serializable
 	 */
 	public Bitmap readImage(String fileName)
 	{
-		try
-		{					
-			File file = new File(mCachePath, "cache_" + fileName);
-			FileInputStream input = new FileInputStream(file);
-
-			BitmapFactory.Options opts = new BitmapFactory.Options();
-			opts.inDither = true;						
-			
-			Bitmap b = BitmapFactory.decodeStream(input, null, opts);	
-			
-			input.close();	
-			
-			return b;
-		}
-		catch (OutOfMemoryError e)
-		{
-			return null;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+		return readImage(null, fileName);
 	}
 	
 	/**
@@ -667,15 +646,21 @@ public class CacheManager implements Serializable
 	 */
 	public Bitmap readImage(String folderName, String fileName)
 	{
+		FileInputStream input = null;
+		
 		try
-		{	
+		{				
 			if (folderName != null && !folderName.equals(""))
 			{
 				folderName = "/cache_" + folderName;
 			}
+			else
+			{ 
+				folderName = "";
+			}
 			
 			File file = new File(mCachePath + folderName, "cache_" + fileName);
-			FileInputStream input = new FileInputStream(file);
+			input = new FileInputStream(file);
 
 			BitmapFactory.Options opts = new BitmapFactory.Options();
 			opts.inDither = true;						
@@ -694,6 +679,10 @@ public class CacheManager implements Serializable
 		{
 			e.printStackTrace();
 			return null;
+		}
+		finally
+		{			
+			input = null;
 		}
 	}
 	
@@ -715,6 +704,9 @@ public class CacheManager implements Serializable
 	 */
 	public Object readFile(String folderName, String fileName)
 	{
+		FileInputStream input = null;
+		ObjectInputStream stream = null;
+		
 		try
 		{
 			String filePath = mCachePath;
@@ -722,10 +714,15 @@ public class CacheManager implements Serializable
 			{
 				filePath += "/cache_" + folderName + "/";
 			}
+			else
+			{
+				filePath = "";
+			}
 			
 			File file = new File(filePath, "cache_" + fileName);
-			FileInputStream input = new FileInputStream(file);
-			ObjectInputStream stream = new ObjectInputStream(input);
+			input = new FileInputStream(file);
+			stream = new ObjectInputStream(input);
+			
 			Object data = stream.readObject();
 			stream.close();
 			input.close();
@@ -740,6 +737,11 @@ public class CacheManager implements Serializable
 		{
 			e.printStackTrace();
 			return null;
+		}
+		finally
+		{
+			input = null;
+			stream = null;
 		}
 	}
 	
@@ -901,7 +903,7 @@ public class CacheManager implements Serializable
 				
 				return yourBytes;
 			}
-			catch (Exception e)
+			catch (Exception e) 
 			{
 				e.printStackTrace();
 				return null;
