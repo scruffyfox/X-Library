@@ -27,9 +27,10 @@ public class Random extends java.util.Random
 	 * @return A random int between from and to
 	 */
 	public int nextInt(int from, int to)
-	{
-		Random r = new Random();
+	{		
 		int range = to - from + 1;
-		return (r.nextInt(range)) + from;
+		int ret = (nextInt(range)) + from;
+		
+		return ret;
 	}
 }
