@@ -5,9 +5,10 @@
 **/
 package x.util;
 
+import java.util.Collection;
 import java.util.List;
 
-import x.util.ArrayUtils.CommandIterator;
+import x.util.ArrayUtils.MapInterface;
 
 /**
  * @brief Class to extend manipulation to strings
@@ -68,7 +69,7 @@ public class StringUtils
 	 * @param glue The glue
 	 * @return The joined string with the glue seperators
 	 */
-	public static String join(List<?> arr, String glue)
+	public static String join(Collection arr, String glue)
 	{						
 		return join(arr.toArray(), glue);
 	}
@@ -82,7 +83,7 @@ public class StringUtils
 	public static String[] split(String input, String splitStr)
 	{
 		String[] arr = input.split(splitStr);
-		arr = (String[])ArrayUtils.iterateCommand(arr, new CommandIterator()
+		arr = (String[])ArrayUtils.map(arr, new MapInterface()
 		{			
 			public Object apply(Object item, int position)
 			{

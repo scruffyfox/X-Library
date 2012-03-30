@@ -25,7 +25,7 @@ public class ArrayUtils
 	* @param arr The input array to be iterated
 	* @param iterator The iterator command to apply to the array
 	*/
-	public static Object[] iterateCommand(Object[] arr, CommandIterator iterator)
+	public static Object[] map(Object[] arr, MapInterface iterator)
 	{		
 		int count = arr.length;
 		for (int index = 0; index < count; index++)
@@ -39,7 +39,7 @@ public class ArrayUtils
 	/**
 	 * @brief Interface class to apply to each item in an array.	 
 	 */
-	interface CommandIterator
+	public interface MapInterface
 	{		
 		/**
 		 * Function to manipulate the cells in an array
@@ -85,23 +85,5 @@ public class ArrayUtils
 		}
 		
 		return array;
-	}
-	
-	/**
-	 * Shuffles a collection
-	 * @param array The collection to shuffle
-	 */
-	public static void shuffle(Collection array)
-	{
-		Collections.shuffle((List<?>)array);
-	}
-	
-	/**
-	 * Shuffles an array
-	 * @param array The array to shuffle
-	 */
-	public static <E> void shuffle(E array)
-	{		
-		Collections.shuffle(Arrays.asList(array));
 	}
 }
