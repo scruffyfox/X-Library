@@ -26,7 +26,7 @@ public class XUISquareLayout extends LinearLayout
 {
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUISquareLayout(Context context)
 	{
@@ -34,9 +34,9 @@ public class XUISquareLayout extends LinearLayout
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attrs
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUISquareLayout(Context context, AttributeSet attrs)
 	{

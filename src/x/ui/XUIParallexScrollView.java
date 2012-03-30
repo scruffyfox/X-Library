@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import x.lib.Debug;
@@ -71,7 +76,7 @@ public class XUIParallexScrollView extends ScrollView
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUIParallexScrollView(Context context)
 	{
@@ -80,9 +85,9 @@ public class XUIParallexScrollView extends ScrollView
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attrs
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIParallexScrollView(Context context, AttributeSet attrs)
 	{

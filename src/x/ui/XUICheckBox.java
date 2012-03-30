@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import android.content.Context;
@@ -33,8 +38,8 @@ public class XUICheckBox extends ImageView implements Checkable
 	private boolean mSetOnClickListener = false;
 	
 	/**
-	 * Default constructor
-	 * @param context
+	 * Default Constructor
+	 * @param context The application's context
 	 */
 	public XUICheckBox(Context context)
 	{
@@ -43,14 +48,13 @@ public class XUICheckBox extends ImageView implements Checkable
 	
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attrs
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUICheckBox(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 				
-		//setBackgroundResource(R.drawable.xui_checkbox_drawable);
 		refreshDrawableState();
 		
 		//	Only set the default click listener if there is none set

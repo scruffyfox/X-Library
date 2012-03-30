@@ -27,7 +27,7 @@ import android.widget.TextView;
  * The forced height of the titlebar is 68px relative to the screen size (46dp) for HDPI
  * 
  * @code
- * 	<x.ui.XUITitleBar
+ *	<x.ui.XUITitleBar
  * 		android:layout_width="fill_parent"
  * 		android:layout_height="wrap_content"
  * 		x:labelIcon="@drawable/logo"
@@ -55,7 +55,7 @@ public class XUITitleBar extends RelativeLayout
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUITitleBar(Context context)
 	{
@@ -68,9 +68,9 @@ public class XUITitleBar extends RelativeLayout
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attrs
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUITitleBar(Context context, AttributeSet attrs)
 	{

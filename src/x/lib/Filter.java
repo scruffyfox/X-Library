@@ -10,13 +10,30 @@ import android.graphics.Paint;
 import android.graphics.Bitmap.Config;
 
 /**
- * !! Still in development !!
+ * @brief This library helper is used to apply filters and blends to a Bitmap.
+ * Class is still in development, but can be used.
+ * 
+ * Example usage
+ * @code
+ * Bitmap image = getImage();
+ * Filter imageFilter = new Filter(image);
+ * imageFilter.apply(new FilterSet[]
+ * {
+ * 	new FilterSet(FilterMode.ADJUST, 15),
+ * 	new FilterSet(FilterMode.OPACITY, 200)
+ * });
+ * image = imageFilter.flatten();
+ * @endcode
  */
 public class Filter
 {
 	private Bitmap bm;
 	private Colour[] colourList;
 			
+	/**
+	 * Default Constructor
+	 * @param bitmap The bitmap to use for filtering
+	 */
 	public Filter(Bitmap bitmap)
 	{			
 		bm = bitmap;
@@ -40,7 +57,11 @@ public class Filter
 		}
 	}
 	
-	public void apply(FilterSet[] filters)
+	/**
+	 * Applies the filter set to the bitmap
+	 * @param filters The filterset to use
+	 */
+	public void apply(FilterSet... filters)
 	{
 		for (int index = 0; index < colourList.length; index++)
 		{
@@ -102,6 +123,11 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Flattens an image and returns the newly created Bitmap from the filters
+	 * Recycles original Bitmap.
+	 * @return The new bitmap
+	 */
 	public Bitmap flatten()
 	{
 		int width = bm.getWidth();
@@ -131,14 +157,20 @@ public class Filter
 		return finalBitmap;
 	}
 		
+	/**
+	 * Applies saturation to the image
+	 * @param amount The amount of saturation to apply. 0-100
+	 */
 	public void saturation(int amount)
 	{
 		saturation(amount, 0, colourList.length);
 	}
 	
 	/**
-	 * 
-	 * @param amount 0-100
+	 * Applies saturation to the image
+	 * @param amount The amount of saturation to apply. 0-100
+	 * @param start The start pixel index
+	 * @param colourIndex The end pixel index
 	 */
 	private void saturation(int amount, int start, int colourIndex)
 	{
@@ -151,7 +183,11 @@ public class Filter
 			colourList[index].blue = BitmapUtils.safe((int)(average + t * (colourList[index].blue - t)));
 		}
 	}
-	
+
+	/**
+	 * Applies a posterize effect to the image
+	 * @param amount The amount to apply. 0-255
+	 */
 	public void posterize(int amount)
 	{
 		posterize(amount, 0, colourList.length);
@@ -172,6 +208,10 @@ public class Filter
 		}
 	}	
 	
+	/**
+	 * The amount of threshold to apply. 0-255
+	 * @param amount
+	 */
 	public void threshold(int amount)
 	{
 		threshold(amount, 0, colourList.length);
@@ -197,6 +237,10 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Amount of brightness to apply to the image. 0-255
+	 * @param amount
+	 */
 	public void brightness(int amount)
 	{
 		brightness(amount, 0, colourList.length);
@@ -216,6 +260,10 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * The amount of gamma to apply. 0-100
+	 * @param amount
+	 */
 	public void gamma(int amount)
 	{
 		gamma(amount, 0, colourList.length);
@@ -241,6 +289,14 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Magnifies the colour to the max value in each channel 
+	 * For example:
+	 * 	Original Red: 150
+	 * 	Mask: 0x000A0000
+	 * 	New Red: 165 
+	 * @param colour use 32bit colour mask the amount for each colour
+	 */
 	public void adjust(int colour)
 	{
 		adjust(colour, 0, colourList.length);
@@ -269,6 +325,9 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Inverts the colours in the bitmap
+	 */
 	public void invert()
 	{
 		invert(0, colourList.length);
@@ -284,6 +343,9 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Converts the bitmap to grey scale
+	 */
 	public void monotone()
 	{
 		monotone(0, colourList.length);
@@ -300,6 +362,10 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Applies contrast to the image. 0-100
+	 * @param amount the amount to apply from 0-100
+	 */
 	public void contrast(int amount)
 	{
 		contrast(amount, 0, colourList.length);
@@ -325,6 +391,10 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Applies a bias filter to the image
+	 * @param amount the amount to apply from 0-255
+	 */
 	public void bias(int amount)
 	{
 		bias(amount, 0, colourList.length);
@@ -350,6 +420,9 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Converts the image to sepia
+	 */
 	public void sepia()
 	{
 		sepia(0, colourList.length);		
@@ -373,6 +446,10 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * Sets the image's opacity
+	 * @param amount the amount to apply from 0-255
+	 */
 	public void opacity(int amount)
 	{
 		opacity(amount, 0, colourList.length);
@@ -408,8 +485,14 @@ public class Filter
 		}
 	}
 	
+	/**
+	 * @brief Used with Filter to apply filters to a Bitmap
+	 */
 	public static class FilterSet
 	{		
+		/**
+		 * @brief The filter modes available to use
+		 */
 		public enum FilterMode
 		{
 			SATURATION,
@@ -431,17 +514,32 @@ public class Filter
 		public int amount = 0;
 		public int amount2 = 0;
 		
+		/** 
+		 * Sets the filter with a filter mode
+		 * @param f The filter mode to use
+		 */
 		public FilterSet(FilterMode f)
 		{
 			filter = f;
 		}
 		
+		/** 
+		 * Sets the filter with a filter mode
+		 * @param f The filter mode to use
+		 * @param a The amount paramter used in certain filters (Optional)
+		 */
 		public FilterSet(FilterMode f, int a)
 		{
 			filter = f;
 			amount = a;
 		}
 		
+		/** 
+		 * Sets the filter with a filter mode
+		 * @param f The filter mode to use
+		 * @param a The amount paramter used in certain filters (Optional)
+		 * @param a2 The amount paramter used in certain filters (Optional)
+		 */
 		public FilterSet(FilterMode f, int a, int a2)
 		{
 			filter = f;

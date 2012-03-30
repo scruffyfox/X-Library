@@ -21,7 +21,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 /**
- * @brief Custom web view that adds extra method to call javascript methods and set javascript variables. Also has interfaces for click listeners and JS alert listeners
+ * @brief Custom web view that adds extra method to call javascript methods and set javascript variables. 
+ * Also has interfaces for click listeners and JS alert listeners
  */
 public class XUIWebView extends WebView
 {
@@ -31,8 +32,8 @@ public class XUIWebView extends WebView
 	public Context mContext;
 	
 	/**
-	 * Default constructor
-	 * @param context
+	 * Default Constructor
+	 * @param context The application's context
 	 */
 	public XUIWebView(Context context)
 	{
@@ -44,8 +45,8 @@ public class XUIWebView extends WebView
 	
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attr 
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIWebView(Context context, AttributeSet attr)
 	{ 

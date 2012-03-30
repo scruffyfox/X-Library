@@ -6,7 +6,7 @@
 package x.lib;
 
 /**
- * @breif An extention to java Random
+ * @brief An extention to java Random
  */
 public class Random extends java.util.Random
 {

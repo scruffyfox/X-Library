@@ -108,9 +108,9 @@ public class XUIActionView extends ViewFlipper
 	}	
 	
 	/**
-	 * Default Constructor
-	 * @param context The application's context
-	 * @param attrs The attribute set parsed from SAX parser
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIActionView(Context context, AttributeSet attrs)
 	{

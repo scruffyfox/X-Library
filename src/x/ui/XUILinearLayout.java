@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import java.util.jar.Attributes;
@@ -30,8 +35,8 @@ public class XUILinearLayout extends LinearLayout
 	private boolean mWrapChildren = false;
 	
 	/**
-	 * Default constructor
-	 * @param context
+	 * Default Constructor
+	 * @param context The application's context
 	 */
 	public XUILinearLayout(Context context)
 	{
@@ -41,8 +46,8 @@ public class XUILinearLayout extends LinearLayout
 	
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attrs
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUILinearLayout(Context context, AttributeSet attrs)
 	{

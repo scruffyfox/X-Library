@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import x.lib.Debug;
@@ -23,17 +28,17 @@ import android.widget.RemoteViews.RemoteView;
  * not supporting it.
  * 
  * @code
- * 	<x.ui.XUIAbsoluteLayout
- * 		android:layout_width="fill_parent"
- * 		android:layout_height="fill_parent"
- * 	>
- * 		<ImageView
- * 			android:layout_width="wrap_content"
- * 			android:layout_height="wrap_content"
- * 			android:layout_x="100dp"
- * 			android:layout_y="100dp"
- * 		/>
- * 	</x.ui.XUIAbsoluteLayout>
+ * <x.ui.XUIAbsoluteLayout
+ * 	android:layout_width="fill_parent"
+ * 	android:layout_height="fill_parent"
+ * >
+ * 	<ImageView
+ * 		android:layout_width="wrap_content"
+ * 		android:layout_height="wrap_content"
+ * 		android:layout_x="100dp"
+ * 		android:layout_y="100dp"
+ * 	/>
+ * </x.ui.XUIAbsoluteLayout>
  * @endcode
  */ 
 public class XUIAbsoluteLayout extends ViewGroup
@@ -41,8 +46,8 @@ public class XUIAbsoluteLayout extends ViewGroup
 	private int mPaddingLeft, mPaddingRight, mPaddingTop, mPaddingBottom;
 	
 	/**
-	 * Default constructor
-	 * @param context
+	 * Default Constructor
+	 * @param context The application's context
 	 */
 	public XUIAbsoluteLayout(Context context)
 	{
@@ -51,8 +56,8 @@ public class XUIAbsoluteLayout extends ViewGroup
 
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attrs
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIAbsoluteLayout(Context context, AttributeSet attrs)
 	{

@@ -1,4 +1,5 @@
 /**
+ * @cond DEV
  * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
  */
 package x.ui;
@@ -71,9 +72,9 @@ public class XUIDragRefreshListView extends ListView implements OnScrollListener
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context The application's context
-	 * @param attrs The attribute set passed via the SAX parser
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIDragRefreshListView(Context context, AttributeSet attrs)
 	{
@@ -575,3 +576,6 @@ public class XUIDragRefreshListView extends ListView implements OnScrollListener
 		public void onRefresh();
 	}
 }
+/**
+ * @endcond
+ */

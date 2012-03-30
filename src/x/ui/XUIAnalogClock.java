@@ -1,4 +1,10 @@
-/*
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+ */
+
+/* Original Source:
  * Copyright (C) 2006 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +19,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package x.ui;
 
 import android.content.Context;
@@ -35,7 +40,7 @@ import java.util.TimeZone;
 import x.lib.Debug;
 
 /**
- * This widget display an analogic clock with two hands for hours and
+ * @brief This widget display an analogic clock with two hands for hours and
  * minutes.
  */
 @RemoteView public class XUIAnalogClock extends View 
@@ -61,8 +66,8 @@ import x.lib.Debug;
 	private Context mContext;
 
 	/**
-	 * Default constructor
-	 * @param context
+	 * Default Constructor
+	 * @param context The application's context
 	 */
 	public XUIAnalogClock(Context context) 
 	{
@@ -71,8 +76,8 @@ import x.lib.Debug;
 
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attrs
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIAnalogClock(Context context, AttributeSet attrs) 
 	{

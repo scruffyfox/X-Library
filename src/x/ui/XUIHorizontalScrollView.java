@@ -41,7 +41,7 @@ import android.widget.ScrollView;
  *		android:fadingEdge="none"	
  *		android:scrollbars="none"
  *		android:id="@+id/galleryView"
- *		xui:scrollMode="step"
+ *		x:scrollMode="step"
  *	>							
  *		<LinearLayout
  *			android:layout_width="wrap_content"
@@ -55,17 +55,15 @@ import android.widget.ScrollView;
  *  
  *  Code Example
  *  @code
- *  for (int imageIndex = fFrom; imageIndex < fTo; imageIndex++)
- *  {	        	
- *	  Bitmap mImage = cacheManager.readImage(hashFileName);		       		
+ *	for (int imageIndex = 0; imageIndex < 5; imageIndex++)
+ *	{	        	
+ *		ImageView image = new ImageView(context);
+ *		image.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+ *		image.setScaleType(ScaleType.FIT_XY);		
+ *		image.setImageResource(R.drawable.image);
  *	
- *	  image = new ImageView(context);
- *	  image.setLayoutParams(new LayoutParams(dm.widthPixels, (int)Math.round(dm.widthPixels / 1.66)));
- *	  image.setScaleType(ScaleType.FIT_XY);		
- *	  image.setDrawingCacheQuality(ImageView.DRAWING_CACHE_QUALITY_LOW);
- *	
- *	  galleryView.addChildView(image);		
- *  }
+ *		scroller.addChildView(image);		
+ *	}
  *  @endcode
  *  
  *  @note To force the child to the width of the scroller, set the width of the child to FILL_PARENT or MATCH_PARENT
@@ -92,7 +90,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 * Default value: STEP.
 	 */
 	public static final int NONE = 0x00;
-	
+		
 	private final int SWIPE_MIN_DISTANCE = 10;
 	private final int SWIPE_THRESHOLD_VELOCITY = 20;
 	
@@ -132,10 +130,10 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context The application's context
-	 * @param attributes The attribute set passed via the SAX parser 
-	 */	
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
+	 */
 	public XUIHorizontalScrollView(Context context, AttributeSet attributes) 
 	{
 		super(context, attributes);
@@ -222,6 +220,9 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		updateCurrentChildView();
 	}
 
+	/**
+	 * Updates the current child index when a view is removed
+	 */
 	private void updateCurrentChildView()
 	{
 		if (mChildCount <= 1)
@@ -343,7 +344,6 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		init();
 	}
 	
-	int prevX = 0;
 	/**
 	 * Initialize the view and set up the scroll listeners
 	 */

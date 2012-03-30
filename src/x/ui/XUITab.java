@@ -93,10 +93,10 @@ public class XUITab extends RelativeLayout
 		init();
 	}
 	
-	/**	 
-	 * Default Constructor
-	 * @param context The application's context
-	 * @param attributes The attribute set passed via the SAX parser
+	/**
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUITab(Context context, AttributeSet attributes) 
 	{

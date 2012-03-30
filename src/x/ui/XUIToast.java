@@ -19,7 +19,7 @@ public class XUIToast extends Toast
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUIToast(Context context)
 	{

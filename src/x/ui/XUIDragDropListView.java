@@ -41,9 +41,9 @@ public class XUIDragDropListView extends ListView
 	protected Rect mDragHandle;
 
 	/**
-	 * Default Constructor
-	 * @param context The application's context
-	 * @param attrs The attribute set passed via the SAX parser
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIDragDropListView(Context context, AttributeSet attrs)
 	{

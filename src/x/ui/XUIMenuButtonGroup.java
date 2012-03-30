@@ -81,7 +81,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUIMenuButtonGroup(Context context)
 	{
@@ -93,9 +93,9 @@ public class XUIMenuButtonGroup extends LinearLayout
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attrs
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIMenuButtonGroup(Context context, AttributeSet attrs)
 	{

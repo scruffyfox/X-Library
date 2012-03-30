@@ -92,8 +92,8 @@ public class XUITabHost extends RelativeLayout
 	
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attributes
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUITabHost(Context context, AttributeSet attributes)
 	{

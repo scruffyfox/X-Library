@@ -78,9 +78,9 @@ public class XUITitleButton extends ImageButton implements Serializable
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context The application's context 
-	 * @param attrs The attribute set passed via the SAX parser
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUITitleButton(Context context, AttributeSet attrs)
 	{

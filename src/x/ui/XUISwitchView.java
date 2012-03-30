@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import x.lib.Debug;
@@ -19,19 +24,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 /**
- * Custom switch view control which allows a midway state.
+ * @brief Custom switch view control which allows a midway state.
  * 
  * The view has a fixed width and height which can not be changed.
- * @param x:color The color of the control when the switch is set to on
- * @param x:state The initial state of the control. Options are: on, off, both
+ * @param XML color The color of the control when the switch is set to on
+ * @param XML state The initial state of the control. Options are: on, off, both
  * 
  * Example XML
  * @code
  * <x.ui.XUISwitchView
- *		android:layout_width="wrap_content"
- *		android:layout_height="wrap_content"  
- *		x:color="#8DB344"	
- *		x:state="on" 								 
+ *	android:layout_width="wrap_content"
+ *	android:layout_height="wrap_content"  
+ *	x:color="#8DB344"	
+ *	x:state="on" 								 
  * />
  * @endcode
  */
@@ -69,7 +74,7 @@ public class XUISwitchView extends View
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUISwitchView(Context context)
 	{
@@ -80,9 +85,9 @@ public class XUISwitchView extends View
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attrs
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUISwitchView(Context context, AttributeSet attrs)
 	{

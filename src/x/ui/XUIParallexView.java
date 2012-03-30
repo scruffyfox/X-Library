@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import android.content.Context;
@@ -43,7 +48,7 @@ public class XUIParallexView extends XUIAbsoluteLayout
 		
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUIParallexView(Context context)
 	{
@@ -51,9 +56,9 @@ public class XUIParallexView extends XUIAbsoluteLayout
 	}
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attrs
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIParallexView(Context context, AttributeSet attrs)
 	{

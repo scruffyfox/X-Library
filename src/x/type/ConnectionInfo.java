@@ -10,12 +10,33 @@ package x.type;
  */
 public class ConnectionInfo 
 {
+	/**
+	 * The URL of the connection
+	 */
 	public String connectionUrl = "";
+	/**
+	 * The headers that were sent (if any)
+	 */
 	public HttpParams connectionHeaders = null;
+	/**
+	 * The data that was sent (if any)
+	 */
 	public Object connectionSentData = null;
+	/**
+	 * The initiated time of the contection
+	 */
 	public long connectionInitiationTime = 0;
+	/**
+	 * The time the response was recieved
+	 */
 	public long connectionResponseTime = 0;
+	/**
+	 * The response code of the connection
+	 */
 	public int connectionResponseCode = 0;
+	/**
+	 * The response message
+	 */
 	public String connectionResponseMessage = "";
 	
 	/**

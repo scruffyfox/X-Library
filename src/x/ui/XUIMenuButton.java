@@ -72,7 +72,7 @@ import android.widget.TextView;
  * 
  * An example of this is. Note this is stored as a drawable and used in textviews attribute android:textColor="@drawable/list" for example.
  * @code
- * <?xml version="1.0" encoding="utf-8"?>
+ *	<?xml version="1.0" encoding="utf-8"?>
  *	<selector xmlns:android="http://schemas.android.com/apk/res/android">
  *		<item android:state_pressed="true" android:color="#FFF" />
  * 		<item android:state_focused="true" android:color="#FFF" />
@@ -94,7 +94,7 @@ public class XUIMenuButton extends LinearLayout
 
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUIMenuButton(Context context)
 	{
@@ -109,10 +109,10 @@ public class XUIMenuButton extends LinearLayout
 		init();
 	}
 
-	/** 
-	 * Default Constructor
-	 * @param context 
-	 * @param attrs 
+	/**
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */ 
 	public XUIMenuButton(Context context, AttributeSet attrs)
 	{

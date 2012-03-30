@@ -27,18 +27,35 @@ import android.widget.TextView;
  * Example code of loading fonts
  * @code
  * <x.ui.XUITextView
- * 		android:layout_width="wrap_content"
- * 		android:layout_height="wrap_content"
- * 		x:font="arial.ttf"
+ * 	android:layout_width="wrap_content"
+ * 	android:layout_height="wrap_content"
+ * 	x:font="arial.ttf"
+ * 	x:text_transform="capitalize"
  * />
  * @endcode
  */
 public class XUITextView extends TextView
 {
+	/**
+	 * XML Attribute: keeps the text as is typed in
+	 */
 	public static final int TEXT_TRANSFORM_NORMAL = 0x0;
+	/**
+	 * XML Attribute: makes the text uppercase
+	 */
 	public static final int TEXT_TRANSFORM_UPPERCASE = 0x01;
+	/**
+	 * XML Attribute: makes the text lowercase
+	 */
 	public static final int TEXT_TRANSFORM_LOWERCASE = 0x10;
+	/**
+	 * XML Attribute: makes the first letter in every word capital
+	 */
 	public static final int TEXT_TRANSFORM_CAPITALIZE = 0x100;
+	/**
+	 * XML Attribute: makes the first letter lower case, then the first letter
+	 * in every word after capital
+	 */
 	public static final int TEXT_TRANSFORM_CAMEL_CASE = 0x1000;
 	
 	private int mTextTransform = TEXT_TRANSFORM_NORMAL;
@@ -47,7 +64,7 @@ public class XUITextView extends TextView
 	
 	/**
 	 * Default Constructor
-	 * @param context
+	 * @param context The application's context
 	 */
 	public XUITextView(Context context)
 	{
@@ -58,9 +75,9 @@ public class XUITextView extends TextView
 	}	
 	
 	/**
-	 * Default Constructor
-	 * @param context
-	 * @param attributes
+	 * Default constructor
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUITextView(Context context, AttributeSet attributes)
 	{

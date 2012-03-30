@@ -46,20 +46,21 @@ import com.google.android.maps.OverlayItem;
  * @brief Map overlay for use to display points with a balloon popup for map views.
  * @param <Item> The item template (Generally use IconOverlayItem included with x.lib)
  * 
- * Example usage of the overlay. Note the XUIMapOverlay is a container for <b>multiple points</b>. Do not make Individual instances for each point.
+ * Example usage of the overlay. 
  * @code
- *  XUIMapOverlay overlay = new XUIMapOverlay(map);
  *	for (int index = 0; index < count; index++)
  *	{
+ *		XUIMapOverlay overlay = new XUIMapOverlay(map);
  *		MapExtras extra = points.get(index);			
  *		
  *		overlay.setOnBallonClickListener(new balloonClickListener());
  *		
  *		IconOverlayItem item = new IconOverlayItem(new GeoPoint(extra.latE6, extra.lngE6), extra.title, extra.description);			
- *		overlay.addOverlay(item);			
+ *		overlay.addOverlay(item);
+ *		
+ *		overlays.add(overlay);			
  *	}
  *	
- *	overlays.add(overlay);
  *	map.invalidate();
  * @endcode
  */

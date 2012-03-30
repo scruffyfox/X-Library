@@ -1,3 +1,8 @@
+/**
+ * @brief x ui is the library which includes the commonly used views in 3 Sided Cube Android applications
+ * 
+ * @author Callum Taylor
+**/
 package x.ui;
 
 import java.util.Timer;
@@ -29,8 +34,8 @@ public class XUIImageView extends ImageView
 	private float mOpacity;
 	
 	/**
-	 * Default constructor
-	 * @param context
+	 * Default Constructor
+	 * @param context The application's context
 	 */
 	public XUIImageView(Context context)
 	{
@@ -40,8 +45,8 @@ public class XUIImageView extends ImageView
 	
 	/**
 	 * Default constructor
-	 * @param context
-	 * @param attrs
+	 * @param context The context of the application/activity
+	 * @param attrs The attribute set gathered from the XML
 	 */
 	public XUIImageView(Context context, AttributeSet attrs)
 	{
