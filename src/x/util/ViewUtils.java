@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Utilities for doing operations on Views
+ * @brief Utilities for doing operations on Views
  */
 public class ViewUtils
 {
