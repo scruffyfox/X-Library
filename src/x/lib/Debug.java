@@ -19,9 +19,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
-*	@brief This static class is for debugging 
-*	@todo Add debug outputs for more data types	
-*/
+ * @brief This static class is for debugging 
+ * @todo Add debug outputs for more data types	
+ */
 public class Debug
 {
 	private final static String LOG_TAG = "TSC";
@@ -34,7 +34,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, message);
+			Log.e(LOG_TAG, message);
 		}
 		catch (Exception e)
 		{
@@ -92,7 +92,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message);
+			Log.e(LOG_TAG, "" + message);
 		}
 		catch (Exception e)
 		{
@@ -107,7 +107,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message);
+			Log.e(LOG_TAG, "" + message);
 		}
 		catch (Exception e)
 		{
@@ -192,7 +192,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message.toString(1));
+			Log.e(LOG_TAG, "" + message.toString(1));
 		}
 		catch (JSONException e)
 		{
@@ -208,7 +208,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message.toString(1));
+			Log.e(LOG_TAG, "" + message.toString(1));
 		}
 		catch (JSONException e)
 		{
@@ -224,7 +224,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message);
+			Log.e(LOG_TAG, "" + message);
 		}
 		catch (Exception e)
 		{
@@ -240,7 +240,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message);
+			Log.e(LOG_TAG, "" + message);
 		}
 		catch (Exception e)
 		{
@@ -256,7 +256,7 @@ public class Debug
 	{
 		try
 		{
-			Log.d(LOG_TAG, "" + message);
+			Log.e(LOG_TAG, "" + message);
 		}
 		catch (Exception e)
 		{
@@ -290,7 +290,7 @@ public class Debug
 	public static void out(Bundle bundle)
 	{
 		try
-		{
+		{ 
 			Set<String> keys = bundle.keySet();
 			out(bundle.toString());
 			
@@ -328,10 +328,10 @@ public class Debug
 	    df.setMaximumFractionDigits(2);
 	    df.setMinimumFractionDigits(2);
 
-	    Log.d("MEM", "" + System.currentTimeMillis() + " - DUMP: " + msg);
-	    Log.d("MEM", "Memory Heap Debug. ==============================================================================================================");
-	    Log.d("MEM", "Memory Heap Native: Allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free) in [" + mClass.getName() + "]");
-	    Log.d("MEM", "Memory Heap App: Allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory() / 1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory() / 1048576)) + "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory() / 1048576)) + "MB free)");
-	    Log.d("MEM", "Memory Heap Debug. ==============================================================================================================");
+	    Log.e("MEM", "" + System.currentTimeMillis() + " - DUMP: " + msg);
+	    Log.e("MEM", "Memory Heap Debug. ==============================================================================================================");
+	    Log.e("MEM", "Memory Heap Native: Allocated " + df.format(allocated) + "MB of " + df.format(available) + "MB (" + df.format(free) + "MB free) in [" + mClass.getName() + "]");
+	    Log.e("MEM", "Memory Heap App: Allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory() / 1048576)) + "MB of " + df.format(new Double(Runtime.getRuntime().maxMemory() / 1048576)) + "MB (" + df.format(new Double(Runtime.getRuntime().freeMemory() / 1048576)) + "MB free)");
+	    Log.e("MEM", "Memory Heap Debug. ==============================================================================================================");
 	}
 }
