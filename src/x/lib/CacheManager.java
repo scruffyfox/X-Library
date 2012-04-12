@@ -30,7 +30,6 @@ public class CacheManager implements Serializable
 {
 	private String mCachePath;
 	private Context context;
-	private ArrayList<String> fileNames;
 	private String mPackageName;
 	
 	/**
@@ -74,7 +73,6 @@ public class CacheManager implements Serializable
 	{
 		mCachePath = path;
 		mPackageName = packageName;
-		fileNames = new ArrayList<String>();
 	}
 	
 	/**
@@ -181,17 +179,13 @@ public class CacheManager implements Serializable
 	{
 		try
 		{
-			if (folderName == null || folderName.length() < 1)
+			String filePath = mCachePath;
+			if (folderName != null && folderName.length() > 0)
 			{
-				folderName = "";
-			}
-			else
-			{
-				folderName = "/" + folderName;
-				folderName += "/";
+				filePath += "/cache_" + folderName + "/";
 			}
 			
-			File f = new File(mCachePath + folderName, "cache_" + fileName);			
+			File f = new File(filePath, "cache_" + fileName);			
 			
 			return f.exists();
 		}
@@ -713,10 +707,6 @@ public class CacheManager implements Serializable
 			if (folderName != null && !folderName.equals(""))
 			{
 				filePath += "/cache_" + folderName + "/";
-			}
-			else
-			{
-				filePath = "";
 			}
 			
 			File file = new File(filePath, "cache_" + fileName);
