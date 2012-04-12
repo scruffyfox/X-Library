@@ -280,7 +280,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	public void scrollToChildAt(int index)
 	{
-		if (index > getChildViewCount()) 
+		if (index > getChildViewCount() || index < 0) 
 		{
 			throw new IllegalStateException("Index out of bounds of gallery [index: " + index + " size: " + getChildViewCount() +"]");
 		}
