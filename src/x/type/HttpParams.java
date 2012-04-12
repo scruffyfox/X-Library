@@ -173,6 +173,15 @@ public class HttpParams implements Serializable
 	}
 	
 	/**
+	 * Add a http params class to the class
+	 * @param params The params to add
+	 */
+	public void addParams(HttpParams params)
+	{
+		queryString.addAll(params.queryString);
+	}
+	
+	/**
 	 * Get the headers as an array list
 	 * @return The headers as the array list
 	 */
