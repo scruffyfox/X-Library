@@ -55,7 +55,7 @@ public class AsyncHttpQueuer
 	/**
 	 * The key for the position of the request passed in the bundle of the AsyncHttpResponse
 	 */
-	public static final String BUNDLE_POSITION = "position";
+	public static final String BUNDLE_POSITION = "bundle_position";
 	/**
 	 * The key for if the request is the last request being sent
 	 */
@@ -65,29 +65,29 @@ public class AsyncHttpQueuer
 	private AsyncHttpResponse mResponse;
 	private int mMaxProcess = 1;
 	private int currentQueuePos = 0;	
-	private int totalPos = 0;
+	private int totalPos = 0, queuePos = 0;
 	private int totalQueueCount = 0;
 	private long queueTimeout = 0;
 	
 	private Handler processer = new Handler()
 	{ 
 		public void handleMessage(android.os.Message msg) 
-		{		
+		{				
 			if (msg.what == 1)
 			{
 				return;
-			}
+			}					
 			
 			int count = mMaxProcess > totalQueueCount ? totalQueueCount : mMaxProcess;					
 			while (currentQueuePos < count)
-			{
+			{				
 				executeRequest(requestQueue.poll());
 			}
 		};
 	};
 	
 	/**
-	 * Starts the queue
+	 * Starts the queue 
 	 */
 	public void start()
 	{
@@ -114,21 +114,22 @@ public class AsyncHttpQueuer
 	 * @param client The client to execute
 	 */
 	private void executeRequest(AsyncHttpClient client)
-	{
+	{		
 		if (client == null) return;			
 		 
-		currentQueuePos++;	 
-		totalPos++;
+		queuePos++;
+		currentQueuePos++;	 		
 								
 		Bundle b = new Bundle();
-		b.putInt(BUNDLE_POSITION, totalPos - 1);
+		b.putInt(BUNDLE_POSITION, queuePos - 1);
 		{
 			final AsyncHttpResponse originalResponse = client.getResponse();			
 						
 			client.execute(new AsyncHttpResponse(b)
 			{
 				@Override public void beforeFinish()
-				{
+				{					
+					totalPos++;
 					currentQueuePos--;
 					
 					if (originalResponse != null)
@@ -208,7 +209,7 @@ public class AsyncHttpQueuer
 				}
 				 
 				@Override public void onSend()
-				{					
+				{											
 					if (originalResponse != null)
 					{
 						originalResponse.setConnectionInfo(getConnectionInfo());
