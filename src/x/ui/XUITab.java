@@ -239,8 +239,7 @@ public class XUITab extends RelativeLayout
 	    	fragmentManager.executePendingTransactions();
 	    	
 	    	((ViewGroup)((Activity)context).findViewById(targetView)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-	    	((ViewGroup)((Activity)context).findViewById(targetView)).requestFocus();
-	    	Debug.out("CHILD COUNT: " + ((ViewGroup)((Activity)context).findViewById(targetView)).getChildCount());
+	    	((ViewGroup)((Activity)context).findViewById(targetView)).requestFocus();	    	
 		}
 		catch (Exception e)
 		{
