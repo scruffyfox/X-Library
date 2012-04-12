@@ -161,6 +161,7 @@ public class AsyncHttpClient
 		AsyncHttpClient client = new AsyncHttpClient();
 		client.mUrl = urlStr;
 		client.mPost = postData;
+		client.mRequestParams = requestParameters;
 		client.mRequestMode = requestMode;
 
 		return client;
@@ -181,6 +182,7 @@ public class AsyncHttpClient
 		client.mUrl = urlStr;
 		client.mHeaders = httpHeaders;
 		client.mPost = postData;
+		client.mRequestParams = requestParameters;
 		client.mRequestMode = requestMode;
 
 		return client;
@@ -202,6 +204,7 @@ public class AsyncHttpClient
 		client.mUrl = urlStr;
 		client.mHeaders = httpHeaders;
 		client.mPost = postData;
+		client.mRequestParams = requestParameters;
 		client.mRequestMode = requestMode;
 		client.mResponse = response;
 
@@ -1088,7 +1091,7 @@ public class AsyncHttpClient
 							i = new PatchInputStream(conn.getInputStream());
 						}
 
-						// Get the response					    
+						// Get the response					     
 						InputStream is = new BufferedInputStream(i);
 
 						InputStreamReader reader = new InputStreamReader(is);
