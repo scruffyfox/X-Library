@@ -1,3 +1,6 @@
+lint.xml
+default.properties
+.settings
 /bin
 /gen
 .DS_Store
