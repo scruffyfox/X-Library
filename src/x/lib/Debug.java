@@ -61,6 +61,16 @@ public class Debug
 	}
 	
 	/**
+	 * Outputs a message to the debug console
+	 * @param message The message to output
+	 */
+	public static void out(Exception message)
+	{
+		Debug.out(message.getLocalizedMessage());
+		Debug.out(message.getStackTrace());
+	}
+	
+	/**
 	* Outputs a message to the debug console
 	* @param message The message to output	 
 	*/
