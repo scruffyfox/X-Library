@@ -617,7 +617,14 @@ public class CacheManager implements Serializable
 		};				
 		
 		//	This might be a bad idea, keep an eye on it
-		((Activity)context).runOnUiThread(r);
+		try
+		{
+			((Activity)context).runOnUiThread(r);
+		}
+		catch (Exception e) 
+		{
+			r.start();
+		}
 		
 		return true;		
 	}
@@ -740,7 +747,7 @@ public class CacheManager implements Serializable
 	 */
 	public void clearCache()
 	{
-		clearCache(false);
+		clearCache(false); 
 	}
 
 	/**
