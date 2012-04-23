@@ -72,12 +72,12 @@ import android.widget.TextView;
  * 
  * An example of this is. Note this is stored as a drawable and used in textviews attribute android:textColor="@drawable/list" for example.
  * @code
- *	<?xml version="1.0" encoding="utf-8"?>
- *	<selector xmlns:android="http://schemas.android.com/apk/res/android">
- *		<item android:state_pressed="true" android:color="#FFF" />
- * 		<item android:state_focused="true" android:color="#FFF" />
- * 		<item android:color="#ff352B21" /> <!-- not selected -->
- *	</selector>
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <selector xmlns:android="http://schemas.android.com/apk/res/android">
+ * 	<item android:state_pressed="true" android:color="#FFF" />
+ * 	<item android:state_focused="true" android:color="#FFF" />
+ * 	<item android:color="#ff352B21" /> <!-- not selected -->
+ * </selector>
  * @endcode
  */
 public class XUIMenuButton extends LinearLayout
