@@ -13,6 +13,9 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,7 +23,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import x.type.ConnectionInfo;
+import x.type.FileHttpParams;
 import x.type.HttpParams;
+import x.type.ItemList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -31,7 +36,28 @@ import android.os.Looper;
 /**
  * @brief The client class used for initiating HTTP requests
  * 
- * Example:
+ * POST/PUT
+ * When using POST/PUT the object data that gets sent must be either a byte array of serialized data, or a derivative of the String class.
+ * Sending as a byte array should be used with the correct headers of Content-Type: multipart/form-data. See {@link getMultipartFormHeader}
+ * When sending as a String, the data should be interpreted by the server as RAW input.
+ * 
+ * You can use the method {@link getFormPostDataWithFiles} to convert a HttpParam object to serialized data. You can also send files by using
+ * the {@link AsyncHttpClient.FileHttpParams} params.
+ * 
+ * GET
+ * When using the GET request, the response is recieved as a STRING. If you are expecting a binary file such as an image or a database, use DOWNLOAD
+ * 
+ * DOWNLOAD
+ * Use this method when you want to recieve a binary file from a server such as an image or database. The response is received as a byte[].
+ * 
+ * The response life cycle:
+ *  - OnSend
+ *  - OnBytesProcessed (continuous)
+ *  - BeforeFinished
+ *  - OnSuccess / OnFailure
+ *  - OnFinish 
+ *  
+ * Example GET:
  * @code
  * AsyncHttpClient APIDownloader = new AsyncHttpClient();
  * APIDownloader.get
@@ -58,16 +84,32 @@ public class AsyncHttpClient
 	private Object mPost;
 	private RequestMode mRequestMode;
 	private AsyncHttpResponse mResponse;
-
+	private static final String BOUNDARY = "----------XLibraryAsyncRequest35146";
+	 
 	/**
 	 * @brief The request mode enumerator for making AsyncHttp requests	 
 	 */
 	public enum RequestMode
 	{
+		/**
+		 * Posts to a server
+		 */
 		POST,
+		/**
+		 * Gets data from the server as String
+		 */
 		GET,
+		/**
+		 * Puts data to the server (equivilant to POST with relevant headers)
+		 */
 		PUT,
+		/**
+		 * Deletes data from the server (equivilant to GET with relevant headers)
+		 */
 		DELETE,
+		/**
+		 * Downloads binary data from the server
+		 */
 		DOWNLOAD
 	}
 
@@ -90,14 +132,105 @@ public class AsyncHttpClient
 	{
 		mHttpLoader = new HttpLoader(timeout);
 	} 
+	
+	/**
+	 * Gets the boundary string for posting headers
+	 * @return The boundary string
+	 */
+	public static String getBoundary()
+	{
+		return BOUNDARY;
+	}
 
+	/**
+	 * Gets the multipart form header used with Posting data to a server
+	 * @return The header as a String[] which can be used with HttpParams.addParam(header)
+	 */
+	public static String[] getMultipartFormHeader()
+	{
+		return new String[]{"Content-Type", "multipart/form-data; boundary=" + getBoundary()};
+	}		
+	
+	/**
+	 * Gets the binary equivilant of a HttpParam object
+	 * @param values The values to convert
+	 * @return The binary data or null if failed
+	 */
+	public static byte[] getFormPostData(HttpParams values)
+	{
+		try
+		{
+			return getFormPostDataWithFiles(values, null);
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Gets the binary equivilant of a HttpParam object and FileHttpParam files object
+	 * @param values The values and files to convert 
+	 * @return The binary data or null if failed
+	 */
+	public static byte[] getFormPostDataWithFiles(HttpParams values, FileHttpParams files)
+	{
+		try
+		{
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			
+			StringBuffer res = new StringBuffer("\r\n").append("--").append(getBoundary()).append("\r\n");			
+			
+			ItemList<String[]> headers = values.getHeaders();
+			int size = headers.size();
+			
+			for (int index = 0; index < size; index++)
+			{
+				String key = headers.get(index)[0];
+				String val = headers.get(index)[1];
+				
+				res.append("Content-Disposition: form-data; name=\"").append(key).append("\"\r\n").append("\r\n").append(val).append("\r\n").append("--").append(getBoundary()).append("\r\n");			
+			}
+			
+			bos.write(res.toString().getBytes());			
+			
+			if (files != null && files.size() > 0)
+			{
+				int count = files.size();
+				for (int index = 0; index < count; index++)
+				{
+					StringBuffer fileRes = new StringBuffer();
+					fileRes.append("Content-Disposition: form-data; name=\"").append(files.getFieldName(index))
+					.append("\"; filename=\"").append(files.getFileName(index)).append("\"\r\n")
+					.append("Content-Type: ").append(files.getFileType(index)).append("\r\n\r\n");
+					
+					bos.write(fileRes.toString().getBytes());
+					bos.write(files.getFileContents(index));
+				}
+			}
+			
+			StringBuffer end = new StringBuffer("\r\n--" + getBoundary() + "--\r\n");			
+			bos.write(end.toString().getBytes());		
+			
+			return bos.toByteArray();
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}		
+	
 	/**
 	 * Cancels the request
 	 */ 
 	public void cancel() 
 	{ 
 		mHttpLoader.cancel(true); 
-	}
+	}		
 
 	/**
 	 * Creates a AsyncHttpClient for later use
@@ -479,16 +612,18 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a get request with a server for an image
+	 * @deprecated Use download instead then decode the byte array manually
 	 * @param urlStr The URL to the server
 	 * @param response The response interface for the request call back
 	 */
-	public void getImage(String urlStr, AsyncHttpResponse response)
+	@Deprecated public void getImage(String urlStr, AsyncHttpResponse response)
 	{
 		mHttpLoader.getImage(urlStr, response);		
 	}		
 
 	/**
 	 * Initiates a get request with a server
+	 * @deprecated Use AsyncHttpQueuer and download mode instead then decode the byte array manually
 	 * @param urlStr The URLs to the server
 	 * @param response The response interface for the request call back
 	 */
@@ -711,12 +846,9 @@ public class AsyncHttpClient
 		private final int GET_IMAGE = 0x11;		
 		private final int POST = 0x02;
 		private final int PUT = 0x03;
-		private final int DELETE = 0x04; 
+		private final int DELETE = 0x04; 		
 
-		private static final int MAXIMUM_POOL_SIZE = 1024;
-
-		private long mLoadTime = 0;
-		private String mResponse;
+		private long mLoadTime = 0;		
 		private AsyncHttpResponse mAsyncHttpResponse;
 		private int type = 0;
 		private Handler mTimeoutHandler;
@@ -729,8 +861,8 @@ public class AsyncHttpClient
 		 * Default Constructor
 		 */
 		public HttpLoader()
-		{				
-		}
+		{			
+		}		
 
 		/**
 		 * Default Constructor
@@ -738,7 +870,7 @@ public class AsyncHttpClient
 		 */
 		public HttpLoader(int timeout)
 		{
-			this.mTimeout = timeout;
+			this.mTimeout = timeout;		
 		}
 
 		/**
@@ -862,6 +994,7 @@ public class AsyncHttpClient
 		{
 			mConnectionInfo.connectionHeaders = mHttpParams;
 			mConnectionInfo.connectionSentData = mSendData;
+			mConnectionInfo.connectionInitiationTime = System.currentTimeMillis();
 			mConnectionInfo.connectionResponseTime = mLoadTime;
 			mConnectionInfo.connectionUrl = mUrl;
 									
@@ -919,11 +1052,23 @@ public class AsyncHttpClient
 						int bufferSize = 1024;
 						byte[] buffer = new byte[bufferSize];
 
-						int len = 0;						
+						int len = 0;	
+						int readCount = 0;
 						while ((len = is.read(buffer)) > 0)
 						{									
+							if (mAsyncHttpResponse != null)
+							{								
+								mAsyncHttpResponse.onBytesProcessed(readCount, conn.getContentLength());
+							}							
+							
 							byteBuffer.write(buffer, 0, len);
-						}											
+							readCount += len;
+						}		
+						
+						if (mAsyncHttpResponse != null)
+						{
+							mAsyncHttpResponse.onBytesProcessed(readCount, conn.getContentLength());
+						}
 
 						is.close();
 						i.close();
@@ -1050,8 +1195,7 @@ public class AsyncHttpClient
 						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
 						conn.setDoInput(true);
 						conn.setDoOutput(true);
-						conn.setUseCaches(false);						
-						conn.setChunkedStreamingMode(64);
+						conn.setUseCaches(false);												
 
 						if (type == PUT)
 						{
@@ -1072,11 +1216,58 @@ public class AsyncHttpClient
 								conn.setRequestProperty(mHeaders.get(headerIndex)[0], mHeaders.get(headerIndex)[1]);
 							}
 						}
-
-						OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-						wr.write(mSendData.toString());					   
-						wr.flush();
-						wr.close();
+																		
+						//	Send as binary if its a byte array
+						if (mSendData.getClass().equals(byte[].class))
+						{
+							ByteArrayOutputStream bos = new ByteArrayOutputStream();
+							ObjectOutput out = new ObjectOutputStream(bos);   
+							out.writeObject(mSendData);
+							byte[] yourBytes = bos.toByteArray();
+							
+							OutputStream wr = conn.getOutputStream();
+							wr.write(yourBytes);
+							
+							int index = 0;
+							int size = 1024;
+							
+							while (index < yourBytes.length)
+							{					
+								if ((index + size) > yourBytes.length) 
+								{
+				                    size = yourBytes.length - index;
+				                }
+								
+								if (mAsyncHttpResponse != null)
+								{
+									mAsyncHttpResponse.onBytesProcessed(index, yourBytes.length);
+								}
+								
+								wr.write(yourBytes, index, size);
+								index += size;
+							}
+							
+							if (mAsyncHttpResponse != null)
+							{
+								mAsyncHttpResponse.onBytesProcessed(index, yourBytes.length);
+							}
+																		
+							wr.flush();
+							wr.close();
+						}
+						else
+						{
+						    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+				            wr.write(mSendData.toString());
+				            
+				            if (mAsyncHttpResponse != null)
+							{
+				            	mAsyncHttpResponse.onBytesProcessed(mSendData.toString().length(), mSendData.toString().length());
+							}
+				            
+				            wr.flush();
+							wr.close();
+						}
 
 						mConnectionInfo.connectionResponseCode = conn.getResponseCode();	
 						mConnectionInfo.connectionSentData = mSendData.toString();
@@ -1167,6 +1358,8 @@ public class AsyncHttpClient
 			super.onPostExecute(result);	
 			mTimeoutHandler.removeCallbacks(timeoutRunnable);
 
+			mConnectionInfo.connectionResponseTime = System.currentTimeMillis();
+			
 			if (mAsyncHttpResponse != null)
 			{				
 				mAsyncHttpResponse.beforeFinish();
@@ -1197,7 +1390,7 @@ public class AsyncHttpClient
 				mAsyncHttpResponse.onFinish();
 			}
 		}				
-	}
+	}			
 
 	private class PatchInputStream extends FilterInputStream
 	{

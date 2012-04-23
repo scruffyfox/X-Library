@@ -55,11 +55,17 @@ public abstract class AsyncHttpResponse
 		return mExtras;
 	}
 	
-	//	Async callbacks
+	/**
+	 * Called when the client has processed some bytes in a request
+	 * @param amountProcessed The amount of bytes that have been processed (0 to totalSize)
+	 * @param totalSize The total size of the data to be downloaded
+	 */
+	public void onBytesProcessed(int amountProcessed, int totalSize){};
+	
 	/**
 	 * The function that gets called when the request is sent
 	 */
-	public void onSend(){}
+	public void onSend(){};
 	
 	/**
 	 * The function that gets called when the server response with >= 200 and < 300
@@ -77,33 +83,33 @@ public abstract class AsyncHttpResponse
 	 * The function that gets called when the server response with an array @see AsyncHttpClient.getImages()
 	 * @param response The response message
 	 */
-	public void onSuccess(Object[] response){}
+	public void onSuccess(Object[] response){};
 	
 	/**
 	 * The function that gets called when the response from the server fails
 	 */
-	public void onFailure(){}
+	public void onFailure(){};
 	
 	/**
 	 * The function that gets called when the response from the server fails
 	 * @param response The response message
 	 */
-	public void onFailure(Object response){}
+	public void onFailure(Object response){};
 	
 	/**
 	 * The function that gets called when the response from the server fails
 	 * @param responseCode The response code
 	 * @param responseMessage The response message
 	 */
-	public void onFailure(int responseCode, String responseMessage){}
+	public void onFailure(int responseCode, String responseMessage){};
 	
 	/**
 	 * The function that gets called before the async task ends. Called before onSuccess/onFailure.
 	 */
-	public void beforeFinish(){}
+	public void beforeFinish(){};
 	
 	/**
 	 * The function that gets called after everything has been completed
 	 */
-	public void onFinish(){}
+	public void onFinish(){};
 }
