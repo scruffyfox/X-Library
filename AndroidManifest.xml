@@ -5,6 +5,6 @@
     android:versionName="1.0" 
     package="x.ui"
 >
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="9"/>    
+    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="15"/>    
     <application android:icon="@drawable/icon" />	       
 </manifest>
