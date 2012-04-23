@@ -163,6 +163,16 @@ public class HttpParams implements Serializable
 	}
 	
 	/**
+	 * Adds a param to the class
+	 * The string must contain 2 values in the order 0: key, 1: value
+	 * @param keyval The array containing the key and value
+	 */
+	public void addParam(String[] keyval)
+	{
+		addParam(keyval[0], keyval[1]);
+	}
+	
+	/**
 	 * Add a param to the class
 	 * @param key The key
 	 * @param value The value
@@ -179,7 +189,7 @@ public class HttpParams implements Serializable
 	public void addParams(HttpParams params)
 	{
 		queryString.addAll(params.queryString);
-	}
+	}		
 	
 	/**
 	 * Get the headers as an array list
