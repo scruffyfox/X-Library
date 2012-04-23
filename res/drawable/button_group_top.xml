@@ -26,7 +26,7 @@
 		    xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:shape="rectangle">
 		    <solid
-		    	android:color="#ffffff"
+		    	android:color="@color/xui_button_group_bg"
 		    />
 		    <corners
 		    	android:radius="10dp"
