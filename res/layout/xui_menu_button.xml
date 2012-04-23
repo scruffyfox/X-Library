@@ -33,14 +33,15 @@
 			android:gravity="center_vertical"
 			android:layout_gravity="center_vertical"
 			android:layout_centerVertical="true"	
-			android:layout_toRightOf="@id/icon"
+			android:layout_toRightOf="@id/icon"			
 			android:duplicateParentState="true"	
 		/> 
 
 		<LinearLayout 
 			android:id="@+id/input_container"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="wrap_content"			
+			android:layout_toRightOf="@id/label"
 			android:gravity="right|center_vertical"
 			android:layout_gravity="right|center_vertical"
 			android:layout_centerVertical="true"
