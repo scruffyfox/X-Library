@@ -68,6 +68,17 @@ public class BitmapUtils
 	}
 	
 	/**
+	 * Duplicates a bitmap. This does <b>not</b> recycle the original bitmap after the method is called
+	 * @param bm The bitmap you wish to duplicate
+	 * @return The new bitmap
+	 */
+	public static Bitmap duplicate(Bitmap bm)
+	{
+		Bitmap newBitmap = Bitmap.createBitmap(bm);
+		return newBitmap;
+	}
+	
+	/**
 	 * Resizes a bitmap. Original bitmap is recycled after this method is called.
 	 * @param bm The bitmap to resize
 	 * @param width The new width
@@ -243,10 +254,11 @@ public class BitmapUtils
 		XOR,
 		
 		//	Custom Blend modes
+		NORMAL,
 		OVERLAY,
-		ADD,
+		//ADD,
 		DIFFERENCE,
-		EXCLUSION,
+		//EXCLUSION,
 		SOFTLIGHT
 	}
 	
@@ -288,7 +300,18 @@ public class BitmapUtils
 			
 			Bitmap newBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
 			Canvas c = new Canvas(newBitmap);
-			c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), new Paint());
+			//c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), new Paint());
+			
+			if (blendMode == BlendMode.NORMAL)
+			{
+				c.drawBitmap(original, 0, 0, new Paint());
+				c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), new Paint());
+				
+				original.recycle();
+				overlay.recycle();
+				
+				return newBitmap;
+			}
 			
 			for (int x = 0; x < w; x++)
 			{
@@ -299,7 +322,7 @@ public class BitmapUtils
 					
 					double[] rgb1 = new double[]{Color.red(colour1), Color.green(colour1), Color.blue(colour1)};
 					double[] rgb2 = new double[]{Color.red(colour2), Color.green(colour2), Color.blue(colour2)};
-					int[] rgb3 = new int[3];
+					int[] rgb3 = new int[]{(int)rgb2[0], (int)rgb2[1], (int)rgb2[2]};
 					
 					if (blendMode == BlendMode.OVERLAY)
 					{
