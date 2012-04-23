@@ -20,8 +20,7 @@ import android.widget.TextView;
 /**
  *  @brief The menu container for XUIMenuButtons
  *
- *  Custom Attributes:
- *  groupName - The label text for the group
+ *  @param x:groupName The label text for the group
  *  
  *  Example XML layout code
  *  @code
