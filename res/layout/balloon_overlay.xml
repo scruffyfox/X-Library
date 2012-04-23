@@ -4,13 +4,12 @@
 	android:layout_height="wrap_content"
 	android:orientation="horizontal" 		
 	android:id="@+id/balloon_main_layout"		
-	android:paddingBottom="20dp"
 >
 	<RelativeLayout 
 		android:layout_width="wrap_content" 
 		android:layout_height="wrap_content"
 		android:background="@drawable/balloon_overlay_bg_selector" 
-		android:paddingTop="15dp" 
+		android:paddingTop="10dp" 
 		android:paddingLeft="15dp"		
 		android:paddingBottom="15dp"
 		android:layout_marginTop="15dp"
@@ -40,6 +39,7 @@
 				android:textSize="16dip"
 				android:textColor="#FF000000"
 				android:visibility="gone"
+				android:text="Title"
 			/>
 			<TextView 
 				android:layout_height="wrap_content" 				
@@ -50,7 +50,8 @@
 				android:singleLine="false"				
 				android:gravity="top"
 				android:layout_gravity="top"	
-				android:visibility="gone"							
+				android:visibility="gone"
+				android:text="Text Snippet"			
 			/>			
 		</LinearLayout>			
 	</RelativeLayout>	
