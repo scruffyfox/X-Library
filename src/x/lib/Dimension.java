@@ -170,7 +170,7 @@ public class Dimension
 	
 	/**
 	 * Gets the value of the density
-	 * @return The density of the screen
+	 * @return The screen density expressed as dots-per-inch. May be either DisplayMetrics.DENSITY_LOW, DisplayMetrics.DENSITY_MEDIUM, or DisplayMetrics.DENSITY_HIGH.
 	 */
 	public int getDensityName()
 	{
