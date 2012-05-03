@@ -290,7 +290,7 @@ public class XUITab extends RelativeLayout
 		
 		tabText.setContentDescription(this.params.tabText.deselected != null ? this.params.tabText.deselected : this.params.tabText.selected);
 		tabText.setText(this.params.tabText.deselected != null ? this.params.tabText.deselected : this.params.tabText.selected);
-		tabText.setTextColor(this.params.tabTextColor.deselected);
+		tabText.setTextColor(this.params.tabTextColor.deselected != null ? this.params.tabTextColor.deselected : this.params.tabTextColor.selected);
 		this.setBackgroundDrawable(this.params.tabBackground.deselected != null ? this.params.tabBackground.deselected : this.params.tabBackground.selected);		
 	}
 	
