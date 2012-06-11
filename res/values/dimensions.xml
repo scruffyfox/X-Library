@@ -3,6 +3,8 @@
     <dimen name="titlebar_title_size">18dp</dimen>
     <dimen name="titlebar_size">46dp</dimen>
     
+    <dimen name="xuimenubutton_stroke">2px</dimen>
+    <dimen name="xuimenubutton_radius">10dp</dimen>
     <dimen name="xuiswitchview_width">82dp</dimen>
     <dimen name="xuiswitchview_height">29dp</dimen>
     <dimen name="xuiswitchview_text_size">13dp</dimen>
