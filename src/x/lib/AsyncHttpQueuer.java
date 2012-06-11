@@ -9,14 +9,19 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import x.lib.AsyncHttpClient.RequestMode;
 import x.type.ItemList;
-
 import android.os.Bundle;
 import android.os.Handler;
 
 /**
  * @brief The helper class for queueing AsyncHttpClient requests
+ * 
+ * <b>Depends on</b>
+ * <ul>
+ * 	<li>{@link AsyncHttpClient}</li>
+ * 	<li>{@link AsyncHttpResponse}</li>
+ * 	<li>{@link ItemList}</li>
+ * </ul>
  * 
  * Example:
  * @code
@@ -239,6 +244,23 @@ public class AsyncHttpQueuer
 						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
 						mResponse.setConnectionInfo(getConnectionInfo());
 						mResponse.onSuccess(response);
+					}
+				}
+				
+				@Override public void onBytesProcessed(int amountProcessed, int totalSize)
+				{
+					if (originalResponse != null)
+					{
+						originalResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						originalResponse.setConnectionInfo(getConnectionInfo());
+						originalResponse.onBytesProcessed(amountProcessed, totalSize);
+					}
+										
+					if (mResponse != null) 						
+					{						
+						mResponse.getExtras().putInt(BUNDLE_POSITION, getExtras().getInt(BUNDLE_POSITION));
+						mResponse.setConnectionInfo(getConnectionInfo());						
+						mResponse.onBytesProcessed(amountProcessed, totalSize);
 					}
 				}
 				
