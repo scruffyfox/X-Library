@@ -11,6 +11,7 @@ import x.lib.Debug;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -99,6 +100,8 @@ public class XUITitleBar extends RelativeLayout
 		mLeftButtonHost = ((XUITitleButtonHost)mLayout.findViewById(R.id.titlebar_buttons_left));
 		mLabel = (TextView)mLayout.findViewById(R.id.titlebar_label); 
 		
+		mLabel.setSingleLine(true);
+		
 		setTitleText(mTitleText); 
 		setTitleGravity(mGravity);		
 	}
@@ -112,8 +115,26 @@ public class XUITitleBar extends RelativeLayout
 		mTitleText = text;
 		mLabel.setText(mTitleText); 
 		mLabel.setContentDescription(mTitleText);
-		mLabel.setFocusable(true);
+		mLabel.setFocusable(true);					
 	} 
+	
+	/**
+	 * Sets the ellipsize for the title text
+	 * @param pos The position for the ellipsis
+	 */
+	public void setEllipsize(TruncateAt pos)
+	{
+		mLabel.setEllipsize(pos);
+	}
+	
+	/**
+	 * Gets the ellipsize for the title text
+	 * @return
+	 */
+	public TruncateAt getEllipsize()
+	{
+		return mLabel.getEllipsize();
+	}
 	
 	/**
 	 * Sets the title bar text label
