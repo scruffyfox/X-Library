@@ -91,6 +91,16 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	
 	/**
 	 * Default constructor
+	 * @param defaultMarker The resource id of the default pin
+	 * @param mapView The map view
+	 */
+	public MapOverlay(int defaultMarker, MapView mapView)
+	{		
+		this(mapView.getContext().getResources().getDrawable(defaultMarker), mapView);
+	}
+	
+	/**
+	 * Default constructor
 	 * @param defaultMarker The default pin
 	 * @param mapView The map view
 	 */
@@ -115,7 +125,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	
 	/**
 	 * Sets the click listener for the bubble
-	 * @param mOnBallonClickListener The new click listener
+	 * @param mOnBalloonClickListener The new click listener
 	 */
 	public void setOnBallonClickListener(OnBalloonClickListener mOnBalloonClickListener)
 	{
@@ -320,7 +330,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 */
 	private OnClickListener createBalloonClickListener()
 	{
-		return new OnClickListener()
+		return new OnClickListener() 
 		{			
 			public void onClick(View arg0)
 			{
