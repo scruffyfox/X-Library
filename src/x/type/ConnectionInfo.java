@@ -38,12 +38,16 @@ public class ConnectionInfo
 	 * The response message
 	 */
 	public String connectionResponseMessage = "";
+	/**
+	 * The response headers
+	 */
+	public HttpParams connectionResponseHeaders = null;
 	
 	/**
 	 * Generates the class as a string
 	 */
 	@Override public String toString()
 	{
-		return "ConnectionInfo \n[\n\tconnectionUrl=" + connectionUrl + ", \n\tconnectionHeaders=" + connectionHeaders + ", \n\tconnectionSentData=" + connectionSentData + ", \n\tconnectionInitiationTime=" + connectionInitiationTime + ", \n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + "\n]";
+		return "ConnectionInfo \n[\n\tconnectionUrl=" + connectionUrl + ", \n\tconnectionHeaders=" + connectionHeaders + ", \n\tconnectionSentData=" + connectionSentData + ", \n\tconnectionInitiationTime=" + connectionInitiationTime + ", \n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + ", \n\tconnectionResponseHeaders=" + connectionResponseHeaders.toString() + "\n]";
 	}		
 }
