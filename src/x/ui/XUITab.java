@@ -138,37 +138,51 @@ public class XUITab extends RelativeLayout
 	 * @param activityManager The tabhost's activity manager
 	 * @param targetView The target container
 	 */
-	public void select(LocalActivityManager activityManager, int targetView)
+	public String select(LocalActivityManager activityManager, String previousActivity, int targetView)
 	{
-		if (isSelected) return;
+		if (isSelected) return previousActivity;
 		
 		//	Start the new intent
 		if (activityManager == null)
 		{
 			Log.e("XUITab", "No activity manager");
 			select();
-			return;
+			return previousActivity;
 		}
 		
 		if (targetView < 1)
 		{
 			Log.e("XUITab", "No Target view"); 
 			select();
-			return;
+			return previousActivity;
 		}
 		
 		if (this.params.intent == null)
 		{
 			Log.e("XUITab", "No Intent for tab");
 			select();
-			return;
+			return previousActivity;
+		}
+		
+		if (previousActivity != null)
+		{
+			try
+			{
+				activityManager.destroyActivity(previousActivity, true);
+			}
+			catch (Exception e) 
+			{ 
+				e.printStackTrace();
+			}
 		}
 			
 		Activity a = (Activity)context;				
 		ViewGroup mContentView = (ViewGroup)a.findViewById(targetView);
         Intent mIntent = this.params.intent;	       
                        
-        Window w = activityManager.startActivity("" + System.currentTimeMillis(), mIntent);
+        String currentActivity = "" + System.currentTimeMillis();
+        
+        Window w = activityManager.startActivity(currentActivity, mIntent);        
         View mLaunchedView = w != null ? w.getDecorView() : null;	
         
         mContentView.removeAllViewsInLayout();
@@ -184,6 +198,8 @@ public class XUITab extends RelativeLayout
         mContentView.requestFocus();        
         
         select();
+        
+        return currentActivity;
 	}		
 	
 	/**

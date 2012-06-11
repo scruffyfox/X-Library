@@ -77,6 +77,7 @@ public class XUITabHost extends RelativeLayout
 	private OnTabSelectedListener mOnTabSelected;
 	private Animation mContentAnimation;
 	private Fragment lastFragment = null;
+	private String lastActivity = null;
 	
 	/**
 	 * Default constructor
@@ -276,7 +277,7 @@ public class XUITabHost extends RelativeLayout
 			}
 			else
 			{
-				((XUITab)view).select(mActivityManager, mTargetView);
+				lastActivity = ((XUITab)view).select(mActivityManager, lastActivity, mTargetView);
 			}
 	        
 	        if (mOnTabSelected != null)
