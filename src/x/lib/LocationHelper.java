@@ -46,15 +46,15 @@ public class LocationHelper implements LocationListener
 	private Runnable mTimeoutRunnable = new Runnable()
 	{
 		public void run()
-		{
-			mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
-			mLocationManager.removeUpdates(mLocationListener);		
-			
+		{						
 			if (mCallback != null)
 			{
 				mCallback.onLocationFailed("Timeout", MESSAGE_TIMEOUT);
 				mCallback.onTimeout();
 			}
+			
+			mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
+			mLocationManager.removeUpdates(mLocationListener);					
 		};
 	};
 	
@@ -74,7 +74,7 @@ public class LocationHelper implements LocationListener
 	public void cancelRequest()
 	{								
 		mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
-		mLocationManager.removeUpdates(this);		
+		mLocationManager.removeUpdates(this);		 
 		
 		if (mCallback != null)
 		{
@@ -98,20 +98,32 @@ public class LocationHelper implements LocationListener
 		if (userLocation == null)
 		{
 			Criteria c = new Criteria();
-		    c.setAccuracy(Criteria.ACCURACY_COARSE);
+		    c.setAccuracy(Criteria.ACCURACY_FINE);
 		    String p = mLocationManager.getBestProvider(c, true);
-		   
-		    if (p == null)
-		    {
-		    	return;
-		    }
 		    
+		    Criteria c2 = new Criteria();
+		    c2.setAccuracy(Criteria.ACCURACY_COARSE);
+		    String p2 = mLocationManager.getBestProvider(c2, true);
+		   
 		    if (timeout > 0)
 		    {
 		    	mTimeoutHandler.postDelayed(mTimeoutRunnable, timeout);
 		    }
 		    
-		    mLocationManager.requestLocationUpdates(p, 0, 0, this);	
+		    if (p == null && p2 == null)
+		    {
+		    	return;
+		    }		    		    
+		    		   
+		    if (p != null)
+		    {
+		    	mLocationManager.requestLocationUpdates(p, 0, 0, this);
+		    }
+		    
+		    if (p2 != null)
+		    {
+		    	mLocationManager.requestLocationUpdates(p2, 0, 0, this);
+		    }
 		}
 		else
 		{
@@ -126,7 +138,7 @@ public class LocationHelper implements LocationListener
 	 * Gets the cached location
  	 * @return The location, or null if one was not retrieved 
 	 */
-	protected Location getCachedLocation() 
+	public Location getCachedLocation() 
 	{		
 	    List<String> providers = mLocationManager.getProviders(true);	
 	    Location l = null;
