@@ -5,13 +5,15 @@
 **/
 package x.type;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @brief Extends arraylist to allow adding multiple items inline
  * @param <E>
  */
-public class ItemList<E> extends ArrayList
+public class ItemList<E> extends ArrayList<E> implements Serializable
 {
 	/**
 	 * Default Constructor
@@ -53,7 +55,7 @@ public class ItemList<E> extends ArrayList
 		int count = size();
 		for (int index = 0; index < count; index++)
 		{
-			set(index, itemInterface.apply(get(index), index));
+			set(index, (E)itemInterface.apply(get(index), index));
 		}
 	}
 		
