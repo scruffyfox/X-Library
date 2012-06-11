@@ -83,7 +83,24 @@ public class HttpParams implements Serializable
 	}
 	
 	/**
-	 * Encodes the values to the URL standard 
+	 * Clones the current http params
+	 */
+	@Override public HttpParams clone()
+	{
+		HttpParams newParams = new HttpParams();
+		
+		int size = queryString.size();
+		for (int index = 0; index < size; index++)
+		{
+			newParams.addParam(queryString.get(index));
+		}
+		
+		return newParams;
+	}
+	
+	/**
+	 * Encodes the values to the URL standard.
+	 * <b>Warning:</b> Calling this more than once will encode the encoded data. If in doubt, clone the object and use that to urlencode
 	 */
 	public void URLEncode()
 	{
@@ -214,7 +231,7 @@ public class HttpParams implements Serializable
 			qString += queryString.get(dataIndex)[0] + "=" + queryString.get(dataIndex)[1] + "&";
 		}
 		
-		qString = (qString.replace(" ", "%20"));
+		qString = (qString.replace(" ", "+"));
 		qString = (qString.toCharArray()[qString.length() - 1] == '&' ? qString.substring(0, qString.length() - 1) : qString);
 		
 		return qString;
