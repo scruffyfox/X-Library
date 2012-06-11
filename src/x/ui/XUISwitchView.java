@@ -47,6 +47,7 @@ public class XUISwitchView extends View
 	private int mWidth, mHeight, mBorderWidth = 2, mBorderRadius, mTextSize; 
 	private Option<Integer> mStateColour;
 	private Option<Integer> mStateTextColour;
+	private OnModeChangedListener mOnModeChangedListener;
 	
 	/**
 	 * Enum for the state of the switch
@@ -117,6 +118,15 @@ public class XUISwitchView extends View
 	}
 	
 	/**
+	 * Sets the mode changed listener
+	 * @param l The new listener
+	 */
+	public void setOnModeChangedListener(OnModeChangedListener l)
+	{
+		this.mOnModeChangedListener = l;
+	}
+	
+	/**
 	 * Initializes the view, calculates the colours and sets the click listener
 	 */
 	private void init()
@@ -152,6 +162,12 @@ public class XUISwitchView extends View
 			public void onClick(View v)
 			{
 				mCurrentSwitchState = mCurrentSwitchState == SwitchState.BOTH ? SwitchState.OFF : (mCurrentSwitchState == SwitchState.ON ? SwitchState.OFF : SwitchState.ON);
+				
+				if (mOnModeChangedListener != null)
+				{
+					mOnModeChangedListener.onModeChanged(mCurrentSwitchState);
+				}
+				
 				invalidate();
 			}
 		});
@@ -163,6 +179,12 @@ public class XUISwitchView extends View
 	public void toggle()
 	{
 		mCurrentSwitchState = mCurrentSwitchState == SwitchState.BOTH ? SwitchState.OFF : (mCurrentSwitchState == SwitchState.ON ? SwitchState.OFF : SwitchState.ON);
+		
+		if (mOnModeChangedListener != null)
+		{
+			mOnModeChangedListener.onModeChanged(mCurrentSwitchState);
+		}		
+		
 		invalidate();
 	}
 	
@@ -297,5 +319,10 @@ public class XUISwitchView extends View
 	@Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
 	{	
 		super.onMeasure(new MeasureSpec().makeMeasureSpec(mWidth, MeasureSpec.EXACTLY), new MeasureSpec().makeMeasureSpec(mHeight, MeasureSpec.EXACTLY));
+	}
+	
+	public interface OnModeChangedListener
+	{
+		public void onModeChanged(SwitchState newState);		
 	}
 }
