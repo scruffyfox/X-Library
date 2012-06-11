@@ -81,7 +81,7 @@ public class XUIImageView extends ImageView
 	public void setOpacity(float opacity)
 	{
 		mOpacity = opacity;
-		getBackground().setAlpha((int)(mOpacity * 255));
+		getDrawable().setAlpha((int)(mOpacity * 255));
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class XUIImageView extends ImageView
 	public void setImage(String url)
 	{	
 		final ScaleType scale = getScaleType();
-						
+								
 		final int[] loader = new int[]
 		{
 			R.drawable.image_loading_1,
