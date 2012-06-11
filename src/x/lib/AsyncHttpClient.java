@@ -22,6 +22,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import x.type.ConnectionInfo;
 import x.type.FileHttpParams;
 import x.type.HttpParams;
@@ -43,6 +45,15 @@ import android.os.Looper;
  * 
  * You can use the method {@link getFormPostDataWithFiles} to convert a HttpParam object to serialized data. You can also send files by using
  * the {@link AsyncHttpClient.FileHttpParams} params.
+ * 
+ * <b>Depends on</b>
+ * <ul>
+ * 	<li>{@link AsyncHttpResponse}</li>
+ * 	<li>{@link HttpParams}</li>
+ * 	<li>{@link FileHttpParams}</li>
+ * 	<li>{@link ConnectionInfo}</li>
+ * 	<li>{@link ItemList}</li>
+ * </ul>
  * 
  * GET
  * When using the GET request, the response is recieved as a STRING. If you are expecting a binary file such as an image or a database, use DOWNLOAD
@@ -994,6 +1005,7 @@ public class AsyncHttpClient
 		{
 			mConnectionInfo.connectionHeaders = mHttpParams;
 			mConnectionInfo.connectionSentData = mSendData;
+			mConnectionInfo.connectionResponseHeaders = new HttpParams();
 			mConnectionInfo.connectionInitiationTime = System.currentTimeMillis();
 			mConnectionInfo.connectionResponseTime = mLoadTime;
 			mConnectionInfo.connectionUrl = mUrl;
@@ -1015,7 +1027,7 @@ public class AsyncHttpClient
 		@Override protected Object doInBackground(String... url)
 		{				
 			mLoadTime = System.currentTimeMillis();											
-
+			
 			switch (type)
 			{
 				case DOWNLOAD:
@@ -1044,6 +1056,12 @@ public class AsyncHttpClient
 						else
 						{
 							i = new PatchInputStream(conn.getInputStream());
+						}
+						
+						String loc;
+						if ((loc = conn.getHeaderField("Location")) != null)
+						{ 
+							mConnectionInfo.connectionResponseHeaders.addParam("Location", loc);
 						}
 						
 						InputStream is = new BufferedInputStream(i, 1024);
@@ -1101,9 +1119,17 @@ public class AsyncHttpClient
 						System.setProperty("http.keepAlive", "false");
 
 						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
+						
+						if (mHttpParams != null && mHttpParams.getParam("FollowRedirect") != null)
+						{
+							//conn.setInstanceFollowRedirects(Boolean.parseBoolean(mHeaders.getParam("FollowRedirect")));
+						}
+						
+						conn.setInstanceFollowRedirects(false);
 						conn.setDoInput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
+						
 
 						if (type == DELETE)
 						{
@@ -1113,7 +1139,6 @@ public class AsyncHttpClient
 						{
 							conn.setRequestMethod("GET");	
 						}					
-
 
 						if (mHttpParams != null)
 						{
@@ -1125,9 +1150,9 @@ public class AsyncHttpClient
 								conn.setRequestProperty(mHeaders.get(headerIndex)[0], mHeaders.get(headerIndex)[1]);
 							}
 						}
-
-						mConnectionInfo.connectionResponseCode = conn.getResponseCode();					    					    				    					  
-
+																		
+						mConnectionInfo.connectionResponseCode = conn.getResponseCode();					    					    				    					  						
+						
 						PatchInputStream i; 
 						if ((mConnectionInfo.connectionResponseCode / 100) != 2)
 						{
@@ -1136,6 +1161,12 @@ public class AsyncHttpClient
 						else
 						{
 							i = new PatchInputStream(conn.getInputStream());
+						}
+						
+						String loc;
+						if ((loc = conn.getHeaderField("Location")) != null)
+						{ 
+							mConnectionInfo.connectionResponseHeaders.addParam("Location", loc);
 						}
 
 						// Get the response					    
@@ -1206,6 +1237,11 @@ public class AsyncHttpClient
 							conn.setRequestMethod("POST");
 						}
 
+						if (mHttpParams != null && mHttpParams.getParam("FollowRedirect") != null)
+						{
+						//	conn.setInstanceFollowRedirects(Boolean.parseBoolean(mHttpParams.getParam("FollowRedirect")));
+						}
+						
 						if (mHttpParams != null)
 						{
 							ArrayList<String[]> mHeaders = mHttpParams.getHeaders();
@@ -1215,7 +1251,7 @@ public class AsyncHttpClient
 							{				    	
 								conn.setRequestProperty(mHeaders.get(headerIndex)[0], mHeaders.get(headerIndex)[1]);
 							}
-						}
+						}			
 																		
 						//	Send as binary if its a byte array
 						if (mSendData.getClass().equals(byte[].class))
@@ -1245,18 +1281,18 @@ public class AsyncHttpClient
 								
 								wr.write(yourBytes, index, size);
 								index += size;
-							}
+							}														
+																		
+							wr.flush();
+							wr.close();
 							
 							if (mAsyncHttpResponse != null)
 							{
 								mAsyncHttpResponse.onBytesProcessed(index, yourBytes.length);
 							}
-																		
-							wr.flush();
-							wr.close();
 						}
 						else
-						{
+						{														
 						    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 				            wr.write(mSendData.toString());
 				            
@@ -1268,10 +1304,16 @@ public class AsyncHttpClient
 				            wr.flush();
 							wr.close();
 						}
-
+						
 						mConnectionInfo.connectionResponseCode = conn.getResponseCode();	
 						mConnectionInfo.connectionSentData = mSendData.toString();
 
+						String loc;
+						if ((loc = conn.getHeaderField("Location")) != null)
+						{ 
+							mConnectionInfo.connectionResponseHeaders.addParam("Location", loc);
+						}
+						
 						PatchInputStream i; 
 						if ((mConnectionInfo.connectionResponseCode / 100) != 2)
 						{
