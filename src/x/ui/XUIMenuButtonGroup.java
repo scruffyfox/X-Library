@@ -75,8 +75,35 @@ public class XUIMenuButtonGroup extends LinearLayout
 	private int childCount = 0;
 	private LayoutInflater mLayoutInflater; 
 	private String groupName = "";
+	private int mGroupNameTransform = TEXT_TRANSFORM_NORMAL;
 	private OnMenuButtonAdded mOnMenuButtonAdded;
 	private OnMenuButtonRemoved mOnMenuButtonRemoved;
+	
+	/**
+	 * XML Attribute: keeps the text as is typed in
+	 */
+	public static final int TEXT_TRANSFORM_NORMAL = 0x0;
+	/**
+	 * XML Attribute: makes the text uppercase
+	 */
+	public static final int TEXT_TRANSFORM_UPPERCASE = 0x01;
+	/**
+	 * XML Attribute: makes the text lowercase
+	 */
+	public static final int TEXT_TRANSFORM_LOWERCASE = 0x10;
+	/**
+	 * XML Attribute: makes the first letter in every word capital
+	 */
+	public static final int TEXT_TRANSFORM_CAPITALIZE = 0x100;
+	/**
+	 * XML Attribute: makes the first letter lower case, then the first letter
+	 * in every word after capital
+	 */
+	public static final int TEXT_TRANSFORM_CAMEL_CASE = 0x1000;
+	/**
+	 * XML Attribute: makes the first letter in a sentence uppercase
+	 */
+	public static final int TEXT_TRANSFORM_GRAMATICAL = 0x10000;
 	
 	/**
 	 * Default Constructor
@@ -103,9 +130,10 @@ public class XUIMenuButtonGroup extends LinearLayout
 		
 		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup);		
 		groupName = attributes.getString(R.styleable.XUIMenuButtonGroup_groupName);
+		mGroupNameTransform = attributes.getInteger(R.styleable.XUIMenuButtonGroup_groupName_transform, TEXT_TRANSFORM_NORMAL);
 		
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);				
+		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);							
 	}
 	
 	/**
@@ -301,13 +329,14 @@ public class XUIMenuButtonGroup extends LinearLayout
 		groupName = title;
 		
 		if (groupName != null && groupName.length() > 0)
-		{			
-			((TextView)findViewById(R.id.group_label)).setText((groupName));
-			((TextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);	
+		{						
+			((XUITextView)findViewById(R.id.group_label)).setText((groupName));
+			((XUITextView)findViewById(R.id.group_label)).setTextTransform(mGroupNameTransform);
+			((XUITextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);	
 		}
 		else
 		{
-			((TextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	
+			((XUITextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	
 		}
 	}
 	
@@ -327,31 +356,36 @@ public class XUIMenuButtonGroup extends LinearLayout
 				if (childCount == 1)
 				{
 					//childView.setBackgroundResource(R.drawable.button_group_all);
-					childView.setStateResouces(R.drawable.button_group_all);
+					//childView.setStateResouces(R.drawable.button_group_all);
+					childView.setCornerLocation(XUIMenuButton.TOP | XUIMenuButton.BOTTOM);
 				}		
 				else
 				{
 					if (viewIndex == 0)
 					{
 						//childView.setBackgroundResource(R.drawable.button_group_top);
-						childView.setStateResouces(R.drawable.button_group_top);
+						//childView.setStateResouces(R.drawable.button_group_top);
+						childView.setCornerLocation(XUIMenuButton.TOP);
 					}
 					else if (viewIndex == childCount - 1)
 					{
 						//childView.setBackgroundResource(R.drawable.button_group_bottom);
-						childView.setStateResouces(R.drawable.button_group_bottom);
+						//childView.setStateResouces(R.drawable.button_group_bottom);
+						childView.setCornerLocation(XUIMenuButton.BOTTOM);
 					}
 					else
 					{
 						//childView.setBackgroundResource(R.drawable.button_group_middle);
-						childView.setStateResouces(R.drawable.button_group_middle);
+						//childView.setStateResouces(R.drawable.button_group_middle);
+						childView.setCornerLocation(XUIMenuButton.NONE);
 					}
 				}	
 			}
 			else
 			{
 				//childView.setBackgroundResource(R.drawable.button_group_middle);
-				childView.setStateResouces(R.drawable.button_group_middle);
+				//childView.setStateResouces(R.drawable.button_group_middle);
+				childView.setCornerLocation(XUIMenuButton.NONE);
 			}
 		}
 	}
@@ -394,31 +428,36 @@ public class XUIMenuButtonGroup extends LinearLayout
 				if (childCount == 1)
 				{
 					//views[viewIndex].setBackgroundResource(R.drawable.button_group_all);
-					views[viewIndex].setStateResouces(R.drawable.button_group_all);
+					//views[viewIndex].setStateResouces(R.drawable.button_group_all);
+					views[viewIndex].setCornerLocation(XUIMenuButton.BOTTOM | XUIMenuButton.TOP);
 				}		
 				else
 				{
 					if (viewIndex == 0)
 					{
 						//views[viewIndex].setBackgroundResource(R.drawable.button_group_top); 
-						views[viewIndex].setStateResouces(R.drawable.button_group_top);
+						//views[viewIndex].setStateResouces(R.drawable.button_group_top);
+						views[viewIndex].setCornerLocation(XUIMenuButton.TOP);
 					}
 					else if (viewIndex == childCount - 1)
 					{
 						//views[viewIndex].setBackgroundResource(R.drawable.button_group_bottom);
-						views[viewIndex].setStateResouces(R.drawable.button_group_bottom);
+						//views[viewIndex].setStateResouces(R.drawable.button_group_bottom);
+						views[viewIndex].setCornerLocation(XUIMenuButton.BOTTOM);
 					}
 					else
 					{
 						//views[viewIndex].setBackgroundResource(R.drawable.button_group_middle);
-						views[viewIndex].setStateResouces(R.drawable.button_group_middle);
+						//views[viewIndex].setStateResouces(R.drawable.button_group_middle);
+						views[viewIndex].setCornerLocation(XUIMenuButton.NONE);
 					}
 				}	
 			}
 			else
 			{
 				//views[viewIndex].setBackgroundResource(R.drawable.button_group_middle);
-				views[viewIndex].setStateResouces(R.drawable.button_group_middle);
+				//views[viewIndex].setStateResouces(R.drawable.button_group_middle);
+				views[viewIndex].setCornerLocation(XUIMenuButton.NONE);
 			}
 						
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(views[viewIndex]);			
@@ -428,12 +467,13 @@ public class XUIMenuButtonGroup extends LinearLayout
 		
 		if (groupName != null && groupName.length() > 0)
 		{			
-			((TextView)findViewById(R.id.group_label)).setText(x.util.StringUtils.capitalize(groupName));
-			((TextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);
+			((XUITextView)findViewById(R.id.group_label)).setText(groupName);
+			((XUITextView)findViewById(R.id.group_label)).setTextTransform(mGroupNameTransform);
+			((XUITextView)findViewById(R.id.group_label)).setVisibility(View.VISIBLE);
 		} 
 		else
 		{
-			((TextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	 
+			((XUITextView)findViewById(R.id.group_label)).setVisibility(View.GONE);	 
 		}
 	}
 	

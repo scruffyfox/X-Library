@@ -20,8 +20,19 @@
 	<declare-styleable name="XUIScrollView">	
 		<attr name="allowOverScroll" format="boolean"/>		
 	</declare-styleable>
+	<declare-styleable name="XUIMenuButton">
+		<attr name="colorState" format="integer" />
+	</declare-styleable>
 	<declare-styleable name="XUIMenuButtonGroup">	
-		<attr name="groupName" format="string"/>		
+		<attr name="groupName" format="string"/>	
+		<attr name="groupName_transform" format="enum">
+	    	<enum name="normal" value="0x00" />
+	    	<enum name="uppercase" value="0x01" />
+	    	<enum name="lowercase" value="0x10" />
+	    	<enum name="capitalize" value="0x100" />
+	    	<enum name="camel_case" value="0x1000" />
+	    	<enum name="gramatical" value="0x10000" />
+	    </attr>	
 	</declare-styleable> 
 	<declare-styleable name="XUIImageView">
 	    <attr name="opacity" format="float"/>

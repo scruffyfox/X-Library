@@ -6,7 +6,7 @@
     android:layout_height="fill_parent"
     android:layout_marginTop="10dp"
 >
-	<TextView
+	<x.ui.XUITextView
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:id="@+id/group_label"
@@ -23,7 +23,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:orientation="vertical"		
-		android:padding="1px"
+		android:padding="1px" 
 		android:background="@drawable/button_group_all_faux"
 		android:duplicateParentState="true"
 	/>		
