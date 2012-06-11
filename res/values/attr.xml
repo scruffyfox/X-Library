@@ -73,6 +73,7 @@
 	    	<enum name="lowercase" value="0x10" />
 	    	<enum name="capitalize" value="0x100" />
 	    	<enum name="camel_case" value="0x1000" />
+	    	<enum name="gramatical" value="0x10000" />
 	    </attr>
 	</declare-styleable>
 	<declare-styleable name="XUILinearLayout">

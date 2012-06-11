@@ -5,19 +5,16 @@
 **/
 package x.ui;
 
-import java.io.File;
-import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import x.lib.Debug;
 import x.type.TextStyle;
 import x.util.StringUtils;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.text.Html;
-import android.text.format.Formatter;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -57,6 +54,10 @@ public class XUITextView extends TextView
 	 * in every word after capital
 	 */
 	public static final int TEXT_TRANSFORM_CAMEL_CASE = 0x1000;
+	/**
+	 * XML Attribute: makes the first letter in a sentence uppercase
+	 */
+	public static final int TEXT_TRANSFORM_GRAMATICAL = 0x10000;
 	
 	private int mTextTransform = TEXT_TRANSFORM_NORMAL;
 	private String mFontResource;
@@ -112,34 +113,39 @@ public class XUITextView extends TextView
 	private void updateText()
 	{
 		if (mTextTransform == TEXT_TRANSFORM_UPPERCASE)
-		{
-			char[] characters = getText().toString().toCharArray();
-			for (int index = 0; index < characters.length; index++)
-			{
-				if ((int)characters[index] < 123 && (int)characters[index] > 96)
-				{
-					characters[index] = (char)((int)characters[index] - 32);
-				}
-			}
-			
-			setText(characters);
+		{			
+			setText(getText().toString().toUpperCase());
 		}
 		else if (mTextTransform == TEXT_TRANSFORM_LOWERCASE)
-		{
-			char[] characters = getText().toString().toCharArray();
-			for (int index = 0; index < characters.length; index++)
-			{
-				if ((int)characters[index] < 91 && (int)characters[index] > 64)
-				{
-					characters[index] = (char)((int)characters[index] + 32);
-				}
-			}
-			
-			setText(characters);
+		{			
+			setText(getText().toString().toLowerCase());
 		}
 		else if (mTextTransform == TEXT_TRANSFORM_CAPITALIZE)
 		{
 			setText(StringUtils.capitalize(getText().toString()));
+		}
+		else if (mTextTransform == TEXT_TRANSFORM_GRAMATICAL)
+		{
+			char[] characters = getText().toString().toLowerCase().toCharArray();
+			for (int index = 0; index < characters.length; index++)
+			{
+				if ((int)characters[index] < 123 && (int)characters[index] > 96)
+				{
+					if (index == 0)
+					{
+						characters[index] = (char)((int)characters[index] - 32);
+					}
+					else
+					{
+						if ((index - 2 > 0 && characters[index - 2] == '.') || (index - 1 > 0 && characters[index - 1] == '\n'))
+						{
+							characters[index] = (char)((int)characters[index] - 32);
+						}											
+					}
+				}
+			}						
+			
+			setText(characters);
 		}
 	}
 	
@@ -191,7 +197,7 @@ public class XUITextView extends TextView
 		if ((style & TextStyle.UNDERLINE) == style)
 		{			
 			preTag += "<u>";
-			endTag += "</u>";
+			endTag += "</u>"; 
 		}
 		
 		if ((style & TextStyle.ITALIC) == style)
@@ -211,5 +217,50 @@ public class XUITextView extends TextView
 	{	
 		Typeface face = Typeface.createFromAsset(mContext.getAssets(), fontPath);
 		this.setTypeface(face);
+	}
+	
+	@Override protected void onFinishInflate()
+	{	
+		super.onFinishInflate();
+		
+		// we need to check if there are any references to @string, @integer, @dimen, @color
+		String text = getText().toString();
+		
+		// find all words starting with m or c, and ends with n or r or s. 
+		// RegEx backslash should be escaped with an additional one.
+		Pattern p = Pattern.compile("(@(.*?(\\s|$)))");
+		Matcher m = p.matcher(text);
+		while (m.find()) 
+		{
+		    String match = m.group().trim();		  
+		    String[] id = match.split("[/]");
+		    
+		    Debug.out(id);
+		    
+		    int resId = mContext.getResources().getIdentifier(id[1], id[0].replace("@", ""), mContext.getPackageName());
+		    if (resId <= 0) continue;
+		    
+		    String replacement = "";
+		    if (id[0].toLowerCase().contains("string"))
+		    {
+		    	replacement = mContext.getResources().getString(resId);
+		    }
+		    else if (id[0].toLowerCase().contains("integer"))
+		    {
+		    	replacement = mContext.getResources().getInteger(resId) + "";
+		    }
+		    else if (id[0].toLowerCase().contains("dimen"))
+		    {
+		    	replacement = mContext.getResources().getDimension(resId) + "";
+		    }
+		    else if (id[0].toLowerCase().contains("color"))
+		    {
+		    	replacement = mContext.getResources().getColor(resId) + "";
+		    }
+		    
+		    text = text.replace(match, replacement);
+		}	    
+		
+		setText(text);
 	}
 }
