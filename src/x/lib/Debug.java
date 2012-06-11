@@ -132,9 +132,11 @@ public class Debug
 	{
 		try
 		{
+			Debug.out(message.toString());
+			int index = 0;
 			for (Object m : message)
 			{
-				out(m.toString());
+				out("\tIndex " + index++ + " : " + m.toString());
 			}
 		}
 		catch (Exception e)
