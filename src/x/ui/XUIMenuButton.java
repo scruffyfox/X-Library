@@ -5,31 +5,31 @@
  **/
 package x.ui;
 
-import java.lang.reflect.Method;
-
-import x.lib.Debug;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
+import android.graphics.drawable.shapes.Shape;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -43,6 +43,16 @@ import android.widget.TextView;
  * [text view, view]
  * [image view, text view, view]	
  *  
+ * @param x:colorState [ref] You can use this to set the default colours list to the cell of the drawable. Only accepts the pressed state and normal state
+ * Example of setting the colours of the group
+ * @code
+ * <?xml version="1.0" encoding="utf-8"?>
+ * <selector xmlns:android="http://schemas.android.com/apk/res/android">
+ * 	<item android:state_pressed="true" android:color="#Ff0fab02" />	
+ * 	<item android:color="#ffffffff" /> <!-- not selected -->
+ * </selector>
+ * @endcode
+ * 
  * Example XML Code (Note to make a button clickable, you must declare it clickable by using android:clickable="true") 
  * This example uses the 4th combination of [text view, view]
  * @code
@@ -52,6 +62,7 @@ import android.widget.TextView;
  *		android:id="@+id/town"
  *		android:onClick="townClick"  
  *		android:clickable="true"
+ *		x:colorState="@drawable/list"
  *	>
  *		<TextView
  *			android:layout_width="wrap_content"
@@ -66,6 +77,7 @@ import android.widget.TextView;
  *		/>
  *	</x.ui.XUIMenuButton>
  * @endcode
+ * 
  * 
  * When using clickable, its important to use colour lists for when the button is pressed for accessibility. Changing the colour to a brighter colour (if the press state is dark) or
  * darker if the press state is light.
@@ -82,15 +94,21 @@ import android.widget.TextView;
  */
 public class XUIMenuButton extends LinearLayout
 {
+	protected static final int NONE = 0x00;
+	protected static final int TOP = 0x01;
+	protected static final int BOTTOM = 0x10;
+	
 	private Context mContext;
 	private ViewGroup mLayoutView;
 	private LayoutInflater mLayoutInflater;
 	private int mChildCount = 0;
+	private int mCornerLocation;
 	private ViewGroup mLayout;
 	private ImageView mImageView;
 	private TextView mLabel;
 	private View mContentView;
 	private boolean mSetOnClickListener;
+	private ColorStateList mStateColours;
 
 	/**
 	 * Default Constructor
@@ -121,9 +139,30 @@ public class XUIMenuButton extends LinearLayout
 		this.mContext = context; 
 
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);	
+		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup);				
+		mStateColours = attributes.getColorStateList(R.styleable.XUIMenuButton_colorState);
 
 		init();
-	}	 
+	}	
+	
+	/**
+	 * Sets the state colours for the view
+	 * @param states The resource to the states
+	 */
+	public void setStateColors(int states)
+	{
+		setStateColors(getResources().getColorStateList(states));
+	}
+	
+	/**
+	 * Sets the state colours for the view
+	 * @param states The colour states
+	 */
+	public void setStateColors(ColorStateList states)
+	{
+		mStateColours = states;
+		updateDrawable();
+	}
 
 	/**
 	 * Override of the padding method
@@ -139,6 +178,11 @@ public class XUIMenuButton extends LinearLayout
 
 	private void init()
 	{		
+		if (mStateColours == null)
+		{
+			mStateColours = getResources().getColorStateList(R.drawable.xui_menu_button_colors);
+		}
+		
 		//	Only set the onlick listener if it hasn't already		
 		if (!mSetOnClickListener && this.isClickable())
 		{			
@@ -312,6 +356,59 @@ public class XUIMenuButton extends LinearLayout
 	}
 
 	/**
+	 * Sets the corner location of the drawable
+	 * @param location The location, either TOP, BOTTOM or NONE
+	 */
+	protected void setCornerLocation(int location)
+	{
+		mCornerLocation = location;
+		updateDrawable();
+	}
+	
+	/**
+	 * Updates the background drawable
+	 */
+	private void updateDrawable()
+	{
+		float[] radii = new float[8];
+		
+		if ((mCornerLocation & TOP) == TOP)
+		{
+			radii[0] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			radii[1] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			radii[2] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			radii[3] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+		}
+		
+		if ((mCornerLocation & BOTTOM) == BOTTOM)
+		{
+			radii[4] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			radii[5] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			radii[6] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			radii[7] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+		}		
+		
+		StateListDrawable newDrawable = new StateListDrawable();				
+		ItemDrawable normal = new ItemDrawable(0xffcccccc, getResources().getDimension(R.dimen.xuimenubutton_stroke));
+		ItemDrawable pressed = new ItemDrawable(0xffcccccc, getResources().getDimension(R.dimen.xuimenubutton_stroke));				
+		RoundRectShape rect = new RoundRectShape(radii, null, null);		
+					
+		normal.setShape(rect);
+		pressed.setShape(rect);		
+		
+		int normalColor = mStateColours.getColorForState(new int[]{}, getResources().getColor(R.color.xui_button_group_bg));
+		normal.getPaint().setColor(normalColor);
+				
+		int pressedColor = mStateColours.getColorForState(new int[]{android.R.attr.state_pressed}, getResources().getColor(R.color.xui_button_group_bg_selected));
+		pressed.getPaint().setColor(pressedColor);
+
+		newDrawable.addState(new int[]{android.R.attr.state_pressed}, pressed);
+		newDrawable.addState(new int[]{}, normal);
+		
+		setBackgroundDrawable(newDrawable);  
+	}
+	
+	/**
 	 * Is called when the view is being layed out
 	 * @param changed If the view has changed or not
 	 * @param l The left coordinate
@@ -413,6 +510,32 @@ public class XUIMenuButton extends LinearLayout
 		{
 			((LinearLayout)mLayout.findViewById(R.id.icon)).addView(mImageView);		
 			((LinearLayout)mLayout.findViewById(R.id.icon)).setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private class ItemDrawable extends ShapeDrawable
+	{
+		int strokeColor;
+		float strokeSize;		
+		
+		public ItemDrawable(int strokeColor, float strokeSize)
+		{
+			this.strokeColor = strokeColor;
+			this.strokeSize = strokeSize;
+		}
+		
+		@Override protected void onDraw(Shape shape, Canvas canvas, Paint paint) 
+		{			
+		    Paint fillpaint = this.getPaint();
+		    Paint strokepaint = new Paint(fillpaint);
+		    strokepaint.setAntiAlias(true);
+		    strokepaint.setStyle(Paint.Style.STROKE);
+		    //to set stroke width and color instead of <stroke android:width="2dp" android:color="#FFFFFFFF" /> 
+		    strokepaint.setStrokeWidth(strokeSize);
+		    strokepaint.setColor(strokeColor);
+
+		    shape.draw(canvas, fillpaint);
+		    shape.draw(canvas, strokepaint);
 		}
 	}
 }
