@@ -51,17 +51,23 @@ public class CacheManager implements Serializable
 	public CacheManager(Context context, String packageName, boolean useExternalCache)
 	{
 		this.context = context;
-		this.mPackageName = packageName;
-		fileNames = new ArrayList<String>();
+		this.mPackageName = packageName;		
 		
 		if (useExternalCache)
-		{
-			mCachePath = context.getExternalCacheDir().getAbsolutePath();
+		{					
+			if (context.getExternalCacheDir() != null)
+			{
+				mCachePath = context.getExternalCacheDir().getAbsolutePath();
+				
+				return;
+			}
 		}
-		else
-		{
-			mCachePath = context.getCacheDir().getAbsolutePath();	
-		}
+		
+		//	Not sure if this is the best thing to do by defaulting 
+		//	to internal cache if external cache is available...
+		//	TODO: change to throw an exception if external cache is
+		//	not available
+		mCachePath = context.getCacheDir().getAbsolutePath();			
 	}
 	
 	/**
@@ -73,6 +79,11 @@ public class CacheManager implements Serializable
 	{
 		mCachePath = path;
 		mPackageName = packageName;
+	}
+	
+	public String getCachePath()
+	{
+		return mCachePath;
 	}
 	
 	/**
@@ -869,7 +880,7 @@ public class CacheManager implements Serializable
 		 */
 		public static byte[] serializeBitmap(Bitmap data)
 		{
-			try
+			try 
 			{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				data.compress(CompressFormat.PNG, 100, bos);
