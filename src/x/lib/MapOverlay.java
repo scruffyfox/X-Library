@@ -73,7 +73,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	private int mViewOffset;
 	private final MapController mMapController;
 	private Item mCurrentFocussedItem;
-	private int mCurrentFocussedIndex;
+	private int mCurrentFocussedIndex;	
 	
 	//	Listeners
 	private OnBalloonClickListener mOnBalloonClickListener;
@@ -129,7 +129,17 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 */
 	public void setOnBallonClickListener(OnBalloonClickListener mOnBalloonClickListener)
 	{
-		this.mOnBalloonClickListener = mOnBalloonClickListener;
+		setOnBallonClickListener(mOnBalloonClickListener, true);
+	}
+	
+	/**
+	 * Sets the click listener for the bubble
+	 * @param mOnBalloonClickListener The new click listener
+	 * @param showArrow whether to show the arrow or not
+	 */
+	public void setOnBallonClickListener(OnBalloonClickListener mOnBalloonClickListener, boolean showArrow)
+	{
+		this.mOnBalloonClickListener = mOnBalloonClickListener;				
 	}
 	
 	/**
@@ -244,6 +254,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		MapView.LayoutParams params = new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER);
 		params.mode = MapView.LayoutParams.MODE_MAP;
 
+		mBalloonView.findViewById(R.id.arrow).setVisibility(View.VISIBLE);
 		mBalloonView.setVisibility(View.VISIBLE);
 
 		if (isRecycled)
