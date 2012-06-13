@@ -3,7 +3,8 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:orientation="horizontal" 		
-	android:id="@+id/balloon_main_layout"		
+	android:id="@+id/balloon_main_layout"
+	android:paddingBottom="35dp"	
 >
 	<RelativeLayout 
 		android:layout_width="wrap_content" 
@@ -11,16 +12,15 @@
 		android:background="@drawable/balloon_overlay_bg_selector" 
 		android:paddingTop="10dp" 
 		android:paddingLeft="15dp"		
-		android:paddingBottom="15dp"
-		android:layout_marginTop="15dp"
+		android:paddingRight="15dp"		
+		android:paddingBottom="15dp"		
 		android:id="@+id/balloon_inner_layout"
 	>
 		<ImageView 
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/balloon_item_icon"
-			android:visibility="gone"
-			android:layout_marginRight="10dp"
+			android:visibility="gone"			
 		/>				
 				
 		<LinearLayout 
@@ -53,6 +53,17 @@
 				android:visibility="gone"
 				android:text="Text Snippet"			
 			/>			
-		</LinearLayout>			
+		</LinearLayout>		
+		
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/chevron"
+			android:id="@+id/arrow"
+			android:visibility="gone"
+			android:layout_centerVertical="true"
+			android:layout_toRightOf="@id/balloon"
+			android:layout_marginLeft="10dp"
+		/>	
 	</RelativeLayout>	
 </FrameLayout>
