@@ -110,7 +110,20 @@ public class XUITitleBar extends RelativeLayout
 	 * Set the title bar text label
 	 * @param text The new text for the titlebar
 	 */
-	public void setTitleText(String text)
+	public void setTitle(String text)
+	{
+		mTitleText = text;
+		mLabel.setText(mTitleText); 
+		mLabel.setContentDescription(mTitleText);
+		mLabel.setFocusable(true);					
+	} 
+	
+	/**
+	 * @deprecated Use setTitle(String text) instead
+	 * Set the title bar text label
+	 * @param text The new text for the titlebar
+	 */
+	@Deprecated public void setTitleText(String text)
 	{
 		mTitleText = text;
 		mLabel.setText(mTitleText); 
@@ -140,7 +153,17 @@ public class XUITitleBar extends RelativeLayout
 	 * Sets the title bar text label
 	 * @param textId The id of the text resource to use
 	 */
-	public void setTitleText(int textId)
+	public void setTitle(int textId)
+	{
+		setTitleText(mContext.getResources().getString(textId));
+	}
+	
+	/**
+	 * @deprecated use setTitle(int textId) instead
+	 * Sets the title bar text label
+	 * @param textId The id of the text resource to use
+	 */
+	@Deprecated public void setTitleText(int textId)
 	{
 		setTitleText(mContext.getResources().getString(textId));				
 	}
