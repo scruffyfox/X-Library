@@ -47,6 +47,23 @@ public class BitmapUtils
 	public static final int ORIENTATION_HORIZONTAL_FLIP_90_ROTATE_RIGHT = 7;
 	public static final int ORIENTATION_90_ROTATE_LEFT = 8;
 	 
+	private static boolean mRecycleBitmaps = true;
+	private static Config mBitmapConfig = Config.ARGB_8888;
+	
+	/**
+	 * Set if the utils library recycles the bitmaps after processing
+	 * @param recycleBitmaps
+	 */
+	public static void setRecycleBitmaps(boolean recycleBitmaps)
+	{
+		mRecycleBitmaps = recycleBitmaps;
+	}
+	
+	public static void setConfig(Config config)
+	{
+		mBitmapConfig = config;
+	}
+	
 	/**
 	 * Makes sure the colour does not exceed the 0-255 bounds
 	 * @param colour The colour integer
@@ -87,11 +104,14 @@ public class BitmapUtils
 	 */
 	public static Bitmap resize(Bitmap bm, int width, int height)
 	{
-		Bitmap newBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+		Bitmap newBitmap = Bitmap.createBitmap(width, height, mBitmapConfig);
 		Canvas canvas = new Canvas(newBitmap);
 		canvas.drawBitmap(bm, new Rect(0, 0, bm.getWidth(), bm.getHeight()), new Rect(0, 0, width, height), new Paint(Paint.DITHER_FLAG | Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
 		
-		bm.recycle();
+		if (mRecycleBitmaps)
+		{
+			bm.recycle();
+		}
 		
 		return newBitmap;
 	}
@@ -156,7 +176,11 @@ public class BitmapUtils
 	{
 		ByteArrayOutputStream bitmapOutputStream = new ByteArrayOutputStream();
 		bm.compress(CompressFormat.JPEG, compression, bitmapOutputStream);
-		bm.recycle();
+		
+		if (mRecycleBitmaps)
+		{
+			bm.recycle();
+		}
 		
 		return BitmapFactory.decodeByteArray(bitmapOutputStream.toByteArray(), 0, bitmapOutputStream.size());		
 	}
@@ -173,7 +197,11 @@ public class BitmapUtils
 		rotateMatrix.setRotate((float)degrees);		
 		
 		Bitmap newBitmap = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), rotateMatrix, true);
-		bm.recycle();
+		
+		if (mRecycleBitmaps)
+		{
+			bm.recycle();
+		}
 		
 		return newBitmap;
 	}
@@ -186,7 +214,7 @@ public class BitmapUtils
 	 */
 	public static Bitmap flip(Bitmap bm, int mode)
 	{
-		Bitmap newBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), Config.ARGB_8888);
+		Bitmap newBitmap = Bitmap.createBitmap(bm.getWidth(), bm.getHeight(), mBitmapConfig);
 		Canvas canvas = new Canvas(newBitmap);
 		Matrix flipMatrix = new Matrix();
 		float xFlip = 1.0f, yFlip = 1.0f;
@@ -203,7 +231,11 @@ public class BitmapUtils
 		
 		flipMatrix.preScale(xFlip, yFlip);
 		canvas.drawBitmap(bm, flipMatrix, new Paint());
-		bm.recycle();
+		
+		if (mRecycleBitmaps)
+		{
+			bm.recycle();
+		}
 		
 		return newBitmap;
 	}
@@ -225,7 +257,11 @@ public class BitmapUtils
 	    Bitmap ret = Bitmap.createBitmap(w, h, bm.getConfig());
 	    Canvas canvas = new Canvas(ret);
 	    canvas.drawBitmap(bm, -startX, -startY, null);
-	    bm.recycle();
+	    
+	    if (mRecycleBitmaps)
+		{
+			bm.recycle();
+		}
 	    
 	    return ret;
 	}
@@ -278,7 +314,7 @@ public class BitmapUtils
 			int w = original.getWidth();
 			int h = original.getHeight();
 			
-			Bitmap newBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+			Bitmap newBitmap = Bitmap.createBitmap(w, h, mBitmapConfig);
 			Canvas c = new Canvas(newBitmap);
 			c.drawBitmap(original, 0, 0, null);
 			
@@ -288,8 +324,11 @@ public class BitmapUtils
 			
 			c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), paint);
 			
-			original.recycle();
-			overlay.recycle();				
+			if (mRecycleBitmaps)
+			{		
+				original.recycle();
+				overlay.recycle();
+			}
 			
 			return newBitmap;
 		}
@@ -298,7 +337,7 @@ public class BitmapUtils
 			int w = original.getWidth();
 			int h = original.getHeight();
 			
-			Bitmap newBitmap = Bitmap.createBitmap(w, h, Config.ARGB_8888);
+			Bitmap newBitmap = Bitmap.createBitmap(w, h, mBitmapConfig);
 			Canvas c = new Canvas(newBitmap);
 			//c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), new Paint());
 			
@@ -307,8 +346,11 @@ public class BitmapUtils
 				c.drawBitmap(original, 0, 0, new Paint());
 				c.drawBitmap(overlay, new Rect(0, 0, overlay.getWidth(), overlay.getHeight()), new Rect(0, 0, w, h), new Paint());
 				
-				original.recycle();
-				overlay.recycle();
+				if (mRecycleBitmaps)
+				{				
+					original.recycle();
+					overlay.recycle();				
+				}
 				
 				return newBitmap;
 			}
@@ -349,8 +391,11 @@ public class BitmapUtils
 				}
 			}
 			
-			original.recycle();
-			overlay.recycle();
+			if (mRecycleBitmaps)
+			{			
+				original.recycle();
+				overlay.recycle();
+			}
 			
 			return newBitmap; 
 		}		
