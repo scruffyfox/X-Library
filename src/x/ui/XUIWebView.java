@@ -120,9 +120,30 @@ public class XUIWebView extends WebView
 	 * @param functionName The function name to call
 	 * @param param Array of params to pass
 	 */
-	public void callFunction(String functionName, String... param)
+	public void callFunction(String functionName, Object... param)
 	{	
-		loadUrl("javascript: " + functionName + "(" + StringUtils.join(param, ",") + ");");		
+		String params = "";
+		
+		for (int index = 0; index < param.length; index++)
+		{
+			if (param[index] instanceof Integer || 
+				param[index] instanceof Boolean || 
+				param[index] instanceof Double ||
+				param[index] instanceof Float ||
+				param[index] instanceof JSONObject ||
+				param[index] instanceof JSONArray)
+			{
+				params += "" + param[index] + ", ";
+			}
+			else
+			{
+				params += "\"" + param[index].toString() + "\", ";
+			}
+		}
+		
+		params = params.substring(0, params.length() - 2);
+		Debug.out(params);
+		loadUrl("javascript: " + functionName + "(" + params + ");");		
 	}
 	
 	/**
