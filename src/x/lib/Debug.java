@@ -25,6 +25,16 @@ import android.util.Log;
 public class Debug
 {
 	private final static String LOG_TAG = "TSC";
+	private static boolean DEBUG = true;
+	
+	/**
+	 * Sets if the app is in debug mode. 
+	 * @param inDebug If set to true then outputs will be made, else they wont
+	 */
+	public static void setDebugMode(boolean inDebug)
+	{
+		DEBUG = inDebug;
+	}
 	
 	/**
 	* Outputs a message to the debug console
@@ -32,6 +42,8 @@ public class Debug
 	*/
 	public static void out(String message)
 	{
+		if (!DEBUG) return;
+		
 		try
 		{
 			Log.e(LOG_TAG, message);
@@ -39,14 +51,16 @@ public class Debug
 		catch (Exception e)
 		{
 		}
-	}
+	}	
 	
 	/**
 	* Outputs a message to the debug console
 	* @param message The message to output	 
 	*/
-	public static void out(String[] message)
+	public static void out(String... message)
 	{
+		if (!DEBUG) return;
+		
 		try
 		{
 			for (String m : message)
@@ -74,7 +88,7 @@ public class Debug
 	* Outputs a message to the debug console
 	* @param message The message to output	 
 	*/
-	public static void out(String[][] message)
+	public static void out(String[]... message)
 	{
 		try
 		{
@@ -102,7 +116,7 @@ public class Debug
 	{
 		try
 		{
-			Log.e(LOG_TAG, "" + message);
+			out("" + message);
 		}
 		catch (Exception e)
 		{
@@ -117,7 +131,7 @@ public class Debug
 	{
 		try
 		{
-			Log.e(LOG_TAG, "" + message);
+			out("" + message);
 		}
 		catch (Exception e)
 		{
@@ -128,7 +142,7 @@ public class Debug
 	* Outputs a message to the debug console
 	* @param message The message to output	 
 	*/
-	public static void out(Object[] message)
+	public static void out(Object... message)
 	{
 		try
 		{
@@ -202,6 +216,8 @@ public class Debug
 	*/
 	public static void out(JSONObject message)
 	{
+		if (!DEBUG) return;
+		
 		try
 		{
 			Log.e(LOG_TAG, "" + message.toString(1));
@@ -218,6 +234,8 @@ public class Debug
 	*/
 	public static void out(JSONArray message)
 	{
+		if (!DEBUG) return;
+		
 		try
 		{
 			Log.e(LOG_TAG, "" + message.toString(1));
@@ -236,7 +254,7 @@ public class Debug
 	{
 		try
 		{
-			Log.e(LOG_TAG, "" + message);
+			out("" + message);
 		}
 		catch (Exception e)
 		{
@@ -252,7 +270,7 @@ public class Debug
 	{
 		try
 		{
-			Log.e(LOG_TAG, "" + message);
+			out("" + message);
 		}
 		catch (Exception e)
 		{
@@ -268,7 +286,7 @@ public class Debug
 	{
 		try
 		{
-			Log.e(LOG_TAG, "" + message);
+			out("" + message);
 		}
 		catch (Exception e)
 		{
@@ -280,7 +298,7 @@ public class Debug
 	* Outputs a message to the debug console
 	* @param message The message to output	 
 	*/
-	public static void out(double[] message)
+	public static void out(double... message)
 	{
 		try
 		{
@@ -333,6 +351,8 @@ public class Debug
 	 */
 	public static void logHeap(String msg, Class mClass) 
 	{
+		if (!DEBUG) return;
+		
 	    Double allocated = new Double(android.os.Debug.getNativeHeapAllocatedSize()) / new Double((1048576));
 	    Double available = new Double(android.os.Debug.getNativeHeapSize() / 1048576.0);
 	    Double free = new Double(android.os.Debug.getNativeHeapFreeSize() / 1048576.0);
