@@ -205,6 +205,8 @@ public class HttpParams implements Serializable
 	 */
 	public void addParams(HttpParams params)
 	{
+		if (params == null) return;
+		
 		queryString.addAll(params.queryString);
 	}		
 	
