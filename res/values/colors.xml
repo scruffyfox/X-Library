@@ -3,6 +3,8 @@
     <color name="xui_button_group_bg_selected">#6D91BA</color>
     <color name="xui_button_group_bg">#ffffff</color>
     
+    <color name="transparent">@android:color/transparent</color>
+    
     <!-- Standard color def -->    
     <color name="alice_blue">#f0f8ff</color>
 	<color name="antique_white">#faebd7</color>
