@@ -620,76 +620,7 @@ public class AsyncHttpClient
 
 		mHttpLoader.get(urlStr, headers, response);		
 	}
-
-	/**
-	 * Initiates a get request with a server for an image
-	 * @deprecated Use download instead then decode the byte array manually
-	 * @param urlStr The URL to the server
-	 * @param response The response interface for the request call back
-	 */
-	@Deprecated public void getImage(String urlStr, AsyncHttpResponse response)
-	{
-		mHttpLoader.getImage(urlStr, response);		
-	}		
-
-	/**
-	 * Initiates a get request with a server
-	 * @deprecated Use AsyncHttpQueuer and download mode instead then decode the byte array manually
-	 * @param urlStr The URLs to the server
-	 * @param response The response interface for the request call back
-	 */
-	public void getImages(String[] urlStr, AsyncHttpResponse response)
-	{
-		mAsyncHttpResponse = response;
-		final int count = urlStr.length;
-		final Object[] images = new Object[count];
-		final ArrayList<Integer> counter = new ArrayList<Integer>();		
-
-		response.onSend();
-
-		for (int index = 0; index < count; index++)
-		{
-			HttpLoader loader = new HttpLoader(); 
-			Bundle b = new Bundle(); 
-			b.putInt("index", index);
-
-			AsyncHttpResponse tempResponse = new AsyncHttpResponse(b)
-			{
-				@Override
-				public void onSuccess(Object response)
-				{
-					Bundle b = getExtras();
-					images[b.getInt("index")] = response;
-					counter.add(1);					
-				}
-
-				@Override
-				public void onFailure()
-				{
-					Bundle b = getExtras();
-					images[b.getInt("index")] = null;
-					counter.add(1);
-
-					super.onFailure();
-				}
-
-				@Override
-				public void onFinish()
-				{
-					if (count == counter.size())
-					{
-						mAsyncHttpResponse.beforeFinish();
-						mAsyncHttpResponse.onSuccess(images);
-					}
-
-					super.onFinish();
-				}
-			};
-
-			loader.getImage(urlStr[index], tempResponse);
-		}
-	}
-
+	
 	/**
 	 * Initiates a delete request with a server
 	 * @param endpoint The URLs to the server
