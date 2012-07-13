@@ -31,6 +31,7 @@ public class CacheManager implements Serializable
 	private String mCachePath;
 	private Context context;
 	private String mPackageName;
+	private static String mPrefix = "cache_"; 
 	
 	/**
 	 * The default constructor
@@ -84,6 +85,15 @@ public class CacheManager implements Serializable
 	public String getCachePath()
 	{
 		return mCachePath;
+	}
+	
+	/**
+	 * Sets the prefix of the files in the cache. Default is "cache_"
+	 * @param prefix The new prefix
+	 */
+	public static void setPrefix(String prefix)
+	{
+		mPrefix = prefix;
 	}
 	
 	/**
@@ -150,7 +160,7 @@ public class CacheManager implements Serializable
 		{
 			public boolean accept(File arg0) 
 			{				
-				if (arg0.getName().contains("cache_"))
+				if (arg0.getName().contains(mPrefix))
 				{
 					return true;					
 				}
@@ -193,10 +203,10 @@ public class CacheManager implements Serializable
 			String filePath = mCachePath;
 			if (folderName != null && folderName.length() > 0)
 			{
-				filePath += "/cache_" + folderName + "/";
+				filePath += "/" + mPrefix + folderName + "/";
 			}
 			
-			File f = new File(filePath, "cache_" + fileName);			
+			File f = new File(filePath, mPrefix + fileName);			
 			
 			return f.exists();
 		}
@@ -214,7 +224,7 @@ public class CacheManager implements Serializable
 	 */
 	public long fileModifiedDate(String fileName)
 	{
-		File f = new File(mCachePath, "cache_" + fileName);
+		File f = new File(mCachePath, mPrefix + fileName);
 		
 		return f.lastModified();
 	}
@@ -269,10 +279,10 @@ public class CacheManager implements Serializable
 		{	
 			if (folderName != null && !folderName.equals(""))
 			{
-				folderName = "/cache_" + folderName;
+				folderName = "/" + mPrefix + folderName;
 			}
 			
-			File file = new File(mCachePath + folderName, "cache_" + fileName);
+			File file = new File(mCachePath + folderName, mPrefix + fileName);
 			return file.getAbsolutePath();
 		}
 		catch (Exception e)
@@ -307,7 +317,7 @@ public class CacheManager implements Serializable
 		{
 			public boolean accept(File arg0) 
 			{				
-				if (arg0.getName().contains("cache_"))
+				if (arg0.getName().contains(mPrefix))
 				{
 					return true;					
 				}
@@ -393,10 +403,10 @@ public class CacheManager implements Serializable
 	{
 		if (!folderName.equals(""))
 		{	
-			folderName = "/cache_" + folderName;
+			folderName = "/" + mPrefix + folderName;
 		}
 		
-		File f = new File(mCachePath + folderName, "cache_" + fileName);
+		File f = new File(mCachePath + folderName, mPrefix + fileName);
 		return f.delete();
 	}
 	
@@ -407,7 +417,7 @@ public class CacheManager implements Serializable
 	 */
 	public boolean removeFolder(String folderName)
 	{
-		File f = new File(mCachePath + "/cache_" + folderName);
+		File f = new File(mCachePath + "/" + mPrefix + folderName);
 		
 		File[] fileList = f.listFiles();
 		double totalSize = 0;
@@ -473,14 +483,14 @@ public class CacheManager implements Serializable
 					File outputPath;
 					if (mFolderName != null)
 					{
-						File f = new File(mCachePath + "/cache_" + mFolderName);
+						File f = new File(mCachePath + "/" + mPrefix + mFolderName);
 						f.mkdir();
 					
-						outputPath = new File(mCachePath + "/cache_" + mFolderName, "cache_" + mFileName);
+						outputPath = new File(mCachePath + "/" + mPrefix + mFolderName, mPrefix + mFileName);
 					}
 					else
 					{
-						outputPath = new File(mCachePath, "cache_" + mFileName);
+						outputPath = new File(mCachePath, mPrefix + mFileName);
 					}					
 										
 					FileOutputStream output = new FileOutputStream(outputPath);										
@@ -566,14 +576,14 @@ public class CacheManager implements Serializable
 					String outputPath;
 					if (mFolderName != null && mFolderName.length() > 0)
 					{
-						File f = new File(mCachePath + "/cache_" + mFolderName);
+						File f = new File(mCachePath + "/" + mPrefix + mFolderName);
 						f.mkdir();
 					
-						outputPath = "cache_" + mFolderName + "/cache_" + mFileName;
+						outputPath = mPrefix + mFolderName + "/" + mPrefix + mFileName;
 					}
 					else
 					{
-						outputPath = "cache_" + mFileName;
+						outputPath = mPrefix + mFileName;
 					}
 					
 					FileOutputStream fos = null;					
@@ -664,14 +674,14 @@ public class CacheManager implements Serializable
 		{				
 			if (folderName != null && !folderName.equals(""))
 			{
-				folderName = "/cache_" + folderName;
+				folderName = mPrefix + folderName;
 			}
 			else
 			{ 
 				folderName = "";
 			}
 			
-			File file = new File(mCachePath + folderName, "cache_" + fileName);
+			File file = new File(mCachePath + folderName, mPrefix + fileName);
 			input = new FileInputStream(file);
 
 			BitmapFactory.Options opts = new BitmapFactory.Options();
@@ -724,10 +734,10 @@ public class CacheManager implements Serializable
 			String filePath = mCachePath;
 			if (folderName != null && !folderName.equals(""))
 			{
-				filePath += "/cache_" + folderName + "/";
+				filePath += "/" + mPrefix + folderName + "/";
 			}
 			
-			File file = new File(filePath, "cache_" + fileName);
+			File file = new File(filePath, mPrefix + fileName);
 			input = new FileInputStream(file);
 			stream = new ObjectInputStream(input);
 			
@@ -779,7 +789,7 @@ public class CacheManager implements Serializable
 		{
 			public boolean accept(File arg0) 
 			{				
-				if (arg0.getName().contains("cache_"))
+				if (arg0.getName().contains(mPrefix))
 				{
 					return true;					
 				}
