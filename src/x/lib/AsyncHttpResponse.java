@@ -80,10 +80,11 @@ public abstract class AsyncHttpResponse
 	public void onSuccess(byte[] response){};
 	
 	/**
+	 * DEPRECATED: Not used
 	 * The function that gets called when the server response with an array @see AsyncHttpClient.getImages()
 	 * @param response The response message
 	 */
-	public void onSuccess(Object[] response){};
+	@Deprecated public void onSuccess(Object[] response){};
 	
 	/**
 	 * The function that gets called when the response from the server fails
