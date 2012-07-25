@@ -165,7 +165,7 @@ public class XUISwitchView extends View
 				
 				if (mOnModeChangedListener != null)
 				{
-					mOnModeChangedListener.onModeChanged(mCurrentSwitchState);
+					mOnModeChangedListener.onModeChanged(XUISwitchView.this, mCurrentSwitchState);
 				}
 				
 				invalidate();
@@ -182,7 +182,7 @@ public class XUISwitchView extends View
 		
 		if (mOnModeChangedListener != null)
 		{
-			mOnModeChangedListener.onModeChanged(mCurrentSwitchState);
+			mOnModeChangedListener.onModeChanged(XUISwitchView.this, mCurrentSwitchState);
 		}		
 		
 		invalidate();
@@ -323,6 +323,6 @@ public class XUISwitchView extends View
 	
 	public interface OnModeChangedListener
 	{
-		public void onModeChanged(SwitchState newState);		
+		public void onModeChanged(View v, SwitchState newState);		
 	}
 }
