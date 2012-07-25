@@ -140,14 +140,14 @@ public class XUIImageView extends ImageView
 		h.postDelayed(r, 100);
 				
 		AsyncHttpClient downloader = new AsyncHttpClient();
-		downloader.getImage(url, new AsyncHttpResponse()
+		downloader.download(url, new AsyncHttpResponse()
 		{
 			@Override
-			public void onSuccess(Object response)
+			public void onSuccess(byte[] response)
 			{				
 				h.removeCallbacks(r);
 				
-				Bitmap b = (Bitmap)response;
+				Bitmap b = BitmapFactory.decodeByteArray(response, 0, response.length);
 				setScaleType(scale);
 				setImageBitmap(b);
 			}
