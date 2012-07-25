@@ -651,6 +651,44 @@ public class CacheManager implements Serializable
 	}
 	
 	/**
+	 * Gets the input stream for a file
+ 	 * @param fileName The file to get the input stream of
+	 * @return The inputstream, null if there was a problem
+	 */
+	public InputStream readStream(String fileName)
+	{
+		return readStream(null, fileName);
+	}
+
+	/**
+	 * Gets the input stream for a file
+	 * @param folderName The folder of the file
+ 	 * @param fileName The file to get the input stream of
+	 * @return The inputstream, null if there was a problem
+	 */
+	public InputStream readStream(String folderName, String fileName)
+	{
+		try
+		{
+			if (folderName != null && !folderName.equals(""))
+			{
+				folderName = mPrefix + folderName;
+			}
+			else
+			{ 
+				folderName = "";
+			}
+			
+			File file = new File(mCachePath + folderName, mPrefix + fileName);
+			return new FileInputStream(file);
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
+	
+	/**
 	 * Reads an image from cache
 	 * @param fileName The image to retrieve
 	 * @return The file as a bitmap or null if there was an OutOfMemoryError or Exception
