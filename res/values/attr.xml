@@ -9,22 +9,53 @@
 		</attr>
 	</declare-styleable>
 	<declare-styleable name="XUIAnalogClock">
+		<!-- Sets the drawable for the dial -->
 	    <attr name="dial" format="reference"/>
+	    <!-- Sets the hour hand for the clock face -->
 	    <attr name="hand_hour" format="reference"/>
+	    <!-- Sets the minute hand for the clock -->
 	    <attr name="hand_minute" format="reference"/>
+	    <!-- Sets the initial time of the clock in seconds from 1970 -->
 	    <attr name="time" format="integer"/>
 	</declare-styleable>
 	<declare-styleable name="XUITabHost">	
+		<!-- The target container for the sub views to load -->
 		<attr name="targetContainer" format="integer"/>		
 	</declare-styleable>
 	<declare-styleable name="XUIScrollView">	
+		<!-- Allows overscroll or not -->
 		<attr name="allowOverScroll" format="boolean"/>		
 	</declare-styleable>
 	<declare-styleable name="XUIMenuButton">
+		<!-- Sets the colour state of the button -->
 		<attr name="colorState" format="integer" />
 	</declare-styleable>
-	<declare-styleable name="XUIMenuButtonGroup">	
-		<attr name="groupName" format="string"/>	
+	<declare-styleable name="XUIMenuButtonGroup">
+		<!-- The title of the button group -->	
+		<attr name="groupName" format="string"/>
+		<!-- The border stroke colour -->
+		<attr name="strokeColor" format="color"/>
+		<!-- The border stroke size -->	
+		<attr name="strokeSize" format="dimension"/>
+		<!-- The label stroke colour -->
+		<attr name="labelStrokeColor" format="color"/>
+		<!-- The label stroke size -->	
+		<attr name="labelStrokeSize" format="dimension"/>
+		<!-- The label text size -->	
+		<attr name="labelSize" format="dimension" />
+		<!-- The label colour -->
+		<attr name="labelColor" format="color"/>
+		<!-- The label padding (left, top, right, bottom) -->	
+		<attr name="labelPadding" format="dimension" />
+		<!-- The top padding (labelPadding overrides these) -->
+		<attr name="labelPaddingTop" format="dimension" />
+		<!-- The bottom padding (labelPadding overrides these) -->
+		<attr name="labelPaddingBottom" format="dimension" />
+		<!-- The left padding (labelPadding overrides these) -->
+		<attr name="labelPaddingLeft" format="dimension" />
+		<!-- The right padding (labelPadding overrides these) -->
+		<attr name="labelPaddingRight" format="dimension" />
+		<!-- The default text transformation of the group name -->
 		<attr name="groupName_transform" format="enum">
 	    	<enum name="normal" value="0x00" />
 	    	<enum name="uppercase" value="0x01" />
@@ -33,12 +64,14 @@
 	    	<enum name="camel_case" value="0x1000" />
 	    	<enum name="gramatical" value="0x10000" />
 	    </attr>	
-	</declare-styleable> 
+	</declare-styleable> 	
 	<declare-styleable name="XUIImageView">
+		<!-- The default opacity of the image -->
 	    <attr name="opacity" format="float"/>
 	</declare-styleable>
 	<declare-styleable name="XUIHorizontalScrollView">	
 		<attr name="fillWidth" format="boolean" />
+		<!-- Sets the default scroll mode of the view -->
 		<attr name="scrollMode" format="enum"> 
 			<enum name="smooth" value="0x10" />
 		    <enum name="step" value="0x01" />
@@ -51,28 +84,42 @@
 		<attr name="headerBackgroundColor" format="color"/>		
 	</declare-styleable>	
 	<declare-styleable name="XUITitleBar">
+		<!-- Sets the text of the titlebar -->
 		<attr name="label" format="string" />
+		<!-- Adds an icon to the titlebar next to the label -->
 		<attr name="labelIcon" format="reference" />
-		<attr name="gravity" format="enum"> 
+		<!-- The gravity of the label text -->
+		<attr name="gravity" format="enum"> 			
 			<enum name="left" value="0x00000003" />
 		    <enum name="center" value="0x00000011" />
 		    <enum name="right" value="0x00000005" /> 
 		</attr>				
 	</declare-styleable>
 	<declare-styleable name="XUITitleButton">
+		<!-- 
+			Sets the onclick method for the button. Reference it using an exact path e.g my.package.class.clickMethod. 			
+		-->
 		<attr name="onClick" format="string" />				
 	</declare-styleable>
 	<declare-styleable name="XUIButtonList">
 		<attr name="onButtonClick" format="string" />				
 	</declare-styleable>
 	<declare-styleable name="XUITextView">
+		<!-- Sets the font file for the text. You must store the file in assets and reference it "font.ttf" -->
 	    <attr name="font" format="string" /> 
+	    <!-- Sets the default transformation of the text -->
 	    <attr name="text_transform" format="enum">
+	    	<!-- As the user enters it -->
 	    	<enum name="normal" value="0x00" />
+	    	<!-- All in capitals -->
 	    	<enum name="uppercase" value="0x01" />
+	    	<!-- All lowercase -->
 	    	<enum name="lowercase" value="0x10" />
+	    	<!-- Capitilize every word -->
 	    	<enum name="capitalize" value="0x100" />
+	    	<!-- Capitalizes every word but the first -->
 	    	<enum name="camel_case" value="0x1000" />
+	    	<!-- Capitalizes words after full stops & paragraphs -->
 	    	<enum name="gramatical" value="0x10000" />
 	    </attr>
 	</declare-styleable>
