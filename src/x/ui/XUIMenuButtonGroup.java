@@ -155,6 +155,16 @@ public class XUIMenuButtonGroup extends LinearLayout
 	}
 	
 	/**
+	 * Gets the child count for the sub container
+	 * @return the amount of children in the container
+	 */
+	public int getMenuButtonCount()
+	{
+		LinearLayout itemContainer = ((LinearLayout)layoutView.findViewById(R.id.items));
+		return itemContainer.getChildCount();
+	}
+	
+	/**
 	 * Gets all the buttons as an array from the group
 	 * @return The buttons within the group as an XUIMenuButton array
 	 */
