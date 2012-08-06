@@ -253,9 +253,17 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		GeoPoint point = mCurrentFocussedItem.getPoint();
 		MapView.LayoutParams params = new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER);
 		params.mode = MapView.LayoutParams.MODE_MAP;
-
-		mBalloonView.findViewById(R.id.arrow).setVisibility(View.VISIBLE);
+		
 		mBalloonView.setVisibility(View.VISIBLE);
+		
+		if (mOnBalloonClickListener != null)
+		{
+			mBalloonView.findViewById(R.id.balloon_inner_layout).setBackgroundResource(R.drawable.balloon_overlay_bg_selector_chevron);
+		}
+		else
+		{
+			mBalloonView.findViewById(R.id.balloon_inner_layout).setBackgroundResource(R.drawable.balloon_overlay_bg_selector);
+		}
 
 		if (isRecycled)
 		{
@@ -437,9 +445,11 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 
 			LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(R.layout.balloon_overlay, layout);
-			title = (TextView) v.findViewById(R.id.balloon_item_title);
-			snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
-			imageIcon = (ImageView) v.findViewById(R.id.balloon_item_icon);
+			
+			
+			title = (TextView)v.findViewById(R.id.balloon_item_title);
+			snippet = (TextView)v.findViewById(R.id.balloon_item_snippet);
+			imageIcon = (ImageView)v.findViewById(R.id.balloon_item_icon);
 
 			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.gravity = Gravity.NO_GRAVITY;
@@ -453,7 +463,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		 */
 		public void setData(Item i)
 		{
-			layout.setVisibility(VISIBLE);
+			layout.setVisibility(VISIBLE); 
 			
 			if (i.getTitle() != null)
 			{
@@ -472,14 +482,14 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 				{						
 					int width = drawable.getWidth();
 					int height = drawable.getHeight();  
-					
+					 
 					imageIcon.setVisibility(VISIBLE);
 					imageIcon.setBackgroundDrawable(new BitmapDrawable(drawable));
 					imageIcon.setLayoutParams(new RelativeLayout.LayoutParams(width, height));			
 				}
 			}
 			
-			if (i.getSnippet() != null)
+			if (i.getSnippet() != null && i.getSnippet().length() > 0)
 			{
 				snippet.setVisibility(VISIBLE);
 				snippet.setText(i.getSnippet());
