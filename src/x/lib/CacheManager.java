@@ -21,6 +21,7 @@ import android.graphics.Bitmap.CompressFormat;
 import android.os.AsyncTask;
 import android.os.FileObserver;
 import android.provider.OpenableColumns;
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -206,7 +207,7 @@ public class CacheManager implements Serializable
 				filePath += "/" + mPrefix + folderName + "/";
 			}
 			
-			File f = new File(filePath, mPrefix + fileName);			
+			File f = new File(filePath, mPrefix + fileName);				
 			
 			return f.exists();
 		}
@@ -504,7 +505,7 @@ public class CacheManager implements Serializable
 						mListener.onFileWritten(mFileName);
 					}
 					
-					mImage.recycle();
+					//mImage.recycle();
 					
 					//	Now delete to make up for more room
 					checkCacheLimit();
@@ -710,9 +711,9 @@ public class CacheManager implements Serializable
 		
 		try
 		{				
-			if (folderName != null && !folderName.equals(""))
+			if (!TextUtils.isEmpty(folderName))
 			{
-				folderName = mPrefix + folderName;
+				folderName = "/" + mPrefix + folderName;
 			}
 			else
 			{ 
@@ -758,7 +759,7 @@ public class CacheManager implements Serializable
 	
 	/**
 	 * Reads a file from cache
-	 * @paaram folderName The folder in which the cache file is stored
+	 * @param folderName The folder in which the cache file is stored
 	 * @param fileName The file to retrieve
 	 * @return The file as an Object or null if there was an OutOfMemoryError or Exception
 	 */
