@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"   
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
+    android:layout_height="fill_parent"       
+    android:id="@+id/root_view"
     android:duplicateParentState="true"			    
 >
 	<RelativeLayout
@@ -24,6 +21,7 @@
 			android:layout_gravity="left|center_vertical"
 			android:duplicateParentState="true"			
 			android:layout_marginRight="7dp"
+			android:visibility="gone"
 		/>
 
 		<LinearLayout
@@ -46,6 +44,6 @@
 			android:layout_gravity="right|center_vertical"
 			android:layout_centerVertical="true"
 			android:duplicateParentState="true"			
-		/>
-	</RelativeLayout>
+		/>			
+	</RelativeLayout> 	
 </LinearLayout>
