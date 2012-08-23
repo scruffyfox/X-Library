@@ -5,13 +5,7 @@
 **/
 package x.ui;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.net.URI;
-
-import x.lib.Debug;
 import x.util.StringUtils;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -29,7 +23,8 @@ public class XUIWebView extends WebView
 	private OnPageLoadListener mOnPageLoadListener;
 	private OnLinkClickedListener mOnLinkClickedListener;
 	private OnAlertListener mOnAlertListener;
-	public Context mContext;
+	private Context mContext;
+	private boolean mHasLoaded = false;
 	
 	/**
 	 * Default Constructor
@@ -96,11 +91,16 @@ public class XUIWebView extends WebView
 		this.setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
 	}
 	
+	public boolean hasLoaded()
+	{
+		return mHasLoaded;
+	}
+	
 	/**
 	 * Loads a file from the assets folder
 	 * @param fileName The file to load
 	 */
-	public void loadFromAssets(String fileName)
+	public void loadFromAssets(String fileName) 
 	{
 		loadUrl("file:///android_asset/" + fileName);		
 	}
@@ -115,11 +115,21 @@ public class XUIWebView extends WebView
 		loadUrl("javascript: var " + variableName + " = " + JSON + ";");
 	}
 	
+	public void callFunction(String functionName)
+	{	
+		loadUrl("javascript: " + functionName + "();");		
+	}
+	
+	public void callFunction(String functionName, String... param)
+	{	
+		loadUrl("javascript: " + functionName + "(" + StringUtils.join(param, ",") + ");");		
+	}
+	
 	/**
 	 * Calls a JavaScript function with the params
 	 * @param functionName The function name to call
 	 * @param param Array of params to pass
-	 */
+	 */	
 	public void callFunction(String functionName, Object... param)
 	{	
 		String params = "";
@@ -129,9 +139,7 @@ public class XUIWebView extends WebView
 			if (param[index] instanceof Integer || 
 				param[index] instanceof Boolean || 
 				param[index] instanceof Double ||
-				param[index] instanceof Float ||
-				param[index] instanceof JSONObject ||
-				param[index] instanceof JSONArray)
+				param[index] instanceof Float)
 			{
 				params += "" + param[index] + ", ";
 			}
@@ -142,7 +150,6 @@ public class XUIWebView extends WebView
 		}
 		
 		params = params.substring(0, params.length() - 2);
-		Debug.out(params);
 		loadUrl("javascript: " + functionName + "(" + params + ");");		
 	}
 	
@@ -160,14 +167,14 @@ public class XUIWebView extends WebView
 		 */
 		@Override public void onPageFinished(WebView view, String url)
 		{
-			if (loadCount < 1)
+			mHasLoaded = true;
+			
+			//if (loadCount < 1)
 			{
 				if (mOnPageLoadListener != null && (url.contains("http://") || url.contains("https://") || url.contains("file://")))
-				{					
+				{										
 					mOnPageLoadListener.onPageLoad();
-				}
-				
-				loadCount++;
+				}				
 			}
 		}
 		
