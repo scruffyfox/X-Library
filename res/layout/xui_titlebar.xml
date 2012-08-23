@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
   	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent"
-	android:layout_height="46dp"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/titlebar_size"
 	android:layout_gravity="center_vertical"
 >   	
 	<x.ui.XUITitleButtonHost
@@ -23,11 +23,12 @@
 	
 	<x.ui.XUITextView
     	android:id="@+id/titlebar_label"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"    	
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"    	
     	android:gravity="center_vertical"
     	android:layout_marginLeft="10dp"
-    	style="@style/titlebar_label"
+    	style="@style/titlebar_label"    	
+    	android:layout_centerInParent="true"
     />
 		  
 </RelativeLayout>
