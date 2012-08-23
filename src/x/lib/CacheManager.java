@@ -149,6 +149,24 @@ public class CacheManager implements Serializable
     	return hashFileName;
 	}
 
+	public String[] list()
+	{
+		return list("");
+	}
+	
+	public String[] list(String folderName)
+	{
+		File f = new File(mCachePath + "/" + folderName);
+		String files[] = f.list();
+		
+		for (int index = 0; index < files.length; index++)
+		{
+			files[index] = mCachePath + "/" + (TextUtils.isEmpty(folderName) ? "" : folderName + "/") + files[index];
+		}
+		
+		return files;
+	}
+	
 	/**
 	 * Gets the total size of the cache in bytes
 	 * @return The size of the cache in bytes
