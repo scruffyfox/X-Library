@@ -17,11 +17,11 @@ public class ConnectionInfo
 	/**
 	 * The headers that were sent (if any)
 	 */
-	public HttpParams connectionHeaders = null;
+	public HttpParams connectionHeaders = new HttpParams();
 	/**
 	 * The data that was sent (if any)
 	 */
-	public Object connectionSentData = null;
+	public Object connectionSentData = new Object();
 	/**
 	 * The initiated time of the contection
 	 */
@@ -41,13 +41,13 @@ public class ConnectionInfo
 	/**
 	 * The response headers
 	 */
-	public HttpParams connectionResponseHeaders = null;
+	public HttpParams connectionResponseHeaders = new HttpParams();
 	
 	/**
 	 * Generates the class as a string
 	 */
 	@Override public String toString()
 	{
-		return "ConnectionInfo \n[\n\tconnectionUrl=" + connectionUrl + ", \n\tconnectionHeaders=" + connectionHeaders + ", \n\tconnectionSentData=" + connectionSentData + ", \n\tconnectionInitiationTime=" + connectionInitiationTime + ", \n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + ", \n\tconnectionResponseHeaders=" + connectionResponseHeaders.toString() + "\n]";
+		return "ConnectionInfo \r\n[\r\n\tconnectionUrl=" + connectionUrl + ", \r\n\tconnectionHeaders=" + connectionHeaders + ", \r\n\tconnectionSentData=" + connectionSentData + ", \r\n\tconnectionInitiationTime=" + connectionInitiationTime + ", \r\n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + ", \n\tconnectionResponseHeaders=" + connectionResponseHeaders.toString() + "\n]";
 	}		
 }
