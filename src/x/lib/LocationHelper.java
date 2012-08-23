@@ -7,7 +7,6 @@ package x.lib;
 
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -15,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 
 /**
  * @brief This class is used to fetch the user's current location
@@ -38,25 +38,42 @@ public class LocationHelper implements LocationListener
 	
 	private Context mContext;	
 	private LocationManager mLocationManager;
-	private LocationListener mLocationListener = this;
 	private long mTimeout = 0;
-	private LocationResponse mCallback = null;	
+	private LocationResponse mCallback = null;
+	private Accuracy mAccuracy = Accuracy.FINE;
 	private Handler mTimeoutHandler = new Handler();
+	private float mAccuracyFloat = 30.0f;
 	
 	private Runnable mTimeoutRunnable = new Runnable()
 	{
 		public void run()
 		{						
+			mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
+			mLocationManager.removeUpdates(LocationHelper.this);					
+
 			if (mCallback != null)
 			{
 				mCallback.onLocationFailed("Timeout", MESSAGE_TIMEOUT);
 				mCallback.onTimeout();
-			}
-			
-			mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
-			mLocationManager.removeUpdates(mLocationListener);					
+			}			
 		};
 	};
+	
+	/**
+	 * Determines the accuracy of the fetch
+	 */
+	public enum Accuracy
+	{
+		/**
+		 * Get the location as close to the real point as possible
+		 */
+		FINE,
+		
+		/**
+		 * Get the location by any means
+		 */
+		COARSE;
+	}
 	
 	/**
 	 * Default Constructor
@@ -83,53 +100,81 @@ public class LocationHelper implements LocationListener
 	}
 	
 	/**
-	 * Fetches the location
+	 * Sets the desired accuracy for the fetch
+	 * @param accuracy The new accuracy
+	 */
+	public void setAccuracy(float accuracy)
+	{
+		mAccuracyFloat = accuracy;
+	}
+	
+	/**
+	 * Gets the current set desired accuracy for a fetch
+	 * @return The accuracy in meters
+	 */
+	public float getAccuracy()
+	{
+		return mAccuracyFloat;
+	}
+	
+	/**
+	 * Fetches the location using Fine accuracy. 
+	 * Note: if the response returns location fetch failed, use the helper to get the cached location, then finally fail if that is null
 	 * @param timeout The time out for the request in MS
 	 * @param callback The callback for the request
 	 */
 	public void fetchLocation(long timeout, LocationResponse callback)
 	{
+		fetchLocation(timeout, Accuracy.FINE, callback);
+	}
+	
+	/**
+	 * Fetches the location
+	 * @param timeout The time out for the request in MS
+	 * @param accuracy The accuracy of the fetch
+	 * @param callback The callback for the request
+	 */
+	public void fetchLocation(long timeout, Accuracy accuracy, LocationResponse callback)	
+	{
 		mCallback = callback;		
 		mCallback.onRequest();
+		mAccuracy = accuracy;
 		Location userLocation = null;		
 		
-		//	Try to get the cache location first
+		//	Try to get the cache location first 
 		userLocation = getCachedLocation();
-		if (userLocation == null)
-		{
-			Criteria c = new Criteria();
-		    c.setAccuracy(Criteria.ACCURACY_FINE);
-		    String p = mLocationManager.getBestProvider(c, true);
-		    
-		    Criteria c2 = new Criteria();
-		    c2.setAccuracy(Criteria.ACCURACY_COARSE);
-		    String p2 = mLocationManager.getBestProvider(c2, true);
-		   
+//		if (userLocation == null)
+		{	
 		    if (timeout > 0)
 		    {
 		    	mTimeoutHandler.postDelayed(mTimeoutRunnable, timeout);
 		    }
 		    
-		    if (p == null && p2 == null)
+		    try
 		    {
-		    	return;
-		    }		    		    
-		    		   
-		    if (p != null)
-		    {
-		    	mLocationManager.requestLocationUpdates(p, 0, 0, this);
+		    	mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		    }
-		    
-		    if (p2 != null)
-		    {
-		    	mLocationManager.requestLocationUpdates(p2, 0, 0, this);
-		    }
-		}
-		else
-		{
-			if (callback != null)
+		    catch (Exception e) 
 			{
-				callback.onLocationAquired(userLocation);
+				e.printStackTrace();
+			}
+		    
+		    try
+		    {
+		    	mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+		    }
+		    catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+		    
+		    try
+		    {
+		    	mLocationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
+		    }
+		    catch (Exception e) 
+			{
+				e.printStackTrace();
 			}
 		}				
 	}
@@ -152,39 +197,61 @@ public class LocationHelper implements LocationListener
 	    return l;
 	}
 		
+	private boolean hasAquired = false;
 	@Override public void onLocationChanged(Location location)
 	{
 		if (location != null)
-		{				
-			mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
+		{												
+			if (mCallback != null)
+			{
+				mCallback.onLocationChanged(location);
+				
+				if (mAccuracy == Accuracy.FINE && (!location.hasAccuracy() || location.getAccuracy() > mAccuracyFloat)) return;
+				if (!hasAquired)
+				{
+					mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
+					mLocationManager.removeUpdates(this);	
+					mCallback.onLocationAquired(location);
+					hasAquired = true;
+				}
+			}
+		}
+	}
+	
+	public void stopFetch()
+	{
+		mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
+		mLocationManager.removeUpdates(this);	
+	}
+
+	@Override public void onProviderDisabled(String provider)
+	{		
+		List<String> providers = mLocationManager.getProviders(true);	
+	    boolean allOn = false;		
+		
+	    for (int i = providers.size() - 1; i >= 0; i--) 
+	    {
+	    	allOn |= Settings.Secure.isLocationProviderEnabled(mContext.getContentResolver(), providers.get(i));
+	    }
+	    
+	    if (!allOn)
+	    {
+	    	mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
 			mLocationManager.removeUpdates(this);		
 			
 			if (mCallback != null)
 			{
-				mCallback.onLocationAquired(location);
+				mCallback.onLocationFailed("All providers disabled", MESSAGE_PROVIDER_DISABLED);
 			}
-		}
-	}
-
-	@Override public void onProviderDisabled(String provider)
-	{
-		mTimeoutHandler.removeCallbacks(mTimeoutRunnable);
-		mLocationManager.removeUpdates(this);		
-		
-		if (mCallback != null)
-		{
-			mCallback.onLocationFailed("Location provider disabled", MESSAGE_PROVIDER_DISABLED);
-		}
+	    }
 	}
 
 	@Override public void onProviderEnabled(String provider)
 	{
-		
 	}
 
 	@Override public void onStatusChanged(String provider, int status, Bundle extras)
 	{
-		
 	}
 	
 	/**
@@ -192,11 +259,17 @@ public class LocationHelper implements LocationListener
 	 * LocationHelper
 	 */
 	public static abstract class LocationResponse
-	{
+	{		
 		/**
 		 * Called when the request was initiated
 		 */
 		public void onRequest(){}
+		
+		/**
+		 * Called when the location changes
+		 * @param l The new location
+		 */
+		public void onLocationChanged(Location l){}
 		
 		/**
 		 * Called when the location was aquired
