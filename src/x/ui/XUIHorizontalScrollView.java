@@ -5,26 +5,20 @@
 **/
 package x.ui;
 
-import x.lib.*;
-import android.app.Activity;
+import java.lang.reflect.Method;
+
+import x.lib.Dimension;
 import android.content.Context;
 import android.content.res.TypedArray;
-//import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
-import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 /**
@@ -225,7 +219,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	 */
 	private void updateCurrentChildView()
 	{
-		if (mChildCount <= 1)
+		if (mChildCount > 0)
 		{
 			mCurrentChildIndex = mChildCount - 1;
 		}
@@ -344,6 +338,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		init();
 	}
 	
+	
 	/**
 	 * Initialize the view and set up the scroll listeners
 	 */
@@ -351,10 +346,23 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	{		
 		Dimension dm = new Dimension(getContext());
 		mScreenWidth = dm.getScreenWidth();
+		mGestureDetector = new GestureDetector(new SwipeGestureDetector());
         				         
+		try
+		{
+			int OVER_SCROLL_NEVER = 2;			
+			// this will do for now...			
+			Method m = getClass().getMethod("setOverScrollMode", new Class[] { int.class });
+			OVER_SCROLL_NEVER = (Integer)getClass().getField("OVER_SCROLL_NEVER").get(this);
+			m.invoke(this, OVER_SCROLL_NEVER);			
+		}
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
 		if (mScrollMode == STEP)
 		{
-			mGestureDetector = new GestureDetector(new SwipeGestureDetector());
 			setOnTouchListener(new View.OnTouchListener() 
 			{            
 				public boolean onTouch(View v, MotionEvent event) 
@@ -377,11 +385,11 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 						int featureWidth = v.getMeasuredWidth();                                                            
 						int mActiveFeature = mCurrentChildIndex;            	                    
 	                    	                    
-						View nextChild = getChildViewAt(getCurrentIndex() + 1);
-						View currentChild = getCurrentChildView();
+						View nextChild = getChildViewAt(getCurrentIndex() + 1); 
+						View currentChild = getCurrentChildView();												
 	                    	                    
 						int currentChildLeft = 0;
-						int nextChildLeft = 0;
+						int nextChildLeft = 0;												
 	                    
 						if (currentChild != null)
 						{
@@ -412,8 +420,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 						if (mOnViewChangedLister != null)
 						{                    	
 							mOnViewChangedLister.onViewChange(mCurrentChildIndex);                    		                    	               	
-						}                    
-	                    
+						}                
+							                    						
 						return true;
 					}
 					else
@@ -425,8 +433,14 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 		}
 		else
 		{
-			mGestureDetector = null;
-			setOnTouchListener(null);
+			setOnTouchListener(new OnTouchListener()
+			{			
+				@Override public boolean onTouch(View v, MotionEvent event)
+				{
+					mGestureDetector.onTouchEvent(event);					
+					return false;
+				}
+			});
 		} 
 	}		
 	
@@ -589,7 +603,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 				mParentScrollView = (ScrollView)v;
 				break;
 			}
-		}		
+		}						
 	}
 
 	/**
@@ -609,8 +623,8 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 			mScrollingHorizontally = Math.abs(distanceX) > Math.abs(distanceY);
 			
 			//	Stop the parent views from scrolling if we're scrolling
-			if (mScrollingHorizontally && mParentScrollView != null)
-			{				
+			if ((mScrollingHorizontally && mParentScrollView != null))
+			{								
 				mParentScrollView.requestDisallowInterceptTouchEvent(true);				
 			}
 			
@@ -692,7 +706,7 @@ public class XUIHorizontalScrollView extends HorizontalScrollView
 	}
 	
 	/**
-	 * @brief The view change listener
+	 * @brief The view change listener 
 	 */
 	public interface OnViewChangedListener
 	{
