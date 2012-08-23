@@ -36,6 +36,23 @@ public class Debug
 		DEBUG = inDebug;
 	}
 	
+	private static String getCallingMethodInfo()
+	{
+		Throwable fakeException = new Throwable();
+		StackTraceElement[] stackTrace = fakeException.getStackTrace();
+
+		if (stackTrace != null && stackTrace.length >= 2)
+		{
+			StackTraceElement s = stackTrace[2];
+			if (s != null)
+			{
+				return s.getFileName() + "(" + s.getMethodName() + ":" + s.getLineNumber() + "):";
+			}
+		}
+
+		return null;
+	}
+	
 	/**
 	* Outputs a message to the debug console
 	* @param message The message to output	 
@@ -45,8 +62,8 @@ public class Debug
 		if (!DEBUG) return;
 		
 		try
-		{
-			Log.e(LOG_TAG, message);
+		{			
+			Log.e(LOG_TAG, getCallingMethodInfo() + " " + message);
 		}
 		catch (Exception e)
 		{
@@ -220,7 +237,7 @@ public class Debug
 		
 		try
 		{
-			Log.e(LOG_TAG, "" + message.toString(1));
+			Log.e(LOG_TAG, getCallingMethodInfo() + " " + "" + message.toString(1));
 		}
 		catch (JSONException e)
 		{
@@ -238,7 +255,7 @@ public class Debug
 		
 		try
 		{
-			Log.e(LOG_TAG, "" + message.toString(1));
+			Log.e(LOG_TAG, getCallingMethodInfo() + " " + "" + message.toString(1));
 		}
 		catch (JSONException e)
 		{
