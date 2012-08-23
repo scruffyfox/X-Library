@@ -7,9 +7,6 @@ package x.type;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-
-import x.lib.Debug;
 
 
 /**
