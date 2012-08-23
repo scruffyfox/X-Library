@@ -22,8 +22,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import x.type.ConnectionInfo;
 import x.type.FileHttpParams;
 import x.type.HttpParams;
@@ -31,7 +29,6 @@ import x.type.ItemList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -91,11 +88,13 @@ import android.os.Looper;
 public class AsyncHttpClient
 {	
 	private String mUrl;
-	private HttpParams mHeaders, mRequestParams;
+	private HttpParams mHeaders, mRequestParams;	
 	private Object mPost;
 	private RequestMode mRequestMode;
 	private AsyncHttpResponse mResponse;
 	private static final String BOUNDARY = "----------XLibraryAsyncRequest35146";
+	public static boolean followRedirect = true;
+	public static HttpParams globalHeaders = new HttpParams();
 	 
 	/**
 	 * @brief The request mode enumerator for making AsyncHttp requests	 
@@ -775,6 +774,11 @@ public class AsyncHttpClient
 
 		mHttpLoader.put(url, postData, httpHeaders, response);
 	}
+	
+	public void setCookie(HttpParams cookie)
+	{		
+		mHeaders.setParam("Cookie", cookie.toString());
+	}
 
 	/**
 	 * @brief This class is the main AsyncTask loader for the requests
@@ -972,6 +976,12 @@ public class AsyncHttpClient
 						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
 						conn.setDoInput(true);
 						conn.setUseCaches(false);
+						
+						for (String[] s : globalHeaders.getHeaders())
+						{
+							conn.setRequestProperty(s[0], s[1]);
+						}
+						
 						conn.setRequestProperty("Connection", "close");
 						conn.setRequestMethod("GET");	
 
@@ -1050,13 +1060,18 @@ public class AsyncHttpClient
 						System.setProperty("http.keepAlive", "false");
 
 						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
-						
-						if (mHttpParams != null && mHttpParams.getParam("FollowRedirect") != null)
+
+						for (String[] s : globalHeaders.getHeaders())
 						{
-							//conn.setInstanceFollowRedirects(Boolean.parseBoolean(mHeaders.getParam("FollowRedirect")));
+							conn.setRequestProperty(s[0], s[1]);							
 						}
 						
-						conn.setInstanceFollowRedirects(false);
+						conn.setInstanceFollowRedirects(followRedirect);
+						if (mHttpParams != null && mHttpParams.getParam("FollowRedirect") != null)
+						{
+							conn.setInstanceFollowRedirects(Boolean.parseBoolean(mHeaders.getParam("FollowRedirect")));
+						}
+						
 						conn.setDoInput(true);
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
@@ -1157,7 +1172,12 @@ public class AsyncHttpClient
 						HttpURLConnection conn = (HttpURLConnection)murl.openConnection();
 						conn.setDoInput(true);
 						conn.setDoOutput(true);
-						conn.setUseCaches(false);												
+						conn.setUseCaches(false);	
+						
+						for (String[] s : globalHeaders.getHeaders())
+						{
+							conn.setRequestProperty(s[0], s[1]);
+						}
 
 						if (type == PUT)
 						{
@@ -1168,9 +1188,10 @@ public class AsyncHttpClient
 							conn.setRequestMethod("POST");
 						}
 
+						conn.setInstanceFollowRedirects(followRedirect);
 						if (mHttpParams != null && mHttpParams.getParam("FollowRedirect") != null)
 						{
-						//	conn.setInstanceFollowRedirects(Boolean.parseBoolean(mHttpParams.getParam("FollowRedirect")));
+							conn.setInstanceFollowRedirects(Boolean.parseBoolean(mHttpParams.getParam("FollowRedirect")));
 						}
 						
 						if (mHttpParams != null)
@@ -1292,33 +1313,6 @@ public class AsyncHttpClient
 					}			    			
 				}						
  
-				case GET_IMAGE:
-				{
-					try 
-					{                           	
-						HttpURLConnection conn = (HttpURLConnection)new URL(url[0]).openConnection();
-						conn.setDoInput(true);
-						conn.setUseCaches(false);
-						conn.setRequestProperty("Connection", "close");
-
-						mConnectionInfo.connectionResponseCode = conn.getResponseCode();
-						mConnectionInfo.connectionResponseMessage = conn.getResponseMessage();
-
-						BitmapFactory.Options opts = new BitmapFactory.Options();                	        			
-						PatchInputStream stream = new PatchInputStream(conn.getInputStream());	        			
-						Bitmap bm = BitmapFactory.decodeStream(stream, null, opts);
-
-						conn.disconnect();                        
-						stream.close();
-
-						return bm;
-					} 
-					catch (Exception e) 
-					{
-						return null;
-					}		               		        				
-				}
-
 				default:
 				{
 					return "";
