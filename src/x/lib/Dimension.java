@@ -37,7 +37,7 @@ public class Dimension
 	}
 	
 	/**
-	 * Sets the ratio for the conversion
+	 * Sets the ratio for the conversion based on the screen width/height
 	 * @param width The width of the desired ratio
 	 * @param height The height of the desired ratio
 	 */
@@ -48,7 +48,7 @@ public class Dimension
 	}
 	
 	/** 
-	 * Get the calculated width of the ratio and desired width
+	 * Get the calculated width of the ratio and desired width based on the screen width
 	 * @param width The original width
 	 * @return The new width calculated
 	 */
@@ -58,7 +58,7 @@ public class Dimension
 	}
 	
 	/**
-	 * Get the calculated height of the ratio and desired height
+	 * Get the calculated height of the ratio and desired height based on the screen width
 	 * @param height The original height
 	 * @return The new height calculated
 	 */
