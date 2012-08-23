@@ -6,6 +6,7 @@
 package x.ui;
 
 import x.lib.Debug;
+import x.ui.XUIMenuButton.LineDrawable;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -71,13 +72,18 @@ import android.widget.TextView;
 public class XUIMenuButtonGroup extends LinearLayout
 {
 	private Context mContext;
-	private ViewGroup layoutView = null;
+	private LinearLayout layoutView = null;
 	private int childCount = 0;
 	private LayoutInflater mLayoutInflater; 
 	private String groupName = "";
+	private int mStrokeColor = 0xffcccccc;
+	private int mStrokeSize = 1;
+	private int mLabelStrokeColor = 0xff333333;
+	private int mLabelStrokeSize = 3;
 	private int mGroupNameTransform = TEXT_TRANSFORM_NORMAL;
 	private OnMenuButtonAdded mOnMenuButtonAdded;
 	private OnMenuButtonRemoved mOnMenuButtonRemoved;
+	private int mStyle = R.style.menu_button_group_iphone;
 	
 	/**
 	 * XML Attribute: keeps the text as is typed in
@@ -111,29 +117,75 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 */
 	public XUIMenuButtonGroup(Context context)
 	{
-		super(context);
-		mContext = context;
+		this(context, R.style.menu_button_group_iphone);
+	}
 		
-		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, this);		
+	public XUIMenuButtonGroup(Context context, int defStyle)
+	{
+		super(context);
+		finalConstructor(context, null, defStyle, true);
 	}
 	
-	/**
-	 * Default constructor
-	 * @param context The context of the application/activity
-	 * @param attrs The attribute set gathered from the XML
-	 */
 	public XUIMenuButtonGroup(Context context, AttributeSet attrs)
 	{
+		this(context, attrs, attrs.getStyleAttribute());
+	}
+	
+	public XUIMenuButtonGroup(Context context, AttributeSet attrs, int defStyle)
+	{
 		super(context, attrs);
-		mContext = context;
+		finalConstructor(context, attrs, defStyle, false);
+	}
+	
+	private void finalConstructor(Context context, AttributeSet attrs, int defStyle, boolean attach)
+	{	
+		mContext = context;		
+		mStyle = defStyle == 0 ? R.style.menu_button_group_iphone : defStyle;
 		
-		TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup);		
-		groupName = attributes.getString(R.styleable.XUIMenuButtonGroup_groupName);
+		//TypedArray attributes = mContext.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup, defStyle, 0);		
+		TypedArray attributes = mContext.obtainStyledAttributes(mStyle, R.styleable.XUIMenuButtonGroup);
+		
+		groupName = attributes.getString(R.styleable.XUIMenuButtonGroup_groupName); 
 		mGroupNameTransform = attributes.getInteger(R.styleable.XUIMenuButtonGroup_groupName_transform, TEXT_TRANSFORM_NORMAL);
 		
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		layoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button_group, null);							
+		layoutView = (LinearLayout)mLayoutInflater.inflate(R.layout.xui_menu_button_group, attach ? this : null);	
+		
+		mStrokeColor = (int)attributes.getColor(R.styleable.XUIMenuButtonGroup_strokeColor, 0xffcccccc);
+		mStrokeSize = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_strokeSize, 2.0f);
+		mLabelStrokeColor = (int)attributes.getColor(R.styleable.XUIMenuButtonGroup_labelStrokeColor, 0xff333333);
+		mLabelStrokeSize = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelStrokeSize, 3.0f);		
+		int labelSize = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelSize, 0);
+		int padding = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPadding, 0);
+		int paddingLeft = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPaddingLeft, 0);
+		int paddingRight = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPaddingRight, 0);
+		int paddingBottom = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPaddingBottom, 0);
+		int paddingTop = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPaddingTop, 0); 
+						
+		((TextView)layoutView.findViewById(R.id.group_label)).setTextSize(labelSize);
+		((TextView)layoutView.findViewById(R.id.group_label)).setTextColor((int)attributes.getColor(R.styleable.XUIMenuButtonGroup_labelColor, 0xff000000));		
+		
+		if (padding > 0)
+		{
+			layoutView.findViewById(R.id.group_label).setPadding(padding, padding, padding, padding);
+		}
+		else
+		{
+			layoutView.findViewById(R.id.group_label).setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+		}					
+		
+		layoutView.setOrientation(VERTICAL);
+		setOrientation(VERTICAL);
+		
+		if (attach)
+		{
+			setTitle(groupName);
+		}
+	}
+	
+	public void setLabelPadding(int left, int top, int right, int bottom)
+	{
+		layoutView.findViewById(R.id.group_label).setPadding(left, top, right, bottom);
 	}
 	
 	/**
@@ -350,6 +402,11 @@ public class XUIMenuButtonGroup extends LinearLayout
 		}
 	}
 	
+	private LineDrawable createICSDrawable()
+	{		
+		return new LineDrawable(mContext, getResources().getDimension(R.dimen.xuimenubutton_stroke), 0x100, mStrokeColor);
+	}
+	
 	/**
 	 * Called to update the layout
 	 */
@@ -360,41 +417,51 @@ public class XUIMenuButtonGroup extends LinearLayout
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{
 			XUIMenuButton childView = (XUIMenuButton)((LinearLayout)layoutView.findViewById(R.id.items)).getChildAt(viewIndex);
+			childView.setStyle(mStyle);
+			childView.setStrokeColor(mStrokeColor);
+			childView.setStrokeSize(mStrokeSize);
+			
+			if (mStyle == R.style.menu_button_group_ics)
+			{
+				//layoutView.setBackgroundDrawable(createICSDrawable());				
+				layoutView.findViewById(R.id.items).setBackgroundDrawable(null);
+				layoutView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+				layoutView.findViewById(R.id.divider).setBackgroundColor(mLabelStrokeColor);
+				layoutView.findViewById(R.id.divider).setPadding(0, mLabelStrokeSize, 0, 0);
+				layoutView.findViewById(R.id.items).setPadding(0, 0, 0, 0);
+			}
+			else
+			{
+				layoutView.setBackgroundDrawable(null);
+				layoutView.findViewById(R.id.items).setBackgroundResource(R.drawable.button_group_all_faux);
+				layoutView.findViewById(R.id.divider).setVisibility(View.GONE);
+				layoutView.findViewById(R.id.items).setPadding(1, 1, 1, 1);
+			}
 			
 			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
 			{			
-				if (childCount == 1)
+				if (childCount == 1) 
 				{
-					//childView.setBackgroundResource(R.drawable.button_group_all);
-					//childView.setStateResouces(R.drawable.button_group_all);
 					childView.setCornerLocation(XUIMenuButton.TOP | XUIMenuButton.BOTTOM);
 				}		
 				else
 				{
 					if (viewIndex == 0)
 					{
-						//childView.setBackgroundResource(R.drawable.button_group_top);
-						//childView.setStateResouces(R.drawable.button_group_top);
 						childView.setCornerLocation(XUIMenuButton.TOP);
 					}
 					else if (viewIndex == childCount - 1)
 					{
-						//childView.setBackgroundResource(R.drawable.button_group_bottom);
-						//childView.setStateResouces(R.drawable.button_group_bottom);
 						childView.setCornerLocation(XUIMenuButton.BOTTOM);
 					}
 					else
 					{
-						//childView.setBackgroundResource(R.drawable.button_group_middle);
-						//childView.setStateResouces(R.drawable.button_group_middle);
 						childView.setCornerLocation(XUIMenuButton.NONE);
 					}
 				}	
 			}
 			else
 			{
-				//childView.setBackgroundResource(R.drawable.button_group_middle);
-				//childView.setStateResouces(R.drawable.button_group_middle);
 				childView.setCornerLocation(XUIMenuButton.NONE);
 			}
 		}
@@ -409,7 +476,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 * @param b The bottom coordinate
 	 */
 	@Override protected void onLayout(boolean changed, int l, int t, int r, int b)
-	{	
+	{	 
 		super.onLayout(changed, l, t, r, b);
 	}
 	
@@ -419,7 +486,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	@Override protected void onFinishInflate()
 	{	
 		super.onFinishInflate();
-						 
+								 
 		int childCount = getChildCount();
 		XUIMenuButton[] views = new XUIMenuButton[childCount];
 				
@@ -430,46 +497,56 @@ public class XUIMenuButtonGroup extends LinearLayout
 					
 		this.removeAllViews();
 				
+		if (mStyle == R.style.menu_button_group_ics)
+		{
+			//layoutView.setBackgroundDrawable(createICSDrawable());
+			layoutView.findViewById(R.id.items).setBackgroundDrawable(null);
+			layoutView.findViewById(R.id.divider).setVisibility(View.VISIBLE);
+			layoutView.findViewById(R.id.divider).setPadding(0, mLabelStrokeSize, 0, 0);
+			layoutView.findViewById(R.id.divider).setBackgroundColor(mLabelStrokeColor);
+			layoutView.findViewById(R.id.items).setPadding(0, 0, 0, 0);			
+		}
+		else
+		{
+			layoutView.setBackgroundDrawable(null);
+			layoutView.findViewById(R.id.items).setBackgroundResource(R.drawable.button_group_all_faux);
+			layoutView.findViewById(R.id.divider).setVisibility(View.GONE);			
+			layoutView.findViewById(R.id.items).setPadding(1, 1, 1, 1);
+		}
+		
 		for (int viewIndex = 0; viewIndex < childCount; viewIndex++)
 		{
-			//LinearLayout container = (LinearLayout)views[viewIndex].findViewById(R.id.container).getParent();			
+			views[viewIndex].setStyle(mStyle); 
+			views[viewIndex].setStrokeColor(mStrokeColor);
+			views[viewIndex].setStrokeSize(mStrokeSize);
+			
 			if (android.os.Build.VERSION.SDK_INT > android.os.Build.VERSION_CODES.ECLAIR_MR1) 
 			{			
 				if (childCount == 1)
 				{
-					//views[viewIndex].setBackgroundResource(R.drawable.button_group_all);
-					//views[viewIndex].setStateResouces(R.drawable.button_group_all);
 					views[viewIndex].setCornerLocation(XUIMenuButton.BOTTOM | XUIMenuButton.TOP);
 				}		
 				else
 				{
 					if (viewIndex == 0)
 					{
-						//views[viewIndex].setBackgroundResource(R.drawable.button_group_top); 
-						//views[viewIndex].setStateResouces(R.drawable.button_group_top);
 						views[viewIndex].setCornerLocation(XUIMenuButton.TOP);
 					}
 					else if (viewIndex == childCount - 1)
 					{
-						//views[viewIndex].setBackgroundResource(R.drawable.button_group_bottom);
-						//views[viewIndex].setStateResouces(R.drawable.button_group_bottom);
 						views[viewIndex].setCornerLocation(XUIMenuButton.BOTTOM);
 					}
 					else
 					{
-						//views[viewIndex].setBackgroundResource(R.drawable.button_group_middle);
-						//views[viewIndex].setStateResouces(R.drawable.button_group_middle);
 						views[viewIndex].setCornerLocation(XUIMenuButton.NONE);
 					}
 				}	
 			}
 			else
 			{
-				//views[viewIndex].setBackgroundResource(R.drawable.button_group_middle);
-				//views[viewIndex].setStateResouces(R.drawable.button_group_middle);
 				views[viewIndex].setCornerLocation(XUIMenuButton.NONE);
 			}
-						
+									
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(views[viewIndex]);			
 		}
 		

@@ -29,4 +29,24 @@
     <style name="transparent_dialog" parent="@style/no_window_title">
 		<item name="android:windowBackground">@drawable/transparent</item>		 
 	</style>
+	
+    <style name="menu_button_group_iphone">
+    	<item name="strokeColor">#cccccc</item>
+    	<item name="labelColor">#000000</item>
+    	<item name="labelPaddingLeft">6dp</item>
+    	<item name="labelPaddingBottom">3dp</item>
+    </style>
+    
+    <style name="menu_button_group_ics"> 
+    	<item name="strokeColor">#ffcccccc</item>
+    	<item name="strokeSize">1dp</item>
+    	<item name="labelStrokeColor">#ffcccccc</item>
+		<item name="labelStrokeSize">3px</item>    	
+    	<item name="labelColor">#ff000000</item>
+    	<item name="labelPaddingTop">4dp</item>
+		<item name="labelPaddingBottom">4dp</item>
+		<item name="labelPaddingLeft">8dp</item>
+		<item name="labelPaddingRight">8dp</item>
+		<item name="labelSize">9dp</item>
+    </style>    
 </resources>

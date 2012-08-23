@@ -5,13 +5,16 @@
  **/
 package x.ui;
 
+import x.lib.Debug;
+import x.lib.Dimension;
+import x.lib.Random;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
@@ -184,7 +187,7 @@ public class XUIMenuButton extends LinearLayout
 		}
 		
 		//	Only set the onlick listener if it hasn't already		
-		if (!mSetOnClickListener && this.isClickable())
+		if (!mSetOnClickListener && this.isClickable() && mLayout != null)
 		{			
 			OnClickListener l = new OnClickListener()
 			{			
@@ -365,48 +368,100 @@ public class XUIMenuButton extends LinearLayout
 		updateDrawable();
 	}
 	
+	int mStyle = R.style.menu_button_group_iphone;
+	protected void setStyle(int style)
+	{
+		mStyle = style;		
+	}
+	
+	int mStrokeColor = 0xffcccccc;
+	protected void setStrokeColor(int color)
+	{
+		mStrokeColor = color;
+	}
+	
+	int mStrokeSize = 1;
+	protected void setStrokeSize(int size)
+	{
+		mStrokeSize = size;
+	}
+	
 	/**
 	 * Updates the background drawable
 	 */
 	private void updateDrawable()
-	{
-		float[] radii = new float[8];
-		
-		if ((mCornerLocation & TOP) == TOP)
+	{		
+		if (mStyle == R.style.menu_button_group_iphone)
 		{
-			radii[0] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-			radii[1] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-			radii[2] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-			radii[3] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-		}
-		
-		if ((mCornerLocation & BOTTOM) == BOTTOM)
-		{
-			radii[4] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-			radii[5] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-			radii[6] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-			radii[7] = getResources().getDimension(R.dimen.xuimenubutton_radius);
-		}		
-		
-		StateListDrawable newDrawable = new StateListDrawable();				
-		ItemDrawable normal = new ItemDrawable(0xffcccccc, getResources().getDimension(R.dimen.xuimenubutton_stroke));
-		ItemDrawable pressed = new ItemDrawable(0xffcccccc, getResources().getDimension(R.dimen.xuimenubutton_stroke));				
-		RoundRectShape rect = new RoundRectShape(radii, null, null);		
+			float[] radii = new float[8];
+			
+			if ((mCornerLocation & TOP) == TOP)
+			{
+				radii[0] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+				radii[1] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+				radii[2] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+				radii[3] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			}
+			
+			if ((mCornerLocation & BOTTOM) == BOTTOM)
+			{
+				radii[4] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+				radii[5] = getResources().getDimension(R.dimen.xuimenubutton_radius); 
+				radii[6] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+				radii[7] = getResources().getDimension(R.dimen.xuimenubutton_radius);
+			}		
+			
+			StateListDrawable newDrawable = new StateListDrawable();				
+			ItemDrawable normal = new ItemDrawable(mStrokeColor, getResources().getDimension(R.dimen.xuimenubutton_stroke));
+			ItemDrawable pressed = new ItemDrawable(mStrokeColor, getResources().getDimension(R.dimen.xuimenubutton_stroke));				
+			RoundRectShape rect = new RoundRectShape(radii, null, null);		
+						
+			normal.setShape(rect);
+			pressed.setShape(rect);		
+			
+			int normalColor = mStateColours.getColorForState(new int[]{}, getResources().getColor(R.color.xui_button_group_bg));
+			normal.getPaint().setColor(normalColor);
 					
-		normal.setShape(rect);
-		pressed.setShape(rect);		
-		
-		int normalColor = mStateColours.getColorForState(new int[]{}, getResources().getColor(R.color.xui_button_group_bg));
-		normal.getPaint().setColor(normalColor);
+			int pressedColor = mStateColours.getColorForState(new int[]{android.R.attr.state_pressed}, getResources().getColor(R.color.xui_button_group_bg_selected));
+			pressed.getPaint().setColor(pressedColor);
+	
+			newDrawable.addState(new int[]{android.R.attr.state_pressed}, pressed);
+			newDrawable.addState(new int[]{}, normal);
+			
+			setBackgroundDrawable(newDrawable);			
+		}
+		else if (mStyle == R.style.menu_button_group_ics)
+		{			
+			if ((mCornerLocation != BOTTOM) && (mCornerLocation) != (BOTTOM | TOP))
+			{
+				StateListDrawable drawable = new StateListDrawable();
 				
-		int pressedColor = mStateColours.getColorForState(new int[]{android.R.attr.state_pressed}, getResources().getColor(R.color.xui_button_group_bg_selected));
-		pressed.getPaint().setColor(pressedColor);
-
-		newDrawable.addState(new int[]{android.R.attr.state_pressed}, pressed);
-		newDrawable.addState(new int[]{}, normal);
-		
-		setBackgroundDrawable(newDrawable);  
-	}
+				LineDrawable drawable_deselected = new LineDrawable(mContext, mStrokeSize, BOTTOM, mStrokeColor, getResources().getColor(R.color.xui_button_group_bg));
+				drawable_deselected.setDividerMargin(getPaddingLeft(), getPaddingRight());
+				LineDrawable drawable_selected = new LineDrawable(mContext, mStrokeSize, BOTTOM, mStrokeColor, getResources().getColor(R.color.xui_button_group_bg_selected));
+				drawable_selected.setDividerMargin(getPaddingLeft(), getPaddingRight());
+				
+				drawable.addState(new int[]{android.R.attr.state_pressed}, drawable_selected);
+				drawable.addState(new int[]{}, drawable_deselected);			
+				
+				setBackgroundDrawable(drawable);
+			} 
+			else
+			{
+				StateListDrawable drawable = new StateListDrawable();
+				
+				LineDrawable drawable_deselected = new LineDrawable(mContext, 0f, NONE, mStrokeColor, getResources().getColor(R.color.xui_button_group_bg));
+				drawable_deselected.setDividerMargin(getPaddingLeft(), getPaddingRight());
+				LineDrawable drawable_selected = new LineDrawable(mContext, 0f, NONE, mStrokeColor, getResources().getColor(R.color.xui_button_group_bg_selected));
+				drawable_selected.setDividerMargin(getPaddingLeft(), getPaddingRight());
+				
+				drawable.addState(new int[]{android.R.attr.state_pressed}, drawable_selected);
+				drawable.addState(new int[]{}, drawable_deselected);			
+				
+				setBackgroundDrawable(drawable);
+			}
+		}
+	}		
 	
 	/**
 	 * Is called when the view is being layed out
@@ -429,7 +484,11 @@ public class XUIMenuButton extends LinearLayout
 	@Override protected void onFinishInflate()  
 	{	
 		super.onFinishInflate();
-
+		
+		Dimension dimension = new Dimension(mContext);		
+		
+		Rect padding = new Rect(dimension.densityPixel(8), dimension.densityPixel(8), dimension.densityPixel(8), dimension.densityPixel(8));
+		
 		/**
 		 * Possible combinations:
 		 * [layout]
@@ -442,7 +501,11 @@ public class XUIMenuButton extends LinearLayout
 		{
 			if (getChildAt(0) instanceof ViewGroup)
 			{
-				mContentView = (View)getChildAt(0);
+				mContentView = this;
+				mLayout = (ViewGroup)getChildAt(0);
+				
+				setOrientation(VERTICAL);
+				return;
 			}
 			else
 			{
@@ -467,10 +530,8 @@ public class XUIMenuButton extends LinearLayout
 			mImageView = (ImageView)getChildAt(0); 
 			mLabel = (TextView)getChildAt(1); 
 			mContentView = (View)getChildAt(2); 
-		}
-
-		Rect padding = new Rect(this.getPaddingLeft(), this.getPaddingTop(), this.getPaddingRight(), this.getPaddingBottom());
-
+		}		
+ 
 		this.detachAllViewsFromParent(); 
 
 		if (mLabel != null)
@@ -478,15 +539,18 @@ public class XUIMenuButton extends LinearLayout
 			ColorStateList list = getResources().getColorStateList(R.drawable.button_group_text);
 
 			mLabel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-			mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));		
+						
+			//mLabel.setText(Html.fromHtml("<b>" + mLabel.getText() + "</b>"));		
 			mLabel.setTextColor(list);
 			mLabel.setDuplicateParentStateEnabled(true);		
 		}
 
-		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true);
+		mLayoutView = (ViewGroup)mLayoutInflater.inflate(R.layout.xui_menu_button, this, true); 
 		mLayout = (ViewGroup)((LinearLayout)mLayoutView).getChildAt(0);
-
-		setMenuPadding(padding.left, padding.top, padding.right, padding.bottom);
+		
+		//setPadding(padding.left, padding.top, padding.right, padding.bottom);
+		//setMenuPadding(padding.left, padding.top, padding.right, padding.bottom);
+		//mLayoutView.setPadding(padding.left, padding.top, padding.right, padding.bottom);
 
 		if (mLabel != null)
 		{						 
@@ -534,8 +598,76 @@ public class XUIMenuButton extends LinearLayout
 		    strokepaint.setStrokeWidth(strokeSize);
 		    strokepaint.setColor(strokeColor);
 
-		    shape.draw(canvas, fillpaint);
+		    shape.draw(canvas, fillpaint); 
 		    shape.draw(canvas, strokepaint);
 		}
+	}
+	
+	public static class LineDrawable extends Drawable
+	{
+		float mHeight = 0.0f;
+		int mPos = 0;
+		int mColor;
+		int mLeftMargin = 0, mRightMargin = 0;
+		Context mContext;
+		int mBackgroundColor;
+		
+		public LineDrawable(Context c, float lineHeight, int position, int strokeColor)
+		{
+			this(c, lineHeight, position, strokeColor, 0);
+		}
+		
+		public LineDrawable(Context c, float lineHeight, int position, int strokeColor, int background)
+		{
+			mContext = c;
+			mHeight = lineHeight; 
+			mPos = position;
+			mColor = strokeColor;
+			mBackgroundColor = background;
+		}
+		
+		public void setDividerMargin(int left, int right)
+		{
+			mLeftMargin = left;
+			mRightMargin = right;
+		}
+		
+		@Override public void draw(Canvas canvas)
+		{
+			canvas.drawColor(0);
+			
+			Paint p = new Paint();
+			p.setColor(mColor);
+							
+			if (mBackgroundColor != 0)
+			{
+				Paint bgPaint = new Paint();
+				bgPaint.setColor(mBackgroundColor);
+				canvas.drawRect(getBounds().left + mLeftMargin, getBounds().top, getBounds().right - mRightMargin, getBounds().bottom, bgPaint);
+			}
+			
+			if (mPos == TOP)
+			{			
+				
+			}
+			else if (mPos == BOTTOM)
+			{
+				Dimension dimen = new Dimension(mContext);
+			
+				canvas.drawRect(getBounds().left + mLeftMargin, getBounds().bottom - dimen.densityPixel(1), getBounds().right - mRightMargin, getBounds().bottom, p);
+			}
+			else if (mPos == 0x100)
+			{
+				canvas.drawRect(getBounds().left, getBounds().top, getBounds().right, getBounds().top + mHeight, p);				
+			}
+		}
+
+		@Override public int getOpacity()
+		{
+			return 0;
+		}
+
+		@Override public void setAlpha(int alpha){}
+		@Override public void setColorFilter(ColorFilter cf){}		
 	}
 }
