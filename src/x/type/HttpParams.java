@@ -1,6 +1,6 @@
 /**
  * @brief x type is the type library which includes the commonly used data types in the X Library lib
- * 
+ *
  * @author Callum Taylor
 **/
 package x.type;
@@ -11,19 +11,19 @@ import java.net.URLEncoder;
 
 /**
  * @brief Http Params to be used with AsyncHttpClient (Key, Value pair class)
- */	
+ */
 public class HttpParams implements Serializable
 {
 	private ItemList<String[]> queryString;
-		
+
 	/**
 	 * Default Constructor
-	 */	 
+	 */
 	public HttpParams()
 	{
 		queryString = new ItemList<String[]>();
 	}
-	
+
 	/**
 	 * Default constructor
 	 * @param params The url formatted string to parse
@@ -33,18 +33,18 @@ public class HttpParams implements Serializable
 		queryString = new ItemList<String[]>();
 		parseString(params);
 	}
-	
+
 	/**
 	 * Default constructor
 	 * @param params The parameters to be added (In the format [{key, value}, {key, value}]
 	 */
 	public HttpParams(String[]... params)
-	{		
+	{
 		queryString = new ItemList<String[]>();
 		for (String[] param : params)
 		{
 			if (param == null) continue;
-						
+
 			addParam(param[0], param[1]);
 		}
 	}
@@ -59,42 +59,39 @@ public class HttpParams implements Serializable
 		if (url.indexOf('?') > -1)
 		{
 			HttpParams retParams = new HttpParams();
-			
+
 			String[] parts = url.split("[?]");
-			String[] variables = parts[1].split("[&]");			
-			
+			String[] variables = parts[1].split("[&]");
+
 			for (int varIndex = 0; varIndex < variables.length; varIndex++)
 			{
-				String[] params = variables[varIndex].split("[=]");								
-				
-				for (int index = 0; index < params.length; index += 2)
-				{
-					retParams.addParam(params[index], params.length > index ? params[index + 1] : null);
-				}
+				String[] params = variables[varIndex].split("[=]");
+
+				retParams.addParam(params[0], params.length > 1 ? params[1] : null);
 			}
-						
+
 			return retParams;
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Clones the current http params
 	 */
 	@Override public HttpParams clone()
 	{
 		HttpParams newParams = new HttpParams();
-		
+
 		int size = queryString.size();
 		for (int index = 0; index < size; index++)
 		{
 			newParams.addParam(queryString.get(index));
 		}
-		
+
 		return newParams;
 	}
-	
+
 	/**
 	 * Encodes the values to the URL standard.
 	 * <b>Warning:</b> Calling this more than once will encode the encoded data. If in doubt, clone the object and use that to urlencode
@@ -108,7 +105,7 @@ public class HttpParams implements Serializable
 			parts[1] = URLEncoder.encode(parts[1] == null ? "" : parts[1]);
 		}
 	}
-	
+
 	/**
 	 * Parses a string into the param type. Format has to be ?key=value&key2=value2. Does not require ? at the start.
 	 * @param url
@@ -121,10 +118,10 @@ public class HttpParams implements Serializable
 			String shortUrl = url.substring(questionMarkIndex, url.length());
 			String[] params = shortUrl.split("&");
 
-			for (String param : params) 
+			for (String param : params)
 			{
 				String[] value = param.split("=");
-				
+
 				if (value.length < 2)
 				{
 					addParam(value[0], "");
@@ -136,7 +133,7 @@ public class HttpParams implements Serializable
 			}
 		}
 	}
-	
+
 	/**
 	 * Setting a parameter with the key to the value (Will add if it doesnt exist already)
 	 * @param key The key
@@ -153,10 +150,10 @@ public class HttpParams implements Serializable
 				return;
 			}
 		}
-		
+
 		addParam(key, value);
 	}
-	
+
 	/**
 	 * Gets a value from a param key
 	 * @param key The key to get the value from
@@ -168,14 +165,14 @@ public class HttpParams implements Serializable
 		for (int dataIndex = 0; dataIndex < dataCount; dataIndex++)
 		{
 			if (queryString.get(dataIndex)[0].equals(key))
-			{				
+			{
 				return queryString.get(dataIndex)[1];
 			}
-		}	
-		
+		}
+
 		return null;
 	}
-	
+
 	/**
 	 * Adds a param to the class
 	 * The string must contain 2 values in the order 0: key, 1: value
@@ -185,7 +182,7 @@ public class HttpParams implements Serializable
 	{
 		addParam(keyval[0], keyval[1]);
 	}
-	
+
 	/**
 	 * Add a param to the class
 	 * @param key The key
@@ -195,7 +192,7 @@ public class HttpParams implements Serializable
 	{
 		queryString.add(new String[]{key, value});
 	}
-	
+
 	/**
 	 * Add a http params class to the class
 	 * @param params The params to add
@@ -203,10 +200,10 @@ public class HttpParams implements Serializable
 	public void addParams(HttpParams params)
 	{
 		if (params == null) return;
-		
+
 		queryString.addAll(params.queryString);
-	}		
-	
+	}
+
 	/**
 	 * Get the headers as an array list
 	 * @return The headers as the array list
@@ -215,7 +212,7 @@ public class HttpParams implements Serializable
 	{
 		return queryString;
 	}
-	
+
 	/**
 	 * To String
 	 * @return returns the http headers in the format ?<b>key</b>=value&<b>key</b>=value
@@ -223,16 +220,16 @@ public class HttpParams implements Serializable
 	@Override public String toString()
 	{
 		String qString = "?";
-		
+
 		int dataCount = queryString.size();
 		for (int dataIndex = 0; dataIndex < dataCount; dataIndex++)
 		{
 			qString += queryString.get(dataIndex)[0] + "=" + queryString.get(dataIndex)[1] + "&";
 		}
-		
+
 		qString = (qString.replace(" ", "+"));
 		qString = (qString.toCharArray()[qString.length() - 1] == '&' ? qString.substring(0, qString.length() - 1) : qString);
-		
+
 		return qString;
 	}
 }
