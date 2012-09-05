@@ -168,7 +168,10 @@ public class XUIWebView extends WebView
 				if (mOnLinkClickedListener != null)
 				{
 					Uri uri = Uri.parse(url);
-					mOnLinkClickedListener.onLinkClicked(uri);
+					if (mOnLinkClickedListener.onLinkClicked(uri))
+					{
+						return;
+					}
 				}
 			}
 
