@@ -1,6 +1,6 @@
 /**
  * @brief x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
- * 
+ *
  * @author Callum Taylor
 **/
 package x.lib;
@@ -19,23 +19,23 @@ import android.os.Bundle;
 import android.util.Log;
 
 /**
- * @brief This static class is for debugging 
- * @todo Add debug outputs for more data types	
+ * @brief This static class is for debugging
+ * @todo Add debug outputs for more data types
  */
 public class Debug
 {
 	private final static String LOG_TAG = "TSC";
 	private static boolean DEBUG = true;
-	
+
 	/**
-	 * Sets if the app is in debug mode. 
+	 * Sets if the app is in debug mode.
 	 * @param inDebug If set to true then outputs will be made, else they wont
 	 */
 	public static void setDebugMode(boolean inDebug)
 	{
 		DEBUG = inDebug;
 	}
-	
+
 	private static String getCallingMethodInfo()
 	{
 		Throwable fakeException = new Throwable();
@@ -52,37 +52,50 @@ public class Debug
 
 		return null;
 	}
-	
+
+	public static void longInfo(String str)
+	{
+	    if (str.length() > 4000)
+	    {
+	        Log.e(LOG_TAG, str.substring(0, 4000));
+	        longInfo(str.substring(4000));
+	    }
+	    else
+	    {
+	        Log.e(LOG_TAG, str);
+	    }
+	}
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(String message)
 	{
 		if (!DEBUG) return;
-		
+
 		try
-		{			
-			Log.e(LOG_TAG, getCallingMethodInfo() + " " + message);
+		{
+			longInfo(getCallingMethodInfo() + " " + message);
 		}
 		catch (Exception e)
 		{
 		}
-	}	
-	
+	}
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(String... message)
 	{
 		if (!DEBUG) return;
-		
+
 		try
 		{
 			for (String m : message)
 			{
-				out(m);
+				longInfo(m);
 			}
 		}
 		catch (Exception e)
@@ -90,7 +103,7 @@ public class Debug
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Outputs a message to the debug console
 	 * @param message The message to output
@@ -100,10 +113,10 @@ public class Debug
 		Debug.out(message.getLocalizedMessage());
 		Debug.out(message.getStackTrace());
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(String[]... message)
 	{
@@ -111,12 +124,12 @@ public class Debug
 		{
 			for (String[] m : message)
 			{
-				out(m);
-				
+				longInfo(m.toString());
+
 				for (String mes : m)
 				{
-					out("\t" + mes);
-				}		
+					longInfo("\t" + mes);
+				}
 			}
 		}
 		catch (Exception e)
@@ -124,31 +137,16 @@ public class Debug
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(Boolean message)
 	{
 		try
 		{
-			out("" + message);
-		}
-		catch (Exception e)
-		{
-		}
-	}
-	
-	/**
-	* Outputs a message to the debug console
-	* @param message The message to output	 
-	*/
-	public static void out(Object message)
-	{
-		try
-		{
-			out("" + message);
+			longInfo("" + message);
 		}
 		catch (Exception e)
 		{
@@ -157,17 +155,32 @@ public class Debug
 
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
+	*/
+	public static void out(Object message)
+	{
+		try
+		{
+			longInfo("" + message);
+		}
+		catch (Exception e)
+		{
+		}
+	}
+
+	/**
+	* Outputs a message to the debug console
+	* @param message The message to output
 	*/
 	public static void out(Object... message)
 	{
 		try
 		{
-			Debug.out(message.toString());
+			longInfo(getCallingMethodInfo() + " " + message.toString());
 			int index = 0;
 			for (Object m : message)
 			{
-				out("\tIndex " + index++ + " : " + m.toString());
+				longInfo("\tIndex " + index++ + " : " + m.toString());
 			}
 		}
 		catch (Exception e)
@@ -175,42 +188,42 @@ public class Debug
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(List<?> message)
 	{
 		out(message.toArray());
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(HttpParams message)
 	{
 		try
-		{			
+		{
 			List params = message.getHeaders();
 			int count = params.size();
-			
-			out("HttpParams$" + params.hashCode());
+
+			longInfo(getCallingMethodInfo() + " HttpParams$" + params.hashCode());
 			for (int index = 0; index < count; index++)
 			{
 				String[] p = (String[])params.get(index);
-				out("\t" + p[0] + ":" + p[1]);
+				longInfo("\t" + p[0] + ":" + p[1]);
 			}
 		}
 		catch (Exception e)
 		{
 		}
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(Location message)
 	{
@@ -224,86 +237,54 @@ public class Debug
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(JSONObject message)
 	{
 		if (!DEBUG) return;
-		
+
 		try
 		{
-			Log.e(LOG_TAG, getCallingMethodInfo() + " " + "" + message.toString(1));
+			longInfo(getCallingMethodInfo() + " " + "" + message.toString(1));
 		}
 		catch (JSONException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(JSONArray message)
 	{
 		if (!DEBUG) return;
-		
+
 		try
 		{
-			Log.e(LOG_TAG, getCallingMethodInfo() + " " + "" + message.toString(1));
+			longInfo(getCallingMethodInfo() + " " + "" + message.toString(1));
 		}
 		catch (JSONException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
 	*/
 	public static void out(int message)
 	{
 		try
 		{
-			out("" + message);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	* Outputs a message to the debug console
-	* @param message The message to output	 
-	*/
-	public static void out(long message)
-	{
-		try
-		{
-			out("" + message);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	* Outputs a message to the debug console
-	* @param message The message to output	 
-	*/
-	public static void out(double message)
-	{
-		try
-		{
-			out("" + message);
+			longInfo(getCallingMethodInfo() + " " + message);
 		}
 		catch (Exception e)
 		{
@@ -313,7 +294,39 @@ public class Debug
 
 	/**
 	* Outputs a message to the debug console
-	* @param message The message to output	 
+	* @param message The message to output
+	*/
+	public static void out(long message)
+	{
+		try
+		{
+			longInfo(getCallingMethodInfo() + " " + message);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	* Outputs a message to the debug console
+	* @param message The message to output
+	*/
+	public static void out(double message)
+	{
+		try
+		{
+			longInfo(getCallingMethodInfo() + " " + message);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	* Outputs a message to the debug console
+	* @param message The message to output
 	*/
 	public static void out(double... message)
 	{
@@ -321,15 +334,15 @@ public class Debug
 		{
 			for (double m : message)
 			{
-				out(m);
+				longInfo(getCallingMethodInfo() + " " + m);
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	/**
 	 * Outputs a message to the debug console
 	 * @param bundle The bundle to output
@@ -337,13 +350,13 @@ public class Debug
 	public static void out(Bundle bundle)
 	{
 		try
-		{ 
+		{
 			Set<String> keys = bundle.keySet();
-			out(bundle.toString());
-			
+			longInfo(getCallingMethodInfo() + " " + (bundle.toString()));
+
 			for (String key : keys)
 			{
-				out("\t[" + key + "] : " + bundle.get(key).toString());
+				longInfo("\t[" + key + "] : " + bundle.get(key).toString());
 			}
 		}
 		catch (Exception e)
@@ -351,25 +364,25 @@ public class Debug
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Logs the heap size of the application and any allocation sizes
 	 * @param mClass The class of the application to check
 	 */
-	public static void logHeap(Class mClass) 
+	public static void logHeap(Class mClass)
 	{
 		logHeap("", mClass);
 	}
-	
+
 	/**
 	 * Logs the heap size of the application and any allocation sizes
 	 * @param msg A message to display
 	 * @param mClass The class of the application to check
 	 */
-	public static void logHeap(String msg, Class mClass) 
+	public static void logHeap(String msg, Class mClass)
 	{
 		if (!DEBUG) return;
-		
+
 	    Double allocated = new Double(android.os.Debug.getNativeHeapAllocatedSize()) / new Double((1048576));
 	    Double available = new Double(android.os.Debug.getNativeHeapSize() / 1048576.0);
 	    Double free = new Double(android.os.Debug.getNativeHeapFreeSize() / 1048576.0);
