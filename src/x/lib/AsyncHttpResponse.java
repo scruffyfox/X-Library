@@ -10,7 +10,7 @@ public abstract class AsyncHttpResponse
 {
 	private Bundle mExtras = null;
 	private ConnectionInfo mConnectionInfo = new ConnectionInfo();
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -18,7 +18,7 @@ public abstract class AsyncHttpResponse
 	{
 		mExtras = new Bundle();
 	}
-	
+
 	/**
 	 * Default constructor
 	 * @param extras The extra bundle that gets passed to the response
@@ -27,7 +27,7 @@ public abstract class AsyncHttpResponse
 	{
 		mExtras = extras;
 	}
-	
+
 	/**
 	 * Sets the connection info to a new connection info
 	 * @param connectionInfo
@@ -36,7 +36,7 @@ public abstract class AsyncHttpResponse
 	{
 		mConnectionInfo = connectionInfo;
 	}
-	
+
 	/**
 	 * Gets the connection info
 	 * @return The connection info
@@ -45,7 +45,7 @@ public abstract class AsyncHttpResponse
 	{
 		return this.mConnectionInfo;
 	}
-	
+
 	/**
 	 * Gets the extras from the class
 	 * @return The extras
@@ -54,61 +54,69 @@ public abstract class AsyncHttpResponse
 	{
 		return mExtras;
 	}
-	
+
 	/**
 	 * Called when the client has processed some bytes in a request
 	 * @param amountProcessed The amount of bytes that have been processed (0 to totalSize)
 	 * @param totalSize The total size of the data to be downloaded
 	 */
 	public void onBytesProcessed(int amountProcessed, int totalSize){};
-	
+
+	/**
+	 * Called when the client has processed some bytes in a request
+	 * @param chunk The chunk of data being processed. This will be a complete array when the request is finished
+	 * @param amountProcessed The amount of bytes that have been processed (0 to totalSize)
+	 * @param totalSize The total size of the data to be downloaded
+	 */
+	public void onBytesProcessed(byte[] chunk, int amountProcessed, int totalSize){};
+
 	/**
 	 * The function that gets called when the request is sent
 	 */
 	public void onSend(){};
-	
+
 	/**
 	 * The function that gets called when the server response with >= 200 and < 300
 	 * @param response The response message
 	 */
 	public void onSuccess(Object response){};
-	
+
 	/**
 	 * The function that gets called when the server response with >= 200 and < 300
 	 * @param response The response message
 	 */
 	public void onSuccess(byte[] response){};
-	
+
 	/**
 	 * DEPRECATED: Not used
 	 * The function that gets called when the server response with an array @see AsyncHttpClient.getImages()
 	 * @param response The response message
 	 */
 	@Deprecated public void onSuccess(Object[] response){};
-	
+
 	/**
 	 * The function that gets called when the response from the server fails
 	 */
 	public void onFailure(){};
-	
+
 	/**
 	 * The function that gets called when the response from the server fails
 	 * @param response The response message
 	 */
 	public void onFailure(Object response){};
-	
+
 	/**
 	 * The function that gets called when the response from the server fails
 	 * @param responseCode The response code
 	 * @param responseMessage The response message
 	 */
 	public void onFailure(int responseCode, String responseMessage){};
-	
+
 	/**
 	 * The function that gets called before the async task ends. Called before onSuccess/onFailure.
 	 */
 	public void beforeFinish(){};
-	
+
 	/**
 	 * The function that gets called after everything has been completed
 	 */

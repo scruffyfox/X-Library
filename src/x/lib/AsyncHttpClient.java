@@ -1027,6 +1027,7 @@ public class AsyncHttpClient
 						{
 							if (mAsyncHttpResponse != null)
 							{
+								mAsyncHttpResponse.onBytesProcessed(buffer, readCount, conn.getContentLength());
 								mAsyncHttpResponse.onBytesProcessed(readCount, conn.getContentLength());
 							}
 
@@ -1036,7 +1037,9 @@ public class AsyncHttpClient
 
 						if (mAsyncHttpResponse != null)
 						{
-							mAsyncHttpResponse.onBytesProcessed(readCount, conn.getContentLength());
+							// 	we fake the content length, because it can be -1
+							mAsyncHttpResponse.onBytesProcessed(byteBuffer.toByteArray(), readCount, readCount);
+							mAsyncHttpResponse.onBytesProcessed(readCount, readCount);
 						}
 
 						is.close();
