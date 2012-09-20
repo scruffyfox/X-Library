@@ -1,6 +1,6 @@
 /**
  * @brief x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
- * 
+ *
  * @author Callum Taylor
 **/
 package x.lib;
@@ -10,17 +10,12 @@ import java.util.List;
 
 import x.type.IconOverlayItem;
 import x.ui.R;
-import x.ui.R.drawable;
-import x.ui.R.id;
-import x.ui.R.layout;
-
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,11 +24,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.FrameLayout.LayoutParams;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
@@ -45,22 +40,22 @@ import com.google.android.maps.OverlayItem;
 /**
  * @brief Map overlay for use to display points with a balloon popup for map views.
  * @param <Item> The item template (Generally use IconOverlayItem included with x.lib)
- * 
- * Example usage of the overlay. 
+ *
+ * Example usage of the overlay.
  * @code
  *	for (int index = 0; index < count; index++)
  *	{
  *		XUIMapOverlay overlay = new XUIMapOverlay(map);
- *		MapExtras extra = points.get(index);			
- *		
+ *		MapExtras extra = points.get(index);
+ *
  *		overlay.setOnBallonClickListener(new balloonClickListener());
- *		
- *		IconOverlayItem item = new IconOverlayItem(new GeoPoint(extra.latE6, extra.lngE6), extra.title, extra.description);			
+ *
+ *		IconOverlayItem item = new IconOverlayItem(new GeoPoint(extra.latE6, extra.lngE6), extra.title, extra.description);
  *		overlay.addOverlay(item);
- *		
- *		overlays.add(overlay);			
+ *
+ *		overlays.add(overlay);
  *	}
- *	
+ *
  *	map.invalidate();
  * @endcode
  */
@@ -73,32 +68,32 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	private int mViewOffset;
 	private final MapController mMapController;
 	private Item mCurrentFocussedItem;
-	private int mCurrentFocussedIndex;	
-	
+	private int mCurrentFocussedIndex;
+
 	//	Listeners
 	private OnBalloonClickListener mOnBalloonClickListener;
 	private OnBalloonLongClickListener mOnBalloonLongClickListener;
 	private OnBalloonOpenedListener mBalloonOpenedListener;
-	
+
 	/**
 	 * Default constructor
 	 * @param mapView The map view
 	 */
 	public MapOverlay(MapView mapView)
-	{			
+	{
 		this(mapView.getContext().getResources().getDrawable(R.drawable.map_pin), mapView);
 	}
-	
+
 	/**
 	 * Default constructor
 	 * @param defaultMarker The resource id of the default pin
 	 * @param mapView The map view
 	 */
 	public MapOverlay(int defaultMarker, MapView mapView)
-	{		
+	{
 		this(mapView.getContext().getResources().getDrawable(defaultMarker), mapView);
 	}
-	
+
 	/**
 	 * Default constructor
 	 * @param defaultMarker The default pin
@@ -107,22 +102,22 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	public MapOverlay(Drawable defaultMarker, MapView mapView)
 	{
 		super(boundCenterBottom(defaultMarker));
-		
+
 		this.mMapView = mapView;
 		mViewOffset = 0;
 		mMapController = mapView.getController();
-		
+
 		mMapView.setOnTouchListener(new OnTouchListener()
-		{			
+		{
 			public boolean onTouch(View v, MotionEvent event)
 			{
 				hideBalloon();
-				
-				return false;  
+
+				return false;
 			}
 		});
-	}		
-	
+	}
+
 	/**
 	 * Sets the click listener for the bubble
 	 * @param mOnBalloonClickListener The new click listener
@@ -131,7 +126,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	{
 		setOnBallonClickListener(mOnBalloonClickListener, true);
 	}
-	
+
 	/**
 	 * Sets the click listener for the bubble
 	 * @param mOnBalloonClickListener The new click listener
@@ -139,9 +134,9 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 */
 	public void setOnBallonClickListener(OnBalloonClickListener mOnBalloonClickListener, boolean showArrow)
 	{
-		this.mOnBalloonClickListener = mOnBalloonClickListener;				
+		this.mOnBalloonClickListener = mOnBalloonClickListener;
 	}
-	
+
 	/**
 	 * Sets the long click listener for the bubble
 	 * @param mOnBalloonLongClickListener The new click listener
@@ -158,9 +153,9 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	public void addOverlay(OverlayItem item)
 	{
 		mOverlayItems.add(item);
-		populate(); 
+		populate();
 	}
-	
+
 	/**
 	 * Draws the point onto the mapview
 	 * @param canvas The canvas to use to draw
@@ -187,14 +182,14 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 */
 	public int getBalloonBottomOffset()
 	{
-		return mViewOffset;  
+		return mViewOffset;
 	}
-	
+
 	/**
 	 * Gets the current focused item
 	 * @return The current focused item
 	 */
-	@Override public Item getFocus() 
+	@Override public Item getFocus()
 	{
 		return mCurrentFocussedItem;
 	}
@@ -203,7 +198,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	 * Sets the focus onto an item
 	 * @param item The item to set focus to
 	 */
-	@Override public void setFocus(Item item) 
+	@Override public void setFocus(Item item)
 	{
 		mCurrentFocussedItem = item;
 
@@ -214,17 +209,17 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		else
 		{
 			createBalloonOverlayView();
-		}	
+		}
 	}
-	
+
 	/**
 	 * Called when an item is tapped
 	 * @param index The index of the item that was tapped
 	 */
 	@Override protected final boolean onTap(int index)
-	{		
+	{
 		mCurrentFocussedIndex = index;
-		mCurrentFocussedItem = createItem(index);		
+		mCurrentFocussedItem = createItem(index);
 
 		boolean isRecycled;
 		if (mBalloonView == null)
@@ -247,15 +242,15 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		{
 			hideOtherBalloons(mapOverlays);
 		}
-				
+
 		mBalloonView.setData(mCurrentFocussedItem);
 
 		GeoPoint point = mCurrentFocussedItem.getPoint();
 		MapView.LayoutParams params = new MapView.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, point, MapView.LayoutParams.BOTTOM_CENTER);
 		params.mode = MapView.LayoutParams.MODE_MAP;
-		
+
 		mBalloonView.setVisibility(View.VISIBLE);
-		
+
 		if (mOnBalloonClickListener != null)
 		{
 			mBalloonView.findViewById(R.id.balloon_inner_layout).setBackgroundResource(R.drawable.balloon_overlay_bg_selector_chevron);
@@ -300,7 +295,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	/**
 	 * Hides the balloon view
 	 */
-	protected void hideBalloon()
+	public void hideBalloon()
 	{
 		if (mBalloonView != null)
 		{
@@ -330,37 +325,37 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	private OnLongClickListener createBalloonLongPressListener()
 	{
 		return new OnLongClickListener()
-		{			
+		{
 			public boolean onLongClick(View v)
-			{			
+			{
 				if (mOnBalloonLongClickListener != null)
 				{
 					mOnBalloonLongClickListener.onBalloonLongClick(mCurrentFocussedIndex, mCurrentFocussedItem);
 				}
-				
+
 				return true;
 			}
 		};
 	}
-	
+
 	/**
 	 * Creates the default click listener
 	 * @return The new click listener
 	 */
 	private OnClickListener createBalloonClickListener()
 	{
-		return new OnClickListener() 
-		{			
+		return new OnClickListener()
+		{
 			public void onClick(View arg0)
 			{
 				if (mOnBalloonClickListener != null)
 				{
 					mOnBalloonClickListener.onBalloonClick(mCurrentFocussedIndex, mCurrentFocussedItem);
 				}
-			}				
+			}
 		};
 	}
-	
+
 	/**
 	 * Creats an item from an int index in the overlay list
 	 * @return The created Item
@@ -369,19 +364,19 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 	{
 		return (Item)mOverlayItems.get(i);
 	}
-	
+
 	/**
 	 * Gets the size of the map overlay
 	 * @return The size of the overlay item list
 	 */
 	public int size()
-	{		
+	{
 		return mOverlayItems.size();
 	}
-	
+
 	/**
 	 * Interface for when the balloon is clicked
-	 * @param <Item> Template of the class (must extend OverlayItem) 
+	 * @param <Item> Template of the class (must extend OverlayItem)
 	 */
 	public interface OnBalloonClickListener<Item>
 	{
@@ -392,7 +387,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		 */
 		public void onBalloonClick(int index, Item item);
 	}
-	
+
 	/**
 	 * Interface for when the ballon is long clicked
 	 * @param <Item> Template of the class (must extend OverlayItem)
@@ -406,19 +401,19 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		 */
 		public void onBalloonLongClick(int index, Item item);
 	}
-	
+
 	/**
 	 * Interface for when the baloon is opened
 	 */
 	public interface OnBalloonOpenedListener
 	{
 		/**
-		 * Method called when the balloon is opened 
+		 * Method called when the balloon is opened
 		 * @param index The index of the item
 		 */
 		public void onBalloonOpened(int index);
 	}
-	
+
 	/**
 	 * Class for the balloon view of the overlay
 	 * @param <Item> Template of the class (must extend OverlayItem)
@@ -429,7 +424,7 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		private TextView title;
 		private TextView snippet;
 		private ImageView imageIcon;
-		
+
 		/**
 		 * The default constructor
 		 * @param context The context for the application
@@ -445,15 +440,15 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 
 			LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View v = inflater.inflate(R.layout.balloon_overlay, layout);
-			
-			
+
+
 			title = (TextView)v.findViewById(R.id.balloon_item_title);
 			snippet = (TextView)v.findViewById(R.id.balloon_item_snippet);
 			imageIcon = (ImageView)v.findViewById(R.id.balloon_item_icon);
 
 			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.gravity = Gravity.NO_GRAVITY;
-			
+
 			addView(layout, params);
 		}
 
@@ -463,8 +458,8 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 		 */
 		public void setData(Item i)
 		{
-			layout.setVisibility(VISIBLE); 
-			
+			layout.setVisibility(VISIBLE);
+
 			if (i.getTitle() != null)
 			{
 				title.setVisibility(VISIBLE);
@@ -474,22 +469,22 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 			{
 				title.setVisibility(GONE);
 			}
-			 
+
 			if (i instanceof IconOverlayItem)
 			{
 				Bitmap drawable;
 				if ((drawable = ((IconOverlayItem)i).getDrawable()) != null)
-				{						
+				{
 					int width = drawable.getWidth();
-					int height = drawable.getHeight();  
-					 
+					int height = drawable.getHeight();
+
 					imageIcon.setVisibility(VISIBLE);
 					imageIcon.setBackgroundDrawable(new BitmapDrawable(drawable));
-					imageIcon.setLayoutParams(new RelativeLayout.LayoutParams(width, height));			
+					imageIcon.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
 				}
 			}
-			
-			if (i.getSnippet() != null && i.getSnippet().length() > 0)
+
+			if (!TextUtils.isEmpty(i.getSnippet()))
 			{
 				snippet.setVisibility(VISIBLE);
 				snippet.setText(i.getSnippet());
@@ -497,6 +492,11 @@ public class MapOverlay<Item extends OverlayItem> extends ItemizedOverlay<Item>
 			else
 			{
 				snippet.setVisibility(GONE);
+			}
+
+			if (TextUtils.isEmpty(i.getSnippet()) && TextUtils.isEmpty(i.getTitle()))
+			{
+				layout.setVisibility(GONE);
 			}
 		}
 	}
