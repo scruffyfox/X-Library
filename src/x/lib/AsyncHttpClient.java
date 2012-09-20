@@ -8,7 +8,7 @@ package x.lib;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
+import java.io.FileNotFoundException;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -1048,9 +1047,20 @@ public class AsyncHttpClient
 
 						return byteBuffer.toByteArray();
 					}
-					catch (EOFException e)
+					catch (IOException e)
 					{
-						e.printStackTrace();
+						if (e.getMessage().contains("Received authentication challenge is null"))
+						{
+							mConnectionInfo.connectionResponseCode = 401;
+							mConnectionInfo.connectionResponseMessage = "Received authentication challenge is null";
+						}
+
+						if (e instanceof FileNotFoundException)
+						{
+							mConnectionInfo.connectionResponseCode = 404;
+							mConnectionInfo.connectionResponseMessage = "File not Found";
+						}
+
 						return null;
 					}
 					catch (Exception e)
@@ -1121,7 +1131,7 @@ public class AsyncHttpClient
 						mConnectionInfo.connectionResponseCode = conn.getResponseCode();
 
 						PatchInputStream i;
-						if ((mConnectionInfo.connectionResponseCode / 100) != 2)
+						if (mConnectionInfo.connectionResponseCode < 100 || (mConnectionInfo.connectionResponseCode / 100) != 2)
 						{
 							i = new PatchInputStream(conn.getErrorStream());
 						}
@@ -1160,16 +1170,19 @@ public class AsyncHttpClient
 
 						return result;
 					}
-					catch (EOFException e)
+					catch (IOException e)
 					{
-						e.printStackTrace();
-						return null;
-					}
-					catch (UnknownHostException e)
-					{
-						e.printStackTrace();
-						mConnectionInfo.connectionResponseCode = 0;
-						mConnectionInfo.connectionResponseMessage = "";
+						if (e.getMessage().contains("Received authentication challenge is null"))
+						{
+							mConnectionInfo.connectionResponseCode = 401;
+							mConnectionInfo.connectionResponseMessage = "Received authentication challenge is null";
+						}
+
+						if (e instanceof FileNotFoundException)
+						{
+							mConnectionInfo.connectionResponseCode = 404;
+							mConnectionInfo.connectionResponseMessage = "File not Found";
+						}
 
 						return null;
 					}
@@ -1330,11 +1343,21 @@ public class AsyncHttpClient
 
 						return sb.toString();
 					}
-					catch (EOFException e)
+					catch (IOException e)
 					{
-						e.printStackTrace();
+						if (e.getMessage().contains("Received authentication challenge is null"))
+						{
+							mConnectionInfo.connectionResponseCode = 401;
+							mConnectionInfo.connectionResponseMessage = "Received authentication challenge is null";
+						}
 
-						return "";
+						if (e instanceof FileNotFoundException)
+						{
+							mConnectionInfo.connectionResponseCode = 404;
+							mConnectionInfo.connectionResponseMessage = "File not Found";
+						}
+
+						return null;
 					}
 					catch (Exception e)
 					{
