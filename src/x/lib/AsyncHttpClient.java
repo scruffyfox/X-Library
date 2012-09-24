@@ -1250,59 +1250,63 @@ public class AsyncHttpClient
 						}
 
 						//	Send as binary if its a byte array
-						if (mSendData.getClass().equals(byte[].class))
+						if (mSendData != null)
 						{
-							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							ObjectOutput out = new ObjectOutputStream(bos);
-							out.writeObject(mSendData);
-							byte[] yourBytes = bos.toByteArray();
-
-							OutputStream wr = conn.getOutputStream();
-							wr.write(yourBytes);
-
-							int index = 0;
-							int size = 1024;
-
-							while (index < yourBytes.length)
+							if (mSendData.getClass().equals(byte[].class))
 							{
-								if ((index + size) > yourBytes.length)
+								ByteArrayOutputStream bos = new ByteArrayOutputStream();
+								ObjectOutput out = new ObjectOutputStream(bos);
+								out.writeObject(mSendData);
+								byte[] yourBytes = bos.toByteArray();
+
+								OutputStream wr = conn.getOutputStream();
+								wr.write(yourBytes);
+
+								int index = 0;
+								int size = 1024;
+
+								while (index < yourBytes.length)
 								{
-				                    size = yourBytes.length - index;
-				                }
+									if ((index + size) > yourBytes.length)
+									{
+										size = yourBytes.length - index;
+									}
+
+									if (mAsyncHttpResponse != null)
+									{
+										mAsyncHttpResponse.onBytesProcessed(index, yourBytes.length);
+									}
+
+									wr.write(yourBytes, index, size);
+									index += size;
+								}
+
+								wr.flush();
+								wr.close();
 
 								if (mAsyncHttpResponse != null)
 								{
 									mAsyncHttpResponse.onBytesProcessed(index, yourBytes.length);
 								}
-
-								wr.write(yourBytes, index, size);
-								index += size;
 							}
-
-							wr.flush();
-							wr.close();
-
-							if (mAsyncHttpResponse != null)
+							else
 							{
-								mAsyncHttpResponse.onBytesProcessed(index, yourBytes.length);
-							}
-						}
-						else
-						{
-						    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-				            wr.write(mSendData.toString());
+								OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+								wr.write(mSendData.toString());
 
-				            if (mAsyncHttpResponse != null)
-							{
-				            	mAsyncHttpResponse.onBytesProcessed(mSendData.toString().length(), mSendData.toString().length());
+								if (mAsyncHttpResponse != null)
+								{
+									mAsyncHttpResponse.onBytesProcessed(mSendData.toString().length(), mSendData.toString().length());
+								}
+
+								wr.flush();
+								wr.close();
 							}
 
-				            wr.flush();
-							wr.close();
+							mConnectionInfo.connectionSentData = mSendData.toString();
 						}
 
 						mConnectionInfo.connectionResponseCode = conn.getResponseCode();
-						mConnectionInfo.connectionSentData = mSendData.toString();
 
 						String loc;
 						if ((loc = conn.getHeaderField("Location")) != null)
