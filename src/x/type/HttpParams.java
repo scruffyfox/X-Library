@@ -6,6 +6,7 @@
 package x.type;
 
 import java.io.Serializable;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 
@@ -103,6 +104,19 @@ public class HttpParams implements Serializable
 		{
 			String[] parts = queryString.get(index);
 			parts[1] = URLEncoder.encode(parts[1] == null ? "" : parts[1]);
+		}
+	}
+
+	/**
+	 * Decodes the params
+	 */
+	public void URLDecode()
+	{
+		int size = queryString.size();
+		for (int index = 0; index < size; index++)
+		{
+			String[] parts = queryString.get(index);
+			parts[1] = URLDecoder.decode(parts[1] == null ? "" : parts[1]);
 		}
 	}
 
