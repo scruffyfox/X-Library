@@ -1,28 +1,33 @@
 /**
  * @brief x lib is the library which includes the commonly used functions in 3 Sided Cube Android applications
- * 
+ *
  * @author Callum Taylor
 **/
 package x.lib;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.security.MessageDigest;
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
-import android.os.AsyncTask;
-import android.os.FileObserver;
-import android.provider.OpenableColumns;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * @brief This class is used to store and retrive data to the user's phone in a serialized form
@@ -32,8 +37,8 @@ public class CacheManager implements Serializable
 	private String mCachePath;
 	private Context context;
 	private String mPackageName;
-	private static String mPrefix = "cache_"; 
-	
+	private static String mPrefix = "cache_";
+
 	/**
 	 * The default constructor
 	 * @param context The application's context
@@ -53,25 +58,25 @@ public class CacheManager implements Serializable
 	public CacheManager(Context context, String packageName, boolean useExternalCache)
 	{
 		this.context = context;
-		this.mPackageName = packageName;		
-		
+		this.mPackageName = packageName;
+
 		if (useExternalCache)
-		{					
+		{
 			if (context.getExternalCacheDir() != null)
 			{
 				mCachePath = context.getExternalCacheDir().getAbsolutePath();
-				
+
 				return;
 			}
 		}
-		
-		//	Not sure if this is the best thing to do by defaulting 
+
+		//	Not sure if this is the best thing to do by defaulting
 		//	to internal cache if external cache is available...
 		//	TODO: change to throw an exception if external cache is
 		//	not available
-		mCachePath = context.getCacheDir().getAbsolutePath();			
+		mCachePath = context.getCacheDir().getAbsolutePath();
 	}
-	
+
 	/**
 	 * The default constructor
 	 * @param path The path to the cache directory
@@ -82,12 +87,12 @@ public class CacheManager implements Serializable
 		mCachePath = path;
 		mPackageName = packageName;
 	}
-	
+
 	public String getCachePath()
 	{
 		return mCachePath;
 	}
-	
+
 	/**
 	 * Sets the prefix of the files in the cache. Default is "cache_"
 	 * @param prefix The new prefix
@@ -96,7 +101,7 @@ public class CacheManager implements Serializable
 	{
 		mPrefix = prefix;
 	}
-	
+
 	/**
 	 * Gets a base64'd MD5 hash of an input string
 	 * @param input The input string
@@ -105,7 +110,7 @@ public class CacheManager implements Serializable
 	public static String getHash(String input)
 	{
 		String hashFileName = "";
-		
+
     	try
     	{
     		MessageDigest md5 = MessageDigest.getInstance("MD5");
@@ -115,10 +120,10 @@ public class CacheManager implements Serializable
     	{
     		e.printStackTrace();
     	}
-    	
+
     	return hashFileName;
 	}
-    
+
 	/**
 	 * Gets a base64'd MD5 hash of an input string
 	 * @param input The serializable input data
@@ -127,17 +132,17 @@ public class CacheManager implements Serializable
 	public static String getHash(Serializable input)
 	{
 		String hashFileName = "";
-		
+
     	try
     	{
     		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    		ObjectOutput out = new ObjectOutputStream(bos);   
+    		ObjectOutput out = new ObjectOutputStream(bos);
     		out.writeObject(input);
-    		byte[] yourBytes = bos.toByteArray(); 
+    		byte[] yourBytes = bos.toByteArray();
 
     		out.close();
     		bos.close();
-    		
+
     		MessageDigest md5 = MessageDigest.getInstance("MD5");
     		hashFileName = Base64.encodeBytes((md5.digest(yourBytes))).replace('/', '.');
     	}
@@ -145,7 +150,7 @@ public class CacheManager implements Serializable
     	{
     		e.printStackTrace();
     	}
-    	
+
     	return hashFileName;
 	}
 
@@ -153,20 +158,26 @@ public class CacheManager implements Serializable
 	{
 		return list("");
 	}
-	
+
 	public String[] list(String folderName)
 	{
-		File f = new File(mCachePath + "/" + folderName);
-		String files[] = f.list();
-		
-		for (int index = 0; index < files.length; index++)
+		File f = new File(mCachePath + "/" + mPrefix + folderName);
+
+		if (f != null)
 		{
-			files[index] = mCachePath + "/" + (TextUtils.isEmpty(folderName) ? "" : folderName + "/") + files[index];
+			String files[] = f.list();
+
+			for (int index = 0; index < files.length; index++)
+			{
+				files[index] = mCachePath + "/" + (TextUtils.isEmpty(folderName) ? "" : folderName + "/") + files[index];
+			}
+
+			return files;
 		}
-		
-		return files;
+
+		return null;
 	}
-	
+
 	/**
 	 * Gets the total size of the cache in bytes
 	 * @return The size of the cache in bytes
@@ -174,28 +185,28 @@ public class CacheManager implements Serializable
 	public long getCacheSize()
 	{
 		File files = new File(mCachePath);
-				
+
 		FileFilter filter = new FileFilter()
 		{
-			public boolean accept(File arg0) 
-			{				
+			public boolean accept(File arg0)
+			{
 				if (arg0.getName().contains(mPrefix))
 				{
-					return true;					
+					return true;
 				}
-				
+
 				return false;
 			};
 		};
-		
+
 		File[] fileList = files.listFiles(filter);
-		
+
 		long totalSize = 0;
 		for (File f : fileList)
 		{
-			totalSize += f.length();	
+			totalSize += f.length();
 		}
-						
+
 		return totalSize;
 	}
 
@@ -208,11 +219,11 @@ public class CacheManager implements Serializable
 	{
 		return fileExists(null, fileName);
 	}
-	
+
 	/**
 	 * Checks if a file exists within the cache
 	 * @param folderName The folder path to check
-	 * @param fileName The file to check	
+	 * @param fileName The file to check
 	 * @return True if the file exists, false if not
 	 */
 	public boolean fileExists(String folderName, String fileName)
@@ -220,13 +231,13 @@ public class CacheManager implements Serializable
 		try
 		{
 			String filePath = mCachePath;
-			if (folderName != null && folderName.length() > 0)
+			if (!TextUtils.isEmpty(folderName))
 			{
 				filePath += "/" + mPrefix + folderName + "/";
 			}
-			
-			File f = new File(filePath, mPrefix + fileName);				
-			
+
+			File f = new File(filePath, mPrefix + fileName);
+
 			return f.exists();
 		}
 		catch (Exception e)
@@ -235,7 +246,7 @@ public class CacheManager implements Serializable
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Gets the modified date of the file
 	 * @param fileName The file
@@ -244,10 +255,10 @@ public class CacheManager implements Serializable
 	public long fileModifiedDate(String fileName)
 	{
 		File f = new File(mCachePath, mPrefix + fileName);
-		
+
 		return f.lastModified();
 	}
-	
+
 	/**
 	 * Checks if a file was created before a certain date
 	 * @param fileName The file to check
@@ -256,16 +267,16 @@ public class CacheManager implements Serializable
 	 */
 	public boolean fileOlderThan(String fileName, long date)
 	{
-		long lastDate = fileModifiedDate(fileName);
-				
+		long lastDate = fileModifiedDate(mPrefix + fileName);
+
 		if (lastDate > date)
-		{						
+		{
 			return false;
-		}		
-		
+		}
+
 		return true;
 	}
-	
+
 	/**
 	 * Gets the file age in ms
 	 * @param fileName The file to check
@@ -273,34 +284,34 @@ public class CacheManager implements Serializable
 	 */
 	public long getFileAge(String fileName)
 	{
-		return Math.abs(fileModifiedDate(fileName) - System.currentTimeMillis());
+		return Math.abs(fileModifiedDate(mPrefix + fileName) - System.currentTimeMillis());
 	}
-	
+
 	/**
 	 * Gets the absolute file path of a file in cache
 	 * @param fileName The file name
-	 * @return The absolute file path 
+	 * @return The absolute file path
 	 */
 	public String getFilePath(String fileName)
 	{
-		return getFilePath("", fileName);
+		return getFilePath("", mPrefix + fileName);
 	}
-	
+
 	/**
 	 * Gets the absolute file path of a file in cache
 	 * @param folderName the folder name
-	 * @param fileName The file name 
-	 * @return The absolute file path 
+	 * @param fileName The file name
+	 * @return The absolute file path
 	 */
 	public String getFilePath(String folderName, String fileName)
 	{
 		try
-		{	
+		{
 			if (folderName != null && !folderName.equals(""))
 			{
 				folderName = "/" + mPrefix + folderName;
 			}
-			
+
 			File file = new File(mCachePath + folderName, mPrefix + fileName);
 			return file.getAbsolutePath();
 		}
@@ -309,7 +320,7 @@ public class CacheManager implements Serializable
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Checks if the cache has reached the user's cache limit stored in user preference as "cacheLimit"
 	 * and removes the oldest files to make space
@@ -318,33 +329,33 @@ public class CacheManager implements Serializable
 	{
 		long currentUsed = getCacheSize();
 		long currentCacheLimit;
-		
+
 		try
 		{
 			SharedPreferences mPrefs = context.getSharedPreferences(mPackageName, Context.MODE_WORLD_WRITEABLE);
 	        currentCacheLimit = mPrefs.getInt("cacheLimit", -1) * 1024 * 1024;
 		}
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			currentCacheLimit = -1;
 		}
-		
+
         if (currentCacheLimit > currentUsed || currentCacheLimit < 0) return;
-        
-		File files = new File(mCachePath);	
+
+		File files = new File(mCachePath);
 		FileFilter filter = new FileFilter()
 		{
-			public boolean accept(File arg0) 
-			{				
+			public boolean accept(File arg0)
+			{
 				if (arg0.getName().contains(mPrefix))
 				{
-					return true;					
+					return true;
 				}
-				
+
 				return false;
 			};
 		};
-		
+
 		Comparator c = new Comparator<File>()
 		{
 			public int compare(File object1, File object2)
@@ -361,12 +372,12 @@ public class CacheManager implements Serializable
 				{
 					return 0;
 				}
-			}			
+			}
 		};
-		
+
 		File[] fileList = files.listFiles(filter);
 		Arrays.sort(fileList, c);
-		
+
 		for (File f : fileList)
 		{
 			if (currentUsed > currentCacheLimit)
@@ -376,11 +387,11 @@ public class CacheManager implements Serializable
 			}
 			else
 			{
-				break;			
+				break;
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes an image from the cache
 	 * @param imageName The image to remove
@@ -390,7 +401,7 @@ public class CacheManager implements Serializable
 	{
 		return removeFile(null, imageName);
 	}
-	
+
 	/**
 	 * Removes an image from the cache
 	 * @param folderName The folder where the image is stored
@@ -401,7 +412,7 @@ public class CacheManager implements Serializable
 	{
 		return removeFile(folderName, imageName);
 	}
-	
+
 	/**
 	 * Removes a file from the cache
 	 * @param fileName The file to remove
@@ -411,24 +422,24 @@ public class CacheManager implements Serializable
 	{
 		return removeFile("", fileName);
 	}
-	
+
 	/**
 	 * Removes a file from the cache
-	 * @param folderName The folder where the image is stored 
+	 * @param folderName The folder where the image is stored
 	 * @param fileName The file to remove
 	 * @return true if the file was deleted, otherwise false
 	 */
 	public boolean removeFile(String folderName, String fileName)
 	{
 		if (!folderName.equals(""))
-		{	
+		{
 			folderName = "/" + mPrefix + folderName;
 		}
-		
+
 		File f = new File(mCachePath + folderName, mPrefix + fileName);
 		return f.delete();
 	}
-	
+
 	/**
 	 * Deletes a folder
 	 * @param folderName The folder to delete
@@ -437,17 +448,17 @@ public class CacheManager implements Serializable
 	public boolean removeFolder(String folderName)
 	{
 		File f = new File(mCachePath + "/" + mPrefix + folderName);
-		
+
 		File[] fileList = f.listFiles();
 		double totalSize = 0;
 		for (File file : fileList)
 		{
 			f.delete();
-		}		
-		
+		}
+
 		return f.delete();
 	}
-	
+
 	/**
 	 * Adds an image to the cache
 	 * @param fileName The file name for the file
@@ -458,9 +469,9 @@ public class CacheManager implements Serializable
 	{
 		return addImage(null, fileName, fileContents, Bitmap.CompressFormat.PNG, null);
 	}
-	
+
 	/**
-	 * Adds an image to the cache 
+	 * Adds an image to the cache
 	 * @param fileName The file name for the file
 	 * @param fileContents The contents for the file
 	 * @param l The on file written listener, called after the file was written to cache
@@ -470,7 +481,7 @@ public class CacheManager implements Serializable
 	{
 		return addImage(null, fileName, fileContents, Bitmap.CompressFormat.PNG, l);
 	}
-	
+
 	/**
 	 * Adds an image to the cache
 	 * @param fileName The file name for the file
@@ -482,7 +493,7 @@ public class CacheManager implements Serializable
 	{
 		return addImage(folderName, fileName, fileContents, Bitmap.CompressFormat.PNG, l);
 	}
-	
+
 	/**
 	 * Adds an image to the cache
 	 * @param fileName The file name for the file
@@ -492,39 +503,39 @@ public class CacheManager implements Serializable
 	 * @return true
 	 */
 	public boolean addImage(String folderName, String fileName, Bitmap fileContents, Bitmap.CompressFormat format, OnFileWrittenListener l)
-	{					
+	{
 		AddImageRunnable r = new AddImageRunnable(folderName, fileName, fileContents, format, l)
-		{						
+		{
 			public void run()
 			{
 				try
-				{			
+				{
 					File outputPath;
 					if (mFolderName != null)
 					{
 						File f = new File(mCachePath + "/" + mPrefix + mFolderName);
 						f.mkdir();
-					
+
 						outputPath = new File(mCachePath + "/" + mPrefix + mFolderName, mPrefix + mFileName);
 					}
 					else
 					{
 						outputPath = new File(mCachePath, mPrefix + mFileName);
-					}					
-										
-					FileOutputStream output = new FileOutputStream(outputPath);										
+					}
+
+					FileOutputStream output = new FileOutputStream(outputPath);
 					mImage.compress(mFormat, 40, output);
-								
+
 					output.flush();
-					output.close();	
-															
+					output.close();
+
 					if (mListener != null)
 					{
 						mListener.onFileWritten(mFileName);
 					}
-					
+
 					//mImage.recycle();
-					
+
 					//	Now delete to make up for more room
 					checkCacheLimit();
 				}
@@ -534,13 +545,13 @@ public class CacheManager implements Serializable
 					checkCacheLimit();
 				}
 			}
-		};				
-		
-		((Activity)context).runOnUiThread(r);		
-		
+		};
+
+		((Activity)context).runOnUiThread(r);
+
 		return true;
 	}
-	
+
 	/**
 	 * Adds a file to the cache
 	 * @param fileName The file name for the file
@@ -551,7 +562,7 @@ public class CacheManager implements Serializable
 	{
 		return addFile(null, fileName, fileContents, null);
 	}
-	
+
 	/**
 	 * Adds a file to the cache
 	 * @param folderName The folder for the file to be stored in
@@ -563,9 +574,9 @@ public class CacheManager implements Serializable
 	{
 		return addFile(folderName, fileName, fileContents, null);
 	}
-	
+
 	/**
-	 * Adds a file to the cache 
+	 * Adds a file to the cache
 	 * @param fileName The file name for the file
 	 * @param fileContents The contents for the file
 	 * @param l The listener for when the file has been written to cache
@@ -575,7 +586,7 @@ public class CacheManager implements Serializable
 	{
 		return addFile(null, fileName, fileContents, l);
 	}
-	
+
 	/**
 	 * Adds a file to the cache
 	 * @param folderName The folder for the file to be stored in
@@ -585,27 +596,27 @@ public class CacheManager implements Serializable
 	 * @return true
 	 */
 	public boolean addFile(String folderName, String fileName, Serializable fileContents, OnFileWrittenListener l)
-	{		
+	{
 		AddFileRunnable r = new AddFileRunnable(folderName, fileName, fileContents, l)
-		{						
+		{
 			public void run()
 			{
 				try
-				{							
+				{
 					String outputPath;
 					if (mFolderName != null && mFolderName.length() > 0)
 					{
 						File f = new File(mCachePath + "/" + mPrefix + mFolderName);
 						f.mkdir();
-					
+
 						outputPath = mPrefix + mFolderName + "/" + mPrefix + mFileName;
 					}
 					else
 					{
 						outputPath = mPrefix + mFileName;
 					}
-					
-					FileOutputStream fos = null;					
+
+					FileOutputStream fos = null;
 					try
 					{
 						if (fos == null)
@@ -613,62 +624,62 @@ public class CacheManager implements Serializable
 							File f = new File(mCachePath + "/" + outputPath);
 							fos = new FileOutputStream(mCachePath + "/" + outputPath);
 						}
-						
+
 					    fos.write((byte[])mContents);
-					    fos.close();					    
+					    fos.close();
 					}
 					catch (Exception e)
 					{
-						if (fos == null) 
+						if (fos == null)
 						{
 							File f = new File(mCachePath + "/" + outputPath);
 							fos = new FileOutputStream(mCachePath + "/" + outputPath);
 						}
-						
+
 						ObjectOutputStream stream = new ObjectOutputStream(fos);
-						
+
 						stream.writeObject(mContents);
 						stream.flush();
 						fos.flush();
 						stream.close();
-						fos.close();		
-					} 
+						fos.close();
+					}
 					finally
 					{
 						mContents = null;
 						System.gc();
-					}					
-					
+					}
+
 					if (mListener != null)
-					{						
+					{
 						mListener.onFileWritten(mFileName);
-					}					
-					
+					}
+
 					//	Now delete to make up for more room
 					checkCacheLimit();
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					
+
 					checkCacheLimit();
 				}
-			} 
-		};				
-		
+			}
+		};
+
 		//	This might be a bad idea, keep an eye on it
 		try
 		{
 			((Activity)context).runOnUiThread(r);
 		}
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			r.start();
 		}
-		
-		return true;		
+
+		return true;
 	}
-	
+
 	/**
 	 * Gets the input stream for a file
  	 * @param fileName The file to get the input stream of
@@ -694,10 +705,10 @@ public class CacheManager implements Serializable
 				folderName = mPrefix + folderName;
 			}
 			else
-			{ 
+			{
 				folderName = "";
 			}
-			
+
 			File file = new File(mCachePath + folderName, mPrefix + fileName);
 			return new FileInputStream(file);
 		}
@@ -706,7 +717,7 @@ public class CacheManager implements Serializable
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Reads an image from cache
 	 * @param fileName The image to retrieve
@@ -716,7 +727,7 @@ public class CacheManager implements Serializable
 	{
 		return readImage(null, fileName);
 	}
-	
+
 	/**
 	 * Reads an image from cache
 	 * @paaram folderName The folder in which the cache file is stored
@@ -726,28 +737,28 @@ public class CacheManager implements Serializable
 	public Bitmap readImage(String folderName, String fileName)
 	{
 		FileInputStream input = null;
-		
+
 		try
-		{				
+		{
 			if (!TextUtils.isEmpty(folderName))
 			{
 				folderName = "/" + mPrefix + folderName;
 			}
 			else
-			{ 
+			{
 				folderName = "";
 			}
-			
+
 			File file = new File(mCachePath + folderName, mPrefix + fileName);
 			input = new FileInputStream(file);
 
 			BitmapFactory.Options opts = new BitmapFactory.Options();
-			opts.inDither = true;						
-			
-			Bitmap b = BitmapFactory.decodeStream(input, null, opts);	
-			
-			input.close();	
-			
+			opts.inDither = true;
+
+			Bitmap b = BitmapFactory.decodeStream(input, null, opts);
+
+			input.close();
+
 			return b;
 		}
 		catch (OutOfMemoryError e)
@@ -760,11 +771,11 @@ public class CacheManager implements Serializable
 			return null;
 		}
 		finally
-		{			
+		{
 			input = null;
 		}
 	}
-	
+
 	/**
 	 * Reads a file from cache
 	 * @param fileName The file to retrieve
@@ -774,7 +785,7 @@ public class CacheManager implements Serializable
 	{
 		return readFile(null, fileName);
 	}
-	
+
 	/**
 	 * Reads a file from cache
 	 * @param folderName The folder in which the cache file is stored
@@ -785,7 +796,7 @@ public class CacheManager implements Serializable
 	{
 		FileInputStream input = null;
 		ObjectInputStream stream = null;
-		
+
 		try
 		{
 			String filePath = mCachePath;
@@ -793,15 +804,16 @@ public class CacheManager implements Serializable
 			{
 				filePath += "/" + mPrefix + folderName + "/";
 			}
-			
+
 			File file = new File(filePath, mPrefix + fileName);
+
 			input = new FileInputStream(file);
 			stream = new ObjectInputStream(input);
-			
+
 			Object data = stream.readObject();
 			stream.close();
 			input.close();
-			
+
 			return data;
 		}
 		catch (OutOfMemoryError e)
@@ -819,13 +831,13 @@ public class CacheManager implements Serializable
 			stream = null;
 		}
 	}
-	
+
 	/**
 	 * Clears the cache
 	 */
 	public void clearCache()
 	{
-		clearCache(false); 
+		clearCache(false);
 	}
 
 	/**
@@ -836,38 +848,38 @@ public class CacheManager implements Serializable
 	{
 		ProgressDialog dialog = new ProgressDialog(context);
 		if (showProgress)
-		{			
+		{
 			dialog.setMessage("Clearing Cache");
 			dialog.show();
 		}
-		
-		File files = this.context.getCacheDir();		
+
+		File files = this.context.getCacheDir();
 		FileFilter filter = new FileFilter()
 		{
-			public boolean accept(File arg0) 
-			{				
+			public boolean accept(File arg0)
+			{
 				if (arg0.getName().contains(mPrefix))
 				{
-					return true;					
+					return true;
 				}
-				
+
 				return false;
 			};
 		};
-		
+
 		File[] fileList = files.listFiles(filter);
 		double totalSize = 0;
 		for (File f : fileList)
 		{
 			f.delete();
 		}
-		
+
 		if (showProgress)
 		{
 			dialog.dismiss();
 		}
 	}
-	
+
 	/**
 	 * @brief The class that adds files to the cache in its own thread
 	 */
@@ -876,9 +888,9 @@ public class CacheManager implements Serializable
 		protected String mFolderName;
 		protected String mFileName;
 		protected Bitmap mImage;
-		protected Bitmap.CompressFormat mFormat;		
+		protected Bitmap.CompressFormat mFormat;
 		protected OnFileWrittenListener mListener;
-		
+
 		/**
 		 * Default constructor for the class
 		 * @param folderName The folder name for the image to be stored
@@ -896,7 +908,7 @@ public class CacheManager implements Serializable
 			mListener = l;
 		}
 	}
-	
+
 	/**
 	 * @brief The class that adds files to the cache in its own thread
 	 */
@@ -906,23 +918,23 @@ public class CacheManager implements Serializable
 		protected String mFileName;
 		protected Serializable mContents;
 		protected OnFileWrittenListener mListener;
-		
+
 		/**
 		 * Default constructor for the class
 		 * @param folderName The folder name for the image to be stored
 		 * @param fileName The file name for the file
-		 * @param contents The contents of the file to be written 
+		 * @param contents The contents of the file to be written
 		 * @param l The callback listener for when the file is written
 		 */
 		public AddFileRunnable(String folderName, String fileName, Serializable contents, OnFileWrittenListener l)
 		{
 			mFolderName = folderName;
 			mFileName = fileName;
-			mContents = contents;			
+			mContents = contents;
 			mListener = l;
 		}
 	}
-	
+
 	/**
 	 * @brief Interface for when the file has been written to cache
 	 */
@@ -934,7 +946,7 @@ public class CacheManager implements Serializable
 		 */
 		public void onFileWritten(String fileName);
 	}
-	
+
 	/**
 	 * @brief The class that serailizes data
 	 */
@@ -947,44 +959,44 @@ public class CacheManager implements Serializable
 		 */
 		public static byte[] serializeBitmap(Bitmap data)
 		{
-			try 
+			try
 			{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				data.compress(CompressFormat.PNG, 100, bos);
 				byte[] bytes = bos.toByteArray();
-				
+
 				return bytes;
 			}
-			catch (Exception e) 
+			catch (Exception e)
 			{
 				e.printStackTrace();
 				return null;
-			}			
+			}
 		}
-		
+
 		/**
 		 * Serializes data into bytes
 		 * @param data The data to be serailized
 		 * @return The serialized data in a byte array
 		 */
 		public static byte[] serializeObject(Object data)
-		{		
+		{
 			try
 			{
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				ObjectOutput out = new ObjectOutputStream(bos);   
+				ObjectOutput out = new ObjectOutputStream(bos);
 				out.writeObject(data);
-				byte[] yourBytes = bos.toByteArray(); 		
-				
+				byte[] yourBytes = bos.toByteArray();
+
 				return yourBytes;
 			}
-			catch (Exception e) 
+			catch (Exception e)
 			{
 				e.printStackTrace();
 				return null;
-			}					
+			}
 		}
-		
+
 		/**
 		 * Deserailizes data into an object
 		 * @param data The byte array to be deserialized
@@ -992,12 +1004,12 @@ public class CacheManager implements Serializable
 		 */
 		public static Object desterializeObject(byte[] data)
 		{
-			try 
+			try
 			{
 				ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(data));
 				Object objectData = input.readObject();
 				input.close();
-				
+
 				return objectData;
 			}
 			catch (Exception e)
