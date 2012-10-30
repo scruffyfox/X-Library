@@ -103,23 +103,34 @@ public class AsyncHttpClient
 		/**
 		 * Posts to a server
 		 */
-		POST,
+		POST("POST"),
 		/**
 		 * Gets data from the server as String
 		 */
-		GET,
+		GET("GET"),
 		/**
 		 * Puts data to the server (equivilant to POST with relevant headers)
 		 */
-		PUT,
+		PUT("PUT"),
 		/**
 		 * Deletes data from the server (equivilant to GET with relevant headers)
 		 */
-		DELETE,
+		DELETE("DELETE"),
 		/**
 		 * Downloads binary data from the server
 		 */
-		DOWNLOAD
+		DOWNLOAD("DOWNLOAD");
+
+		private String mEnumStr;
+		private RequestMode(String enumStr)
+		{
+			this.mEnumStr = enumStr;
+		}
+
+		public String getString()
+		{
+			return mEnumStr;
+		}
 	}
 
 	private HttpLoader mHttpLoader;
@@ -786,16 +797,16 @@ public class AsyncHttpClient
 	{
 		public ConnectionInfo mConnectionInfo = new ConnectionInfo();
 
-		private final int DOWNLOAD = 0x00;
-		private final int GET = 0x01;
-		private final int GET_IMAGE = 0x11;
-		private final int POST = 0x02;
-		private final int PUT = 0x03;
-		private final int DELETE = 0x04;
+//		private final int DOWNLOAD = 0x00;
+//		private final int GET = 0x01;
+//		private final int GET_IMAGE = 0x11;
+//		private final int POST = 0x02;
+//		private final int PUT = 0x03;
+//		private final int DELETE = 0x04;
 
 		private long mLoadTime = 0;
 		private AsyncHttpResponse mAsyncHttpResponse;
-		private int type = 0;
+		private RequestMode type;
 		private Handler mTimeoutHandler;
 		private int mTimeout = 10000;
 		private Object mSendData;
@@ -827,7 +838,7 @@ public class AsyncHttpClient
 		{
 			this.mAsyncHttpResponse = responseHandler;
 			this.mHttpParams = headers;
-			type = DOWNLOAD;
+			type = RequestMode.DOWNLOAD;
 			this.mUrl = urlStr;
 
 			this.execute(urlStr);
@@ -843,7 +854,7 @@ public class AsyncHttpClient
 		{
 			this.mAsyncHttpResponse = responseHandler;
 			this.mHttpParams = headers;
-			type = GET;
+			type = RequestMode.GET;
 			this.mUrl = urlStr;
 
 			this.execute(urlStr);
@@ -859,7 +870,7 @@ public class AsyncHttpClient
 		{
 			this.mAsyncHttpResponse = responseHandler;
 			this.mHttpParams = headers;
-			type = DELETE;
+			type = RequestMode.DELETE;
 			this.mUrl = urlStr;
 
 			this.execute(urlStr);
@@ -874,7 +885,7 @@ public class AsyncHttpClient
 		public void getImage(String urlStr, AsyncHttpResponse responseHandler)
 		{
 			this.mAsyncHttpResponse = responseHandler;
-			type = GET_IMAGE;
+			type = RequestMode.GET;
 			this.mUrl = urlStr;
 
 			this.execute(urlStr);
@@ -892,7 +903,7 @@ public class AsyncHttpClient
 			this.mAsyncHttpResponse = response;
 			this.mSendData = data;
 			this.mHttpParams = headers;
-			type = POST;
+			type = RequestMode.POST;
 			this.mUrl = urlStr;
 
 			this.execute(urlStr);
@@ -910,7 +921,7 @@ public class AsyncHttpClient
 			this.mAsyncHttpResponse = response;
 			this.mSendData = data;
 			this.mHttpParams = header;
-			type = PUT;
+			type = RequestMode.PUT;
 			this.mUrl = urlStr;
 
 			this.execute(urlStr);
@@ -961,6 +972,7 @@ public class AsyncHttpClient
 		@Override protected Object doInBackground(String... url)
 		{
 			mLoadTime = System.currentTimeMillis();
+			mConnectionInfo.connectionMethod = type.getString();
 
 			switch (type)
 			{
@@ -1108,7 +1120,7 @@ public class AsyncHttpClient
 						conn.setUseCaches(false);
 						conn.setRequestProperty("Connection", "close");
 
-						if (type == DELETE)
+						if (type == RequestMode.DELETE)
 						{
 							conn.setRequestMethod("DELETE");
 						}
@@ -1223,7 +1235,7 @@ public class AsyncHttpClient
 							conn.setRequestProperty(s[0], s[1]);
 						}
 
-						if (type == PUT)
+						if (type == RequestMode.PUT)
 						{
 							conn.setRequestMethod("PUT");
 						}
@@ -1391,7 +1403,7 @@ public class AsyncHttpClient
 
 				if (((mConnectionInfo.connectionResponseCode / 100) == 2))
 				{
-					if (type == DOWNLOAD)
+					if (type == RequestMode.DOWNLOAD)
 					{
 						mAsyncHttpResponse.onSuccess(result == null ? new byte[]{} : (byte[])result);
 					}

@@ -1,6 +1,6 @@
 /**
  * @brief x type is the type library which includes the commonly used data types in the X Library lib
- * 
+ *
  * @author Callum Taylor
 **/
 package x.type;
@@ -8,7 +8,7 @@ package x.type;
 /**
  * @brief Gives details on the connection made to a server
  */
-public class ConnectionInfo 
+public class ConnectionInfo
 {
 	/**
 	 * The URL of the connection
@@ -42,12 +42,13 @@ public class ConnectionInfo
 	 * The response headers
 	 */
 	public HttpParams connectionResponseHeaders = new HttpParams();
-	
 	/**
-	 * Generates the class as a string
+	 * The connection method
 	 */
+	public String connectionMethod = "";
+
 	@Override public String toString()
 	{
-		return "ConnectionInfo \r\n[\r\n\tconnectionUrl=" + connectionUrl + ", \r\n\tconnectionHeaders=" + connectionHeaders + ", \r\n\tconnectionSentData=" + connectionSentData + ", \r\n\tconnectionInitiationTime=" + connectionInitiationTime + ", \r\n\tconnectionResponseTime=" + connectionResponseTime + ", \n\tconnectionResponseCode=" + connectionResponseCode + ", \n\tconnectionResponseMessage=" + connectionResponseMessage + ", \n\tconnectionResponseHeaders=" + connectionResponseHeaders.toString() + "\n]";
-	}		
+		return "ConnectionInfo " + hashCode() + "\n[\n    connectionUrl=" + connectionUrl + ", \n    connectionHeaders=" + connectionHeaders + ", \n    connectionSentData=" + connectionSentData + ", \n    connectionInitiationTime=" + connectionInitiationTime + ", \n    connectionResponseTime=" + connectionResponseTime + ", \n    connectionResponseCode=" + connectionResponseCode + ", \n    connectionResponseMessage=" + connectionResponseMessage + ", \n    connectionResponseHeaders=" + connectionResponseHeaders + ", \n    connectionMethod=" + connectionMethod + "\n]";
+	}
 }
