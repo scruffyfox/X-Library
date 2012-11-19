@@ -139,8 +139,8 @@ public class XUIMenuButtonGroup extends LinearLayout
 		mContext = context;
 		mStyle = defStyle == 0 ? R.style.menu_button_group_iphone : defStyle;
 
-		//TypedArray attributes = mContext.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup, defStyle, 0);
-		TypedArray attributes = mContext.obtainStyledAttributes(mStyle, R.styleable.XUIMenuButtonGroup);
+		TypedArray attributes = mContext.obtainStyledAttributes(attrs, R.styleable.XUIMenuButtonGroup, 0, mStyle);
+		//TypedArray attributes = mContext.obtainStyledAttributes(mStyle, R.styleable.XUIMenuButtonGroup);
 
 		groupName = attributes.getString(R.styleable.XUIMenuButtonGroup_groupName);
 		mGroupNameTransform = attributes.getInteger(R.styleable.XUIMenuButtonGroup_groupName_transform, TEXT_TRANSFORM_NORMAL);
@@ -148,9 +148,9 @@ public class XUIMenuButtonGroup extends LinearLayout
 		mLayoutInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		layoutView = (LinearLayout)mLayoutInflater.inflate(R.layout.xui_menu_button_group, attach ? this : null);
 
-		mStrokeColor = (int)attributes.getColor(R.styleable.XUIMenuButtonGroup_strokeColor, 0xffcccccc);
+		mStrokeColor = attributes.getColor(R.styleable.XUIMenuButtonGroup_strokeColor, 0xffcccccc);
 		mStrokeSize = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_strokeSize, 2.0f);
-		mLabelStrokeColor = (int)attributes.getColor(R.styleable.XUIMenuButtonGroup_labelStrokeColor, 0xff333333);
+		mLabelStrokeColor = attributes.getColor(R.styleable.XUIMenuButtonGroup_labelStrokeColor, 0xff333333);
 		mLabelStrokeSize = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelStrokeSize, 3.0f);
 		int labelSize = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelSize, 0);
 		int padding = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPadding, 0);
@@ -160,7 +160,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 		int paddingTop = (int)attributes.getDimension(R.styleable.XUIMenuButtonGroup_labelPaddingTop, 0);
 
 		((TextView)layoutView.findViewById(R.id.group_label)).setTextSize(labelSize);
-		((TextView)layoutView.findViewById(R.id.group_label)).setTextColor((int)attributes.getColor(R.styleable.XUIMenuButtonGroup_labelColor, 0xff000000));
+		((TextView)layoutView.findViewById(R.id.group_label)).setTextColor(attributes.getColor(R.styleable.XUIMenuButtonGroup_labelColor, 0xff000000));
 
 		if (padding > 0)
 		{
@@ -285,7 +285,7 @@ public class XUIMenuButtonGroup extends LinearLayout
 	 */
 	public void addMenuButton(XUIMenuButton... child)
 	{
-		for (XUIMenuButton b : (XUIMenuButton[])child)
+		for (XUIMenuButton b : child)
 		{
 			((LinearLayout)layoutView.findViewById(R.id.items)).addView(b);
 
