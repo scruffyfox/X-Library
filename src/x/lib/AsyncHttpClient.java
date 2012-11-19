@@ -13,8 +13,6 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -32,56 +30,34 @@ import android.os.Handler;
 import android.os.Looper;
 
 /**
- * @brief The client class used for initiating HTTP requests
- *
- * POST/PUT
- * When using POST/PUT the object data that gets sent must be either a byte array of serialized data, or a derivative of the String class.
- * Sending as a byte array should be used with the correct headers of Content-Type: multipart/form-data. See {@link getMultipartFormHeader}
- * When sending as a String, the data should be interpreted by the server as RAW input.
- *
- * You can use the method {@link getFormPostDataWithFiles} to convert a HttpParam object to serialized data. You can also send files by using
- * the {@link AsyncHttpClient.FileHttpParams} params.
- *
- * <b>Depends on</b>
- * <ul>
- * 	<li>{@link AsyncHttpResponse}</li>
- * 	<li>{@link HttpParams}</li>
- * 	<li>{@link FileHttpParams}</li>
- * 	<li>{@link ConnectionInfo}</li>
- * 	<li>{@link ItemList}</li>
- * </ul>
- *
- * GET
- * When using the GET request, the response is recieved as a STRING. If you are expecting a binary file such as an image or a database, use DOWNLOAD
- *
- * DOWNLOAD
- * Use this method when you want to recieve a binary file from a server such as an image or database. The response is received as a byte[].
- *
- * The response life cycle:
- *  - OnSend
- *  - OnBytesProcessed (continuous)
- *  - BeforeFinished
- *  - OnSuccess / OnFailure
- *  - OnFinish
- *
- * Example GET:
- * @code
- * AsyncHttpClient APIDownloader = new AsyncHttpClient();
- * APIDownloader.get
- * (
- * 	"http://url.com/api.json",
- * 	new HttpParams
- * 	(
- * 		new String[]{"id", 15}
- * 	),
- * 	new AsyncHttpResponse()
- * 	{
- * 		public void onSuccess(Object response)
- * 		{
- * 			//	do stuff
- * 		}
- * 	}
- * );
+ * @brief The client class used for initiating HTTP requests POST/PUT When using
+ *        POST/PUT the object data that gets sent must be either a byte array of
+ *        serialized data, or a derivative of the String class. Sending as a
+ *        byte array should be used with the correct headers of Content-Type:
+ *        multipart/form-data. See {@link getMultipartFormHeader} When sending
+ *        as a String, the data should be interpreted by the server as RAW
+ *        input. You can use the method {@link getFormPostDataWithFiles} to
+ *        convert a HttpParam object to serialized data. You can also send files
+ *        by using the {@link AsyncHttpClient.FileHttpParams} params. <b>Depends
+ *        on</b>
+ *        <ul>
+ *        <li>{@link AsyncHttpResponse}</li>
+ *        <li>{@link HttpParams}</li>
+ *        <li>{@link FileHttpParams}</li>
+ *        <li>{@link ConnectionInfo}</li>
+ *        <li>{@link ItemList}</li>
+ *        </ul>
+ *        GET When using the GET request, the response is recieved as a STRING.
+ *        If you are expecting a binary file such as an image or a database, use
+ *        DOWNLOAD DOWNLOAD Use this method when you want to recieve a binary
+ *        file from a server such as an image or database. The response is
+ *        received as a byte[]. The response life cycle: - OnSend -
+ *        OnBytesProcessed (continuous) - BeforeFinished - OnSuccess / OnFailure
+ *        - OnFinish Example GET:
+ * @code AsyncHttpClient APIDownloader = new AsyncHttpClient();
+ *       APIDownloader.get ( "http://url.com/api.json", new HttpParams ( new
+ *       String[]{"id", 15} ), new AsyncHttpResponse() { public void
+ *       onSuccess(Object response) { // do stuff } } );
  * @endcode
  */
 public class AsyncHttpClient
@@ -113,7 +89,8 @@ public class AsyncHttpClient
 		 */
 		PUT("PUT"),
 		/**
-		 * Deletes data from the server (equivilant to GET with relevant headers)
+		 * Deletes data from the server (equivilant to GET with relevant
+		 * headers)
 		 */
 		DELETE("DELETE"),
 		/**
@@ -122,6 +99,7 @@ public class AsyncHttpClient
 		DOWNLOAD("DOWNLOAD");
 
 		private String mEnumStr;
+
 		private RequestMode(String enumStr)
 		{
 			this.mEnumStr = enumStr;
@@ -146,7 +124,9 @@ public class AsyncHttpClient
 
 	/**
 	 * Default constructor
-	 * @param timeout The timeout delay for the request
+	 *
+	 * @param timeout
+	 *            The timeout delay for the request
 	 */
 	public AsyncHttpClient(int timeout)
 	{
@@ -155,6 +135,7 @@ public class AsyncHttpClient
 
 	/**
 	 * Gets the boundary string for posting headers
+	 *
 	 * @return The boundary string
 	 */
 	public static String getBoundary()
@@ -164,16 +145,21 @@ public class AsyncHttpClient
 
 	/**
 	 * Gets the multipart form header used with Posting data to a server
-	 * @return The header as a String[] which can be used with HttpParams.addParam(header)
+	 *
+	 * @return The header as a String[] which can be used with
+	 *         HttpParams.addParam(header)
 	 */
 	public static String[] getMultipartFormHeader()
 	{
-		return new String[]{"Content-Type", "multipart/form-data; boundary=" + getBoundary()};
+		return new String[]
+		{"Content-Type", "multipart/form-data; boundary=" + getBoundary()};
 	}
 
 	/**
 	 * Gets the binary equivilant of a HttpParam object
-	 * @param values The values to convert
+	 *
+	 * @param values
+	 *            The values to convert
 	 * @return The binary data or null if failed
 	 */
 	public static byte[] getFormPostData(HttpParams values)
@@ -191,8 +177,11 @@ public class AsyncHttpClient
 	}
 
 	/**
-	 * Gets the binary equivilant of a HttpParam object and FileHttpParam files object
-	 * @param values The values and files to convert
+	 * Gets the binary equivilant of a HttpParam object and FileHttpParam files
+	 * object
+	 *
+	 * @param values
+	 *            The values and files to convert
 	 * @return The binary data or null if failed
 	 */
 	public static byte[] getFormPostDataWithFiles(HttpParams values, FileHttpParams files)
@@ -222,9 +211,7 @@ public class AsyncHttpClient
 				for (int index = 0; index < count; index++)
 				{
 					StringBuffer fileRes = new StringBuffer();
-					fileRes.append("Content-Disposition: form-data; name=\"").append(files.getFieldName(index))
-					.append("\"; filename=\"").append(files.getFileName(index)).append("\"\r\n")
-					.append("Content-Type: ").append(files.getFileType(index)).append("\r\n\r\n");
+					fileRes.append("Content-Disposition: form-data; name=\"").append(files.getFieldName(index)).append("\"; filename=\"").append(files.getFileName(index)).append("\"\r\n").append("Content-Type: ").append(files.getFileType(index)).append("\r\n\r\n");
 
 					bos.write(fileRes.toString().getBytes());
 					bos.write(files.getFileContents(index));
@@ -254,8 +241,11 @@ public class AsyncHttpClient
 
 	/**
 	 * Creates a AsyncHttpClient for later use
-	 * @param requestMode The request mode
-	 * @param urlStr The URL
+	 *
+	 * @param requestMode
+	 *            The request mode
+	 * @param urlStr
+	 *            The URL
 	 * @return The newly created async client
 	 */
 	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr)
@@ -269,9 +259,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Creates a AsyncHttpClient for later use
-	 * @param requestMode The request mode
-	 * @param urlStr The URL
-	 * @param response The response for the request
+	 *
+	 * @param requestMode
+	 *            The request mode
+	 * @param urlStr
+	 *            The URL
+	 * @param response
+	 *            The response for the request
 	 * @return The newly created async client
 	 */
 	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, AsyncHttpResponse response)
@@ -286,9 +280,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Creates a AsyncHttpClient for later use
-	 * @param requestMode The request mode
-	 * @param urlStr The URL
-	 * @param postData The post data
+	 *
+	 * @param requestMode
+	 *            The request mode
+	 * @param urlStr
+	 *            The URL
+	 * @param postData
+	 *            The post data
 	 * @return The newly created async client
 	 */
 	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, Object postData)
@@ -303,10 +301,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Creates a AsyncHttpClient for later use
-	 * @param requestMode The request mode
-	 * @param urlStr The URL
-	 * @param requestParameters The request params for the url
-	 * @param postData The post data
+	 *
+	 * @param requestMode
+	 *            The request mode
+	 * @param urlStr
+	 *            The URL
+	 * @param requestParameters
+	 *            The request params for the url
+	 * @param postData
+	 *            The post data
 	 * @return The newly created async client
 	 */
 	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, HttpParams requestParameters, Object postData)
@@ -322,11 +325,17 @@ public class AsyncHttpClient
 
 	/**
 	 * Creates a AsyncHttpClient for later use
-	 * @param requestMode The request mode
-	 * @param urlStr The URL
-	 * @param requestParameters The request params for the url
-	 * @param postData The post data
-	 * @param httpHeaders The HTTP Headers to send to the server
+	 *
+	 * @param requestMode
+	 *            The request mode
+	 * @param urlStr
+	 *            The URL
+	 * @param requestParameters
+	 *            The request params for the url
+	 * @param postData
+	 *            The post data
+	 * @param httpHeaders
+	 *            The HTTP Headers to send to the server
 	 * @return The newly created async client
 	 */
 	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, HttpParams requestParameters, Object postData, HttpParams httpHeaders)
@@ -343,12 +352,19 @@ public class AsyncHttpClient
 
 	/**
 	 * Creates a AsyncHttpClient for later use
-	 * @param requestMode The request mode
-	 * @param urlStr The URL
-	 * @param requestParameters The request params for the url
-	 * @param postData The post data
-	 * @param httpHeaders The HTTP Headers to send to the server
-	 * @param response The response
+	 *
+	 * @param requestMode
+	 *            The request mode
+	 * @param urlStr
+	 *            The URL
+	 * @param requestParameters
+	 *            The request params for the url
+	 * @param postData
+	 *            The post data
+	 * @param httpHeaders
+	 *            The HTTP Headers to send to the server
+	 * @param response
+	 *            The response
 	 * @return The newly created async client
 	 */
 	public static AsyncHttpClient createClient(RequestMode requestMode, String urlStr, HttpParams requestParameters, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
@@ -366,7 +382,9 @@ public class AsyncHttpClient
 
 	/**
 	 * Sets the response of a client
-	 * @param response The response to set
+	 *
+	 * @param response
+	 *            The response to set
 	 */
 	public void setResponse(AsyncHttpResponse response)
 	{
@@ -375,6 +393,7 @@ public class AsyncHttpClient
 
 	/**
 	 * Gets the response for the client
+	 *
 	 * @return The response for the client
 	 */
 	public AsyncHttpResponse getResponse()
@@ -383,7 +402,8 @@ public class AsyncHttpClient
 	}
 
 	/**
-	 * Executes a pre-created request built by {@link AsyncHttpClient.createClient}
+	 * Executes a pre-created request built by
+	 * {@link AsyncHttpClient.createClient}
 	 */
 	public void execute()
 	{
@@ -394,7 +414,8 @@ public class AsyncHttpClient
 	}
 
 	/**
-	 * Executes a pre-created request built by {@link AsyncHttpClient.createClient}
+	 * Executes a pre-created request built by
+	 * {@link AsyncHttpClient.createClient}
 	 */
 	protected void execute(AsyncHttpResponse response)
 	{
@@ -406,8 +427,11 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
 	 */
 	public void request(RequestMode requestMode, String urlStr)
 	{
@@ -416,9 +440,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void request(RequestMode requestMode, String urlStr, AsyncHttpResponse response)
 	{
@@ -427,10 +455,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void request(RequestMode requestMode, String urlStr, Object postData, AsyncHttpResponse response)
 	{
@@ -439,10 +472,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
-	 * @param httpHeaders The headers to be sent to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param httpHeaders
+	 *            The headers to be sent to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void request(RequestMode requestMode, String urlStr, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -451,11 +489,17 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
-	 * @param requestParameters The request params
-	 * @param httpHeaders The headers to be sent to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param requestParameters
+	 *            The request params
+	 * @param httpHeaders
+	 *            The headers to be sent to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void request(RequestMode requestMode, String urlStr, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -464,11 +508,17 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param httpHeaders The request headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param httpHeaders
+	 *            The request headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void request(RequestMode requestMode, String urlStr, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -477,12 +527,19 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a request with a server
-	 * @param requestMode The request mode for the connection
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param httpHeaders The request headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param requestMode
+	 *            The request mode for the connection
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param httpHeaders
+	 *            The request headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void request(RequestMode requestMode, String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -524,8 +581,11 @@ public class AsyncHttpClient
 
 	/**
 	 * Downloads a file from a url as an instance of a byte array
-	 * @param url The url to download
-	 * @param response The response
+	 *
+	 * @param url
+	 *            The url to download
+	 * @param response
+	 *            The response
 	 */
 	public void download(String url, AsyncHttpResponse response)
 	{
@@ -534,9 +594,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Downloads a file from a url as an instance of a byte array
-	 * @param url The url to download
-	 * @param requestParameters The request parameters
-	 * @param response The response
+	 *
+	 * @param url
+	 *            The url to download
+	 * @param requestParameters
+	 *            The request parameters
+	 * @param response
+	 *            The response
 	 */
 	public void download(String url, HttpParams requestParameters, AsyncHttpResponse response)
 	{
@@ -545,10 +609,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Downloads a file from a url as an instance of a byte array
-	 * @param url The url to download
-	 * @param requestParameters The request parameters
-	 * @param params The header parameters
-	 * @param response The response
+	 *
+	 * @param url
+	 *            The url to download
+	 * @param requestParameters
+	 *            The request parameters
+	 * @param params
+	 *            The header parameters
+	 * @param response
+	 *            The response
 	 */
 	public void download(String url, HttpParams requestParameters, HttpParams params, AsyncHttpResponse response)
 	{
@@ -565,9 +634,14 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a get request with a server
-	 * @param endpoint The URL to the server
-	 * @param requestParameters The request parameters in the format ?<b>param</b>=value&<b>param</b>=value
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URL to the server
+	 * @param requestParameters
+	 *            The request parameters in the format
+	 *            ?<b>param</b>=value&<b>param</b>=value
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void get(String endpoint, String requestParameters, AsyncHttpResponse response)
 	{
@@ -583,8 +657,11 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a get request with a server
-	 * @param endpoint The URL to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URL to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void get(String endpoint, AsyncHttpResponse response)
 	{
@@ -600,9 +677,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a get request with a server
-	 * @param endpoint The URL to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URL to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void get(String endpoint, HttpParams requestParameters, AsyncHttpResponse response)
 	{
@@ -611,10 +692,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a get request with a server
-	 * @param endpoint The URL to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param headers The headers to be sent to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URL to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param headers
+	 *            The headers to be sent to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void get(String endpoint, HttpParams requestParameters, HttpParams headers, AsyncHttpResponse response)
 	{
@@ -632,8 +718,11 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param endpoint The URLs to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URLs to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void delete(String endpoint, AsyncHttpResponse response)
 	{
@@ -642,9 +731,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param endpoint The URLs to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URLs to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void delete(String endpoint, String requestParameters, AsyncHttpResponse response)
 	{
@@ -653,10 +746,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param endpoint The URLs to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param headers The headers to be esnt to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URLs to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param headers
+	 *            The headers to be esnt to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void delete(String endpoint, String requestParameters, HttpParams headers, AsyncHttpResponse response)
 	{
@@ -665,9 +763,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param endpoint The URLs to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URLs to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void delete(String endpoint, HttpParams requestParameters, AsyncHttpResponse response)
 	{
@@ -676,10 +778,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param endpoint The URLs to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param headers The headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param endpoint
+	 *            The URLs to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param headers
+	 *            The headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void delete(String endpoint, HttpParams requestParameters, HttpParams headers, AsyncHttpResponse response)
 	{
@@ -697,9 +804,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void post(String urlStr, Object postData, AsyncHttpResponse response)
 	{
@@ -708,10 +819,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param httpHeaders The request headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param httpHeaders
+	 *            The request headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void post(String urlStr, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -720,11 +836,17 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param httpHeaders The request headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param httpHeaders
+	 *            The request headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void post(String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -742,9 +864,13 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param response The response interface for the request call back
+	 *
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void put(String urlStr, Object postData, AsyncHttpResponse response)
 	{
@@ -753,10 +879,15 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param httpHeaders The request headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param httpHeaders
+	 *            The request headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void put(String urlStr, Object postData, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -765,11 +896,17 @@ public class AsyncHttpClient
 
 	/**
 	 * Initiates a delete request with a server
-	 * @param urlStr The URLs to the server
-	 * @param postData The data to be sent to the server
-	 * @param requestParameters The request parameters for the URL
-	 * @param httpHeaders The request headers for the URL
-	 * @param response The response interface for the request call back
+	 *
+	 * @param urlStr
+	 *            The URLs to the server
+	 * @param postData
+	 *            The data to be sent to the server
+	 * @param requestParameters
+	 *            The request parameters for the URL
+	 * @param httpHeaders
+	 *            The request headers for the URL
+	 * @param response
+	 *            The response interface for the request call back
 	 */
 	public void put(String urlStr, Object postData, HttpParams requestParameters, HttpParams httpHeaders, AsyncHttpResponse response)
 	{
@@ -797,12 +934,12 @@ public class AsyncHttpClient
 	{
 		public ConnectionInfo mConnectionInfo = new ConnectionInfo();
 
-//		private final int DOWNLOAD = 0x00;
-//		private final int GET = 0x01;
-//		private final int GET_IMAGE = 0x11;
-//		private final int POST = 0x02;
-//		private final int PUT = 0x03;
-//		private final int DELETE = 0x04;
+		// private final int DOWNLOAD = 0x00;
+		// private final int GET = 0x01;
+		// private final int GET_IMAGE = 0x11;
+		// private final int POST = 0x02;
+		// private final int PUT = 0x03;
+		// private final int DELETE = 0x04;
 
 		private long mLoadTime = 0;
 		private AsyncHttpResponse mAsyncHttpResponse;
@@ -822,7 +959,9 @@ public class AsyncHttpClient
 
 		/**
 		 * Default Constructor
-		 * @param timeout Sets the timeout for the request
+		 *
+		 * @param timeout
+		 *            Sets the timeout for the request
 		 */
 		public HttpLoader(int timeout)
 		{
@@ -831,8 +970,11 @@ public class AsyncHttpClient
 
 		/**
 		 * Initiates a download request on the urlStr
-		 * @param urlStr The URL for the request
-		 * @param responseHandler The response handler
+		 *
+		 * @param urlStr
+		 *            The URL for the request
+		 * @param responseHandler
+		 *            The response handler
 		 */
 		public void download(String urlStr, HttpParams headers, AsyncHttpResponse responseHandler)
 		{
@@ -846,9 +988,13 @@ public class AsyncHttpClient
 
 		/**
 		 * Initiates a GET request on the urlStr
-		 * @param urlStr The URL for the request
-		 * @param headers The headers to be sent to the server
-		 * @param responseHandler The response handler
+		 *
+		 * @param urlStr
+		 *            The URL for the request
+		 * @param headers
+		 *            The headers to be sent to the server
+		 * @param responseHandler
+		 *            The response handler
 		 */
 		public void get(String urlStr, HttpParams headers, AsyncHttpResponse responseHandler)
 		{
@@ -862,9 +1008,13 @@ public class AsyncHttpClient
 
 		/**
 		 * Initiates a DELETE request on the urlStr
-		 * @param urlStr The URL for the request
-		 * @param headers The headers to be sent to the server
-		 * @param responseHandler The response handler
+		 *
+		 * @param urlStr
+		 *            The URL for the request
+		 * @param headers
+		 *            The headers to be sent to the server
+		 * @param responseHandler
+		 *            The response handler
 		 */
 		public void delete(String urlStr, HttpParams headers, AsyncHttpResponse responseHandler)
 		{
@@ -878,9 +1028,13 @@ public class AsyncHttpClient
 
 		/**
 		 * Initiates a GET request on the urlStr for an image
-		 * @param urlStr The URL for the request
-		 * @param headers The headers to be sent to the server
-		 * @param responseHandler The response handler
+		 *
+		 * @param urlStr
+		 *            The URL for the request
+		 * @param headers
+		 *            The headers to be sent to the server
+		 * @param responseHandler
+		 *            The response handler
 		 */
 		public void getImage(String urlStr, AsyncHttpResponse responseHandler)
 		{
@@ -893,10 +1047,15 @@ public class AsyncHttpClient
 
 		/**
 		 * Initiates a POST request on the urlStr
-		 * @param urlStr The URL for the request
-		 * @param data The data to be sent to the server
-		 * @param headers The headers to be sent to the server
-		 * @param responseHandler The response handler
+		 *
+		 * @param urlStr
+		 *            The URL for the request
+		 * @param data
+		 *            The data to be sent to the server
+		 * @param headers
+		 *            The headers to be sent to the server
+		 * @param responseHandler
+		 *            The response handler
 		 */
 		public void post(String urlStr, Object data, HttpParams headers, AsyncHttpResponse response)
 		{
@@ -911,10 +1070,15 @@ public class AsyncHttpClient
 
 		/**
 		 * Initiates a PUT request on the urlStr
-		 * @param urlStr The URL for the request
-		 * @param data The data to be sent to the server
-		 * @param headers The headers to be sent to the server
-		 * @param responseHandler The response handler
+		 *
+		 * @param urlStr
+		 *            The URL for the request
+		 * @param data
+		 *            The data to be sent to the server
+		 * @param headers
+		 *            The headers to be sent to the server
+		 * @param responseHandler
+		 *            The response handler
 		 */
 		public void put(String urlStr, Object data, HttpParams header, AsyncHttpResponse response)
 		{
@@ -945,7 +1109,6 @@ public class AsyncHttpClient
 			}
 		};
 
-
 		@Override protected void onPreExecute()
 		{
 			mConnectionInfo.connectionHeaders = mHttpParams;
@@ -954,6 +1117,7 @@ public class AsyncHttpClient
 			mConnectionInfo.connectionInitiationTime = System.currentTimeMillis();
 			mConnectionInfo.connectionResponseTime = mLoadTime;
 			mConnectionInfo.connectionUrl = mUrl;
+			mConnectionInfo.connectionMethod = type.getString();
 
 			if (mAsyncHttpResponse != null)
 			{
@@ -972,7 +1136,6 @@ public class AsyncHttpClient
 		@Override protected Object doInBackground(String... url)
 		{
 			mLoadTime = System.currentTimeMillis();
-			mConnectionInfo.connectionMethod = type.getString();
 
 			switch (type)
 			{
@@ -1048,7 +1211,7 @@ public class AsyncHttpClient
 
 						if (mAsyncHttpResponse != null)
 						{
-							// 	we fake the content length, because it can be -1
+							// we fake the content length, because it can be -1
 							mAsyncHttpResponse.onBytesProcessed(byteBuffer.toByteArray(), readCount, readCount);
 							mAsyncHttpResponse.onBytesProcessed(readCount, readCount);
 						}
@@ -1261,18 +1424,14 @@ public class AsyncHttpClient
 							}
 						}
 
-						//	Send as binary if its a byte array
+						// Send as binary if its a byte array
 						if (mSendData != null)
 						{
 							if (mSendData.getClass().equals(byte[].class))
 							{
-								ByteArrayOutputStream bos = new ByteArrayOutputStream();
-								ObjectOutput out = new ObjectOutputStream(bos);
-								out.writeObject(mSendData);
-								byte[] yourBytes = bos.toByteArray();
+								byte[] yourBytes = (byte[])mSendData;
 
 								OutputStream wr = conn.getOutputStream();
-								wr.write(yourBytes);
 
 								int index = 0;
 								int size = 1024;
@@ -1405,7 +1564,8 @@ public class AsyncHttpClient
 				{
 					if (type == RequestMode.DOWNLOAD)
 					{
-						mAsyncHttpResponse.onSuccess(result == null ? new byte[]{} : (byte[])result);
+						mAsyncHttpResponse.onSuccess(result == null ? new byte[]
+						{} : (byte[])result);
 					}
 					else
 					{
