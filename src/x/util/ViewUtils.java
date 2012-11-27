@@ -6,9 +6,9 @@
 package x.util;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import x.type.ItemList;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -73,11 +73,11 @@ public class ViewUtils
 	 * Gets all views of a parent that match an instance (recursive)
 	 * @param parent The parent view
 	 * @param instance The instance to check
-	 * @return An array of views, or null
+	 * @return An array of views
 	 */
-	public static View[] getAllChildrenByInstance(ViewGroup parent, Class instance)
+	public static ArrayList<View> getAllChildrenByInstance(ViewGroup parent, Class... instance)
 	{
-		ItemList<View> views = new ItemList<View>();
+		ArrayList<View> views = new ArrayList<View>();
 		int childCount = parent.getChildCount();
 
 		for (int childIndex = 0; childIndex < childCount; childIndex++)
@@ -86,18 +86,21 @@ public class ViewUtils
 
 			if (child instanceof ViewGroup)
 			{
-				views.add(getAllChildrenByInstance((ViewGroup)child, instance));
+				views.addAll(getAllChildrenByInstance((ViewGroup)child, instance));
 			}
 			else
 			{
-				if (child.getClass() == instance)
+				for (Class c : instance)
 				{
-					views.add(child);
+					if (child.getClass() == c)
+					{
+						views.add(child);
+					}
 				}
 			}
 		}
 
-		return views.size() > 0 ? (View[])views.toArray(new View[views.size()]) : null;
+		return views;
 	}
 
 	/**
